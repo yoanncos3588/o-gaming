@@ -10,7 +10,7 @@ function App() {
     }, []);
     return (
         <>
-            <TemplateDrawer>test</TemplateDrawer>
+            <TemplateDrawer>Hello world</TemplateDrawer>
         </>
     );
 }

@@ -10,7 +10,27 @@ type Props = {};
 
 const Header = (props: Props) => {
     return (
-        <header className="w-full navbar bg-base-300">
+        <header className="w-full navbar border-b-2 border-base-200">
+            <div className="mx-2 text-2xl">
+                <Logo />
+            </div>
+            <div className="flex-1 px-2 mx-2">
+                <SearchBar />
+                <div className="hidden lg:block mx-4">
+                    <ul className="menu menu-horizontal">
+                        <Menu />
+                    </ul>
+                </div>
+            </div>
+
+            <div className="menu menu-horizontal hidden lg:flex">
+                <li>
+                    <LoginButton />
+                </li>
+                <li>
+                    <SignUpButton />
+                </li>
+            </div>
             <div className="flex-none lg:hidden">
                 <label
                     htmlFor="my-drawer-3"
@@ -18,26 +38,6 @@ const Header = (props: Props) => {
                 >
                     <IconBurger stroke={'white'} className="w-6 h-6" />
                 </label>
-            </div>
-            <div className="px-2 mx-2">
-                <Logo />
-            </div>
-            <div className="flex-1 px-2 mx-2">
-                <SearchBar />
-                <div className="hidden lg:block">
-                    <ul className="menu menu-horizontal">
-                        <Menu />
-                    </ul>
-                </div>
-            </div>
-
-            <div className="menu menu-horizontal">
-                <li>
-                    <LoginButton />
-                </li>
-                <li>
-                    <SignUpButton />
-                </li>
             </div>
         </header>
     );

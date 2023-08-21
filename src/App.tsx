@@ -1,4 +1,10 @@
+import { useEffect } from 'react';
+
 function App() {
+    /** DaisyUI Theme */
+    useEffect(() => {
+        document.querySelector('html')?.setAttribute('data-theme', 'business');
+    }, []);
     return (
         <>
             <div className="text-2xl">hello world</div>

@@ -12,7 +12,7 @@ const Header = (props: Props) => {
     return (
         <header className="w-full navbar border-b-2 border-base-200">
             <div className="mx-2 text-2xl">
-                <Logo />
+                <Logo shortForMobile />
             </div>
             <div className="flex-1 px-2 mx-2">
                 <SearchBar />

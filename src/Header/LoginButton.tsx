@@ -6,7 +6,10 @@ type Props = {};
 const LoginButton = (props: Props) => {
     return (
         <div>
-            <UserCircleIcon fill="white" className="w-4 h-4" />
+            <UserCircleIcon
+                fill="white"
+                className="w-4 h-4 hidden lg:inline-block"
+            />
             <Link to="#">Login</Link>
         </div>
     );

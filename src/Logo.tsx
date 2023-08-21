@@ -1,12 +1,18 @@
-type Props = {};
+type Props = { shortForMobile: boolean };
 
-const Logo = (props: Props) => {
+const Logo = ({ shortForMobile }: Props) => {
     return (
-        <div className=" font-black uppercase ">
+        <div className="font-black uppercase">
             <span className="text-accent">O'</span>
-            <span className="hidden sm:inline-block">Gaming</span>
+            <span className={`${shortForMobile && 'hidden sm:inline-block'}`}>
+                Gaming
+            </span>
         </div>
     );
+};
+
+Logo.defaultProps = {
+    shortForMobile: false,
 };
 
 export default Logo;

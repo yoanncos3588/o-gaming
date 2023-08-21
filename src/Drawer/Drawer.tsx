@@ -1,4 +1,9 @@
 import React from 'react';
+import Menu from '../Header/Menu';
+import LoginButton from '../Header/LoginButton';
+import SignUpButton from '../Header/SignUpButton';
+import Logo from '../Logo';
+import { Link } from 'react-router-dom';
 
 type Props = {};
 
@@ -6,15 +11,22 @@ const Drawer = (props: Props) => {
     return (
         <div className="drawer-side">
             <label htmlFor="my-drawer-3" className="drawer-overlay"></label>
-            <ul className="menu p-4 w-80 h-full bg-base-200">
-                {/* Sidebar content here */}
-                <li>
-                    <a>Sidebar Item 1</a>
-                </li>
-                <li>
-                    <a>Sidebar Item 2</a>
-                </li>
-            </ul>
+            <div className="menu p-4 w-80 h-full bg-base-200">
+                <div className="mb-4">
+                    <Link to={'/'}>
+                        <Logo />
+                    </Link>
+                </div>
+                <ul>
+                    <li>
+                        <LoginButton />
+                    </li>
+                    <li>
+                        <SignUpButton />
+                    </li>
+                    <Menu />
+                </ul>
+            </div>
         </div>
     );
 };

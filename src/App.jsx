@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import Example from './Example';
+import Games from './Games/Games';
 
 function App() {
     /** DaisyUI Theme */
@@ -10,6 +11,7 @@ function App() {
     return (
         <Routes>
             <Route path="/example" element={<Example />} />
+            <Route path="/games" element={<Games />} />
         </Routes>
     );
 }

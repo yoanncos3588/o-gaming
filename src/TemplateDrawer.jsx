@@ -7,8 +7,6 @@ import SignUpButton from './Header/SignUpButton';
 import Logo from './Logo';
 import { ReactComponent as IconBurger } from './assets/icons/burger.svg';
 
-type Props = {};
-
 const TemplateDrawer = ({ children }) => {
     return (
         <div className="drawer">

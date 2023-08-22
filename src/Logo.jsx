@@ -1,6 +1,4 @@
-type Props = { shortForMobile: boolean };
-
-const Logo = ({ shortForMobile }: Props) => {
+const Logo = ({ shortForMobile }) => {
     return (
         <div className="font-black uppercase">
             <span className="text-accent">O'</span>

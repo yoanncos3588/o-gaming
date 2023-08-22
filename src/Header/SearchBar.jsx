@@ -1,8 +1,6 @@
 import { ReactComponent as IconSearch } from '../assets/icons/search.svg';
 
-type Props = {};
-
-const SearchBar = (props: Props) => {
+const SearchBar = (props) => {
     return (
         <form method="GET" className="w-full lg:w-96">
             <div className="relative focus-within:text-secondary-content">

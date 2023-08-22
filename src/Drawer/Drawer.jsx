@@ -5,9 +5,7 @@ import SignUpButton from '../Header/SignUpButton';
 import Logo from '../Logo';
 import { Link } from 'react-router-dom';
 
-type Props = {};
-
-const Drawer = (props: Props) => {
+const Drawer = (props) => {
     return (
         <div className="drawer-side">
             <label htmlFor="my-drawer-3" className="drawer-overlay"></label>

@@ -1,9 +1,7 @@
 import { Link } from 'react-router-dom';
 import { ReactComponent as UserCircleIcon } from '../assets/icons/user.svg';
 
-type Props = {};
-
-const LoginButton = (props: Props) => {
+const LoginButton = (props) => {
     return (
         <div>
             <UserCircleIcon

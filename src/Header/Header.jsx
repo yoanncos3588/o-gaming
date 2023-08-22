@@ -6,9 +6,7 @@ import LoginButton from './LoginButton';
 import SignUpButton from './SignUpButton';
 import { ReactComponent as IconBurger } from '../assets/icons/burger.svg';
 
-type Props = {};
-
-const Header = (props: Props) => {
+const Header = (props) => {
     return (
         <header className="w-full navbar border-b-2 border-base-200">
             <div className="mx-2 text-2xl">

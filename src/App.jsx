@@ -1,6 +1,4 @@
 import { useEffect } from 'react';
-
-import Header from './Header/Header';
 import TemplateDrawer from './TemplateDrawer';
 
 function App() {

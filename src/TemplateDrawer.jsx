@@ -1,11 +1,6 @@
 import Drawer from './Drawer/Drawer';
 import Header from './Header/Header';
-import LoginButton from './Header/LoginButton';
-import Menu from './Header/Menu';
-import SearchBar from './Header/SearchBar';
-import SignUpButton from './Header/SignUpButton';
-import Logo from './Logo';
-import { ReactComponent as IconBurger } from './assets/icons/burger.svg';
+import PropTypes from 'prop-types';
 
 const TemplateDrawer = ({ children }) => {
     return (
@@ -20,6 +15,10 @@ const TemplateDrawer = ({ children }) => {
             <Drawer />
         </div>
     );
+};
+
+TemplateDrawer.propTypes = {
+    children: PropTypes.node,
 };
 
 export default TemplateDrawer;

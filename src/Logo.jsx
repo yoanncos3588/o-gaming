@@ -1,3 +1,5 @@
+import PropTypes from 'prop-types';
+
 const Logo = ({ shortForMobile }) => {
     return (
         <div className="font-black uppercase">
@@ -11,6 +13,10 @@ const Logo = ({ shortForMobile }) => {
 
 Logo.defaultProps = {
     shortForMobile: false,
+};
+
+Logo.propTypes = {
+    shortForMobile: PropTypes.bool,
 };
 
 export default Logo;

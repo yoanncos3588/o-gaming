@@ -1,17 +1,28 @@
 import PropTypes from 'prop-types';
 
-const ContentContainer = ({ children, Sidebar = null }) => {
+const ContentContainer = ({
+    children,
+    SidebarLeft = null,
+    SidebarRight = null,
+}) => {
     return (
         <div className="container grid grid-cols-12 gap-4 mx-auto h-full p-4 auto-rows-min">
+            {SidebarLeft && (
+                <div className="col-span-12 lg:col-span-4">{SidebarLeft}</div>
+            )}
             <div
-                className={`col-span-12 ${
-                    Sidebar ? 'lg:col-span-8' : 'lg:col-span-12'
+                className={`col-span-12 order-2 ${
+                    SidebarRight || SidebarLeft
+                        ? 'lg:col-span-8'
+                        : 'lg:col-span-12'
                 }`}
             >
                 {children}
             </div>
-            {Sidebar && (
-                <div className="col-span-12 lg:col-span-4">{Sidebar}</div>
+            {SidebarRight && (
+                <div className="col-span-12 lg:col-span-4 lg:order-3 order-1">
+                    {SidebarRight}
+                </div>
             )}
         </div>
     );
@@ -19,7 +30,8 @@ const ContentContainer = ({ children, Sidebar = null }) => {
 
 ContentContainer.propTypes = {
     children: PropTypes.node,
-    Sidebar: PropTypes.node,
+    SidebarLeft: PropTypes.node,
+    SidebarRight: PropTypes.node,
 };
 
 export default ContentContainer;

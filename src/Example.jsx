@@ -7,7 +7,9 @@ import ContentContainer from './ContentContainer';
 
 function Example() {
     return (
-        <ContentContainer Sidebar={<div>Side content components or html</div>}>
+        <ContentContainer
+            SidebarLeft={<div>Side content components or html</div>}
+        >
             <div>Main content components or html</div>
         </ContentContainer>
     );

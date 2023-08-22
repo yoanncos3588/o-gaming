@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
-import TemplateDrawer from './TemplateDrawer';
+import { Route, Routes } from 'react-router-dom';
+import Example from './Example';
 
 function App() {
     /** DaisyUI Theme */
@@ -7,9 +8,9 @@ function App() {
         document.querySelector('html')?.setAttribute('data-theme', 'business');
     }, []);
     return (
-        <>
-            <TemplateDrawer>Hello world</TemplateDrawer>
-        </>
+        <Routes>
+            <Route path="/example" element={<Example />} />
+        </Routes>
     );
 }
 

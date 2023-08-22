@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 
-const Logo = ({ shortForMobile }) => {
+const Logo = ({ shortForMobile = false }) => {
     return (
         <div className="font-black uppercase">
             <span className="text-accent">O&apos;</span>
@@ -9,10 +9,6 @@ const Logo = ({ shortForMobile }) => {
             </span>
         </div>
     );
-};
-
-Logo.defaultProps = {
-    shortForMobile: false,
 };
 
 Logo.propTypes = {

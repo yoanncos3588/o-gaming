@@ -3,8 +3,8 @@
 function Profil() {
   return (
     <><header>-</header><main>
-          <div className="bg-gray-100 min-h-screen py-8">
-              <div className="max-w-3xl mx-auto bg-white shadow-md p-6 rounded-lg">
+          <div className="bg-gray-100 min-h-screen py-8 flex-auto">
+              <div className=" md:mx-auto max-w-4xl min-w-xs mx-3 bg-white shadow-md p-6 rounded-lg justify-center">
                   <div className="flex items-center">
                       <img
                           className=" w-32 h-32 rounded-full mr-4"

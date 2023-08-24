@@ -69,7 +69,7 @@ export const GameItem = ({
                 <ul className="mt-4 -mx-1">
                     {categories.map((c) => (
                         <li className="mx-1 inline-block" key={c.id}>
-                            <Category name={c.name} />
+                            <Category name={c} />
                         </li>
                     ))}
                 </ul>

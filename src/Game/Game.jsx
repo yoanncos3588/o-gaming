@@ -71,7 +71,7 @@ const Game = () => {
             </div>
             <form action="" className="w-full mt-4">
                 <div className="join w-full flex lg:flex-row flex-col">
-                    <select className="select select-bordered lg:join-item">
+                    <select className="select select-bordered lg:join-item bg-neutral">
                         <option disabled selected>
                             Filter
                         </option>
@@ -81,7 +81,7 @@ const Game = () => {
                     <div className="flex-1">
                         <div>
                             <input
-                                className="input input-bordered lg:join-item w-full"
+                                className="input input-bordered lg:join-item w-full text-sm text-white focus:outline-none focus:bg-white focus:text-secondary-content bg-neutral"
                                 placeholder="Search"
                             />
                         </div>

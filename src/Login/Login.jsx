@@ -46,7 +46,7 @@ function signIn() {
                                             </div>
                                             <div className="flex items-center justify-between pb-6 border-t-2 border-gray-300 pt-4">
                                                 <p className="mb-0 mr-2">
-                                                    Don't have an account?
+                                                    Dont have an account?
                                                 </p>
                                                 <button
                                                     type="button"

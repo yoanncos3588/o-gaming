@@ -1,4 +1,11 @@
+import { useState } from 'react';
+
 function signIn() {
+    const handleLogin = async (e) => {
+        e.preventdefault();
+        const [email, setEmail] = useState('');
+        const [password, setPassword] = useState('');
+    };
     return (
         <section className="h-full gradient-form md:h-screen">
             <div className="container py-12 px-6 h-full">

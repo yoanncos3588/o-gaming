@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import ContentContainer from '../ContentContainer';
 import Category from '../Category';
+import { IssuesListItem } from './IssuesListItem';
 
 const Game = () => {
     const categories = ['FPS', 'Action'];
@@ -14,7 +15,7 @@ const Game = () => {
                             alt=""
                             className="mb-8 order-2 lg:order-1"
                         />
-                        <h1 className="text-2xl font-black mb-8 order-1 lg:order-2">
+                        <h1 className="text-4xl font-black mb-8 order-1 lg:order-2">
                             The Elder Scrolls V Skyrim Special Edition
                         </h1>
                     </div>
@@ -85,12 +86,29 @@ const Game = () => {
                             />
                         </div>
                     </div>
-
                     <button className="btn-primary btn lg:join-item">
                         Search
                     </button>
                 </div>
             </form>
+
+            <ul className="mt-4">
+                <li className="mb-4">
+                    <IssuesListItem />
+                </li>
+                <li className="mb-4">
+                    <IssuesListItem />
+                </li>
+                <li className="mb-4">
+                    <IssuesListItem />
+                </li>
+                <li className="mb-4">
+                    <IssuesListItem />
+                </li>
+                <li className="mb-4">
+                    <IssuesListItem />
+                </li>
+            </ul>
         </ContentContainer>
     );
 };

@@ -1,8 +1,6 @@
-import './signIn.css';
-
 function signIn() {
     return (
-        <section className="h-full gradient-form bg-gray-200 md:h-screen">
+        <section className="h-full gradient-form md:h-screen">
             <div className="container py-12 px-6 h-full">
                 <div className=" flex justify-center items-center flex-col h-full g-6 text-gray-800">
                     <div className="">
@@ -68,7 +66,7 @@ function signIn() {
                                             </div>
                                             <div className="text-center pt-1 mb-5 pb-1">
                                                 <button
-                                                    className=" mt-4 inline-block px-6 py-2.5 text-black font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg transition duration-150 ease-in-out w-full mb-3"
+                                                    className=" mt-4 inline-block px-6 py-2.5 text-black font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-primary hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg transition duration-150 ease-in-out w-full mb-3"
                                                     type="button"
                                                 >
                                                     Sign Up

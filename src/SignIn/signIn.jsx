@@ -1,4 +1,39 @@
-function signIn() {
+import axios from 'axios';
+import { useState } from 'react';
+
+function SignIn() {
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [username, setUsername] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+    const [role, setRole] = useState(2);
+    const responseBody = {
+        username: '',
+        email: '',
+        password: '',
+        confirmPassword: '',
+        role_id: '',
+    };
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        responseBody.username = username;
+        responseBody.email = email;
+        responseBody.password = password;
+        responseBody.confirmPassword = confirmPassword;
+        responseBody.role = role;
+        const jsonResponse = JSON.stringify(responseBody);
+        try {
+            const res = await axios.post(
+                'http://localhost:3000/signup',
+                responseBody
+            );
+            console.log(res);
+        } catch (error) {
+            console.log(error);
+        }
+        console.log(jsonResponse);
+    };
+
     return (
         <section className="h-full gradient-form md:h-screen">
             <div className="container py-12 px-6 h-full">
@@ -13,41 +48,63 @@ function signIn() {
                                                 sign up
                                             </h4>
                                         </div>
-                                        <form>
+                                        <form onSubmit={(e) => handleSubmit(e)}>
                                             <p className="mb-4">
                                                 Please Sign Up if you do not
                                                 have an account
                                             </p>
                                             <div className="mb-4">
                                                 <input
+                                                    value={username}
+                                                    onChange={(e) =>
+                                                        setUsername(
+                                                            e.target.value
+                                                        )
+                                                    }
                                                     type="text"
                                                     className="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
                                                     placeholder="username"
-                                                    name="userEmail"
+                                                    name="username"
                                                 />
                                             </div>
                                             <div className="mb-4">
                                                 <input
+                                                    value={email}
+                                                    onChange={(e) =>
+                                                        setEmail(e.target.value)
+                                                    }
                                                     type="email"
                                                     className="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
                                                     placeholder="email"
-                                                    name="pin"
+                                                    name="email"
                                                 />
                                             </div>
                                             <div className="mb-4">
                                                 <input
+                                                    value={password}
+                                                    onChange={(e) =>
+                                                        setPassword(
+                                                            e.target.value
+                                                        )
+                                                    }
                                                     type="password"
                                                     className="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
                                                     placeholder="Password"
-                                                    name="pin"
+                                                    name="password"
                                                 />
                                             </div>
                                             <div className="mb-4">
                                                 <input
+                                                    value={confirmPassword}
+                                                    onChange={(e) =>
+                                                        setConfirmPassword(
+                                                            e.target.value
+                                                        )
+                                                    }
                                                     type="password"
                                                     className="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
                                                     placeholder="confirm Password"
-                                                    name="pin"
+                                                    name="confirmPassword"
                                                 />
                                             </div>
                                             <div className="join w-80 flex justify-center">
@@ -56,34 +113,44 @@ function signIn() {
                                                     type="radio"
                                                     name="options"
                                                     aria-label="Developpeur"
+                                                    value={1}
+                                                    onChange={(e) =>
+                                                        setRole(e.target.value)
+                                                    }
+                                                    checked={role === 1}
                                                 />
                                                 <input
                                                     className="join-horizontal btn  bg-white mb-2 text-black hover:text-white border-gray-300"
                                                     type="radio"
                                                     name="options"
                                                     aria-label="Gamer"
+                                                    value={2}
+                                                    onChange={(e) =>
+                                                        setRole(e.target.value)
+                                                    }
+                                                    checked={role === 2}
                                                 />
                                             </div>
                                             <div className="text-center pt-1 mb-5 pb-1">
                                                 <button
                                                     className=" mt-4 inline-block px-6 py-2.5 text-black font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-primary hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg transition duration-150 ease-in-out w-full mb-3"
-                                                    type="button"
+                                                    type="submit"
                                                 >
                                                     Sign Up
                                                 </button>
                                             </div>
-                                            <div className="flex items-center justify-between pb-6 border-t-2 border-gray-300 pt-4">
-                                                <p className="mb-0 mr-2">
-                                                    Do you have an account?
-                                                </p>
-                                                <button
-                                                    type="button"
-                                                    className="inline-block px-6 py-2 border-2 border-green-600 text-green-600 font-medium text-xs leading-tight uppercase rounded hover:bg-green-700 hover:text-white focus:outline-none focus:ring-0 transition duration-150 ease-in-out"
-                                                >
-                                                    Log In
-                                                </button>
-                                            </div>
                                         </form>
+                                        <div className="flex items-center justify-between pb-6 border-t-2 border-gray-300 pt-4">
+                                            <p className="mb-0 mr-2">
+                                                Do you have an account?
+                                            </p>
+                                            <button
+                                                type="button"
+                                                className="inline-block px-6 py-2 border-2 border-green-600 text-green-600 font-medium text-xs leading-tight uppercase rounded hover:bg-green-700 hover:text-white focus:outline-none focus:ring-0 transition duration-150 ease-in-out"
+                                            >
+                                                Log In
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -95,4 +162,4 @@ function signIn() {
     );
 }
 
-export default signIn;
+export default SignIn;

@@ -2,36 +2,50 @@ import axios from 'axios';
 import { useState } from 'react';
 
 function SignIn() {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [username, setUsername] = useState('');
-    const [confirmPassword, setConfirmPassword] = useState('');
-    const [role, setRole] = useState(2);
-    const responseBody = {
+    const [userInfos, setUserInfos] = useState({
         username: '',
         email: '',
         password: '',
         confirmPassword: '',
-        role_id: '',
+        role_id: '2',
+    });
+
+    const handleChange = (e) => {
+        setUserInfos({
+            ...userInfos,
+            [e.target.name]: e.target.value,
+        });
     };
+
+    // const [email, setEmail] = useState('');
+    // const [password, setPassword] = useState('');
+    // const [username, setUsername] = useState('');
+    // const [confirmPassword, setConfirmPassword] = useState('');
+    // const [role, setRole] = useState(2);
+    // const responseBody = {
+    //     username: '',
+    //     email: '',
+    //     password: '',
+    //     confirmPassword: '',
+    //     role_id: '',
+    // };
     const handleSubmit = async (e) => {
         e.preventDefault();
-        responseBody.username = username;
-        responseBody.email = email;
-        responseBody.password = password;
-        responseBody.confirmPassword = confirmPassword;
-        responseBody.role = role;
-        const jsonResponse = JSON.stringify(responseBody);
+        // responseBody.username = username;
+        // responseBody.email = email;
+        // responseBody.password = password;
+        // responseBody.confirmPassword = confirmPassword;
+        // responseBody.avatar = '';
+        // responseBody.role_id = role;
         try {
             const res = await axios.post(
                 'http://localhost:3000/signup',
-                responseBody
+                userInfos
             );
             console.log(res);
         } catch (error) {
             console.log(error);
         }
-        console.log(jsonResponse);
     };
 
     return (
@@ -55,12 +69,8 @@ function SignIn() {
                                             </p>
                                             <div className="mb-4">
                                                 <input
-                                                    value={username}
-                                                    onChange={(e) =>
-                                                        setUsername(
-                                                            e.target.value
-                                                        )
-                                                    }
+                                                    value={userInfos.username}
+                                                    onChange={handleChange}
                                                     type="text"
                                                     className="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
                                                     placeholder="username"
@@ -69,10 +79,8 @@ function SignIn() {
                                             </div>
                                             <div className="mb-4">
                                                 <input
-                                                    value={email}
-                                                    onChange={(e) =>
-                                                        setEmail(e.target.value)
-                                                    }
+                                                    value={userInfos.email}
+                                                    onChange={handleChange}
                                                     type="email"
                                                     className="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
                                                     placeholder="email"
@@ -81,12 +89,8 @@ function SignIn() {
                                             </div>
                                             <div className="mb-4">
                                                 <input
-                                                    value={password}
-                                                    onChange={(e) =>
-                                                        setPassword(
-                                                            e.target.value
-                                                        )
-                                                    }
+                                                    value={userInfos.password}
+                                                    onChange={handleChange}
                                                     type="password"
                                                     className="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
                                                     placeholder="Password"
@@ -95,12 +99,10 @@ function SignIn() {
                                             </div>
                                             <div className="mb-4">
                                                 <input
-                                                    value={confirmPassword}
-                                                    onChange={(e) =>
-                                                        setConfirmPassword(
-                                                            e.target.value
-                                                        )
+                                                    value={
+                                                        userInfos.confirmPassword
                                                     }
+                                                    onChange={handleChange}
                                                     type="password"
                                                     className="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
                                                     placeholder="confirm Password"
@@ -111,24 +113,24 @@ function SignIn() {
                                                 <input
                                                     className="join-horizontal btn bg-white  text-black hover:text-white focus:bg-black border-gray-300"
                                                     type="radio"
-                                                    name="options"
+                                                    name="role"
                                                     aria-label="Developpeur"
                                                     value={1}
-                                                    onChange={(e) =>
-                                                        setRole(e.target.value)
+                                                    onChange={handleChange}
+                                                    checked={
+                                                        userInfos.role === 1
                                                     }
-                                                    checked={role === 1}
                                                 />
                                                 <input
                                                     className="join-horizontal btn  bg-white mb-2 text-black hover:text-white border-gray-300"
                                                     type="radio"
-                                                    name="options"
+                                                    name="role"
                                                     aria-label="Gamer"
                                                     value={2}
-                                                    onChange={(e) =>
-                                                        setRole(e.target.value)
+                                                    onChange={handleChange}
+                                                    checked={
+                                                        userInfos.role === 2
                                                     }
-                                                    checked={role === 2}
                                                 />
                                             </div>
                                             <div className="text-center pt-1 mb-5 pb-1">

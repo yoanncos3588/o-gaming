@@ -12,12 +12,14 @@ export const initialState = {
 };
 
 export const updateCredentials = createAction('user/updateCredential');
+export const updateLoginErrorMessage = createAction(
+    'user/updateLoginErrorMessage'
+);
 
 export const login = createAsyncThunk('user/login', async (_, thunkAPI) => {
     const { email, password } = thunkAPI.getState().user.credentials;
     const { data } = await axiosInstance.post('/login', { email, password });
 
-    //console.log(data);
     //store token in local storage
     // TODO use token in same-site cookie
     localStorage.setItem('user', JSON.stringify(data));
@@ -29,18 +31,25 @@ const userReducer = createReducer(initialState, (builder) => {
         .addCase(updateCredentials, (state, action) => {
             const { name, value } = action.payload;
             state.credentials[name] = value;
+            state.loginErrorMessage = '';
         })
         .addCase(login.fulfilled, (state, action) => {
-            // api send object {error: string} when user failed to login
             if (Object.prototype.hasOwnProperty.call(action.payload, 'error')) {
+                // api send object {error: string} when user failed to login
                 state.loginErrorMessage = action.payload.error;
             } else {
+                console.log(action.payload);
+                //login is good
                 state.username = action.payload.username;
                 state.credentials = { email: '', password: '' };
+                state.loginErrorMessage = initialState.loginErrorMessage;
             }
         })
         .addCase(login.rejected, (state) => {
             state.loginErrorMessage = 'An unexpected error occured';
+        })
+        .addCase(updateLoginErrorMessage, (state, action) => {
+            state.loginErrorMessage = action.payload;
         });
 });
 

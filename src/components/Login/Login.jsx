@@ -1,24 +1,47 @@
 import { toast } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
-import { login, updateCredentials } from '../../store/reducers/user';
+import {
+    login,
+    updateCredentials,
+    updateLoginErrorMessage,
+} from '../../store/reducers/user';
 import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-function SignIn() {
+function Login() {
     const dispatch = useDispatch();
     const { email, password } = useSelector((state) => state.user.credentials);
-    const { loginErrorMessage } = useSelector(
+    const username = useSelector((state) => state.user.username);
+    const loginErrorMessage = useSelector(
         (state) => state.user.loginErrorMessage
     );
+    const navigate = useNavigate();
 
     useEffect(() => {
-        console.log('useeffect');
+        if (typeof username !== 'undefined') {
+            toast.success(`Welcome back ${username}, you will be redirected…`);
+            navigate('/');
+        }
+    }, [username, navigate]);
+
+    useEffect(() => {
+        // error happened during login
         if (loginErrorMessage !== '') {
-            console.log('error');
             toast.error(loginErrorMessage, {
                 theme: 'colored',
+                toastId: 'errorLogin',
+            });
+            toast.onChange((payload) => {
+                // delete store value for login error message just to be sure
+                if (
+                    payload.status === 'removed' &&
+                    payload.id === 'errorLogin'
+                ) {
+                    dispatch(updateLoginErrorMessage(''));
+                }
             });
         }
-    }, [loginErrorMessage]);
+    }, [loginErrorMessage, dispatch]);
 
     /**
      * Handle form field change and update redux store
@@ -116,4 +139,4 @@ function SignIn() {
     );
 }
 
-export default SignIn;
+export default Login;

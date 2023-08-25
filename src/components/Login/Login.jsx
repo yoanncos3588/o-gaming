@@ -12,6 +12,8 @@ function Login() {
     const dispatch = useDispatch();
     const { email, password } = useSelector((state) => state.user.credentials);
     const username = useSelector((state) => state.user.username);
+    //TODO remove and use username when available from API
+    const userId = useSelector((state) => state.user.userId);
     const loginErrorMessage = useSelector(
         (state) => state.user.loginErrorMessage
     );
@@ -19,11 +21,20 @@ function Login() {
 
     /** useEffect for success on login */
     useEffect(() => {
-        if (typeof username !== 'undefined') {
-            toast.success(`Welcome back ${username}, you will be redirected…`);
-            navigate('/');
+        //TODO replace id with username when available
+        if (typeof userId !== 'undefined') {
+            toast.success(`Welcome back ${userId}, you will be redirected…`, {
+                autoClose: 2000,
+                theme: 'colored',
+                toastId: 'successLogin',
+            });
         }
-    }, [username, navigate]);
+        toast.onChange((payload) => {
+            if (payload.status === 'removed' && payload.id === 'successLogin') {
+                navigate('/');
+            }
+        });
+    }, [userId, navigate]);
 
     /** useEffect for error on login */
     useEffect(() => {

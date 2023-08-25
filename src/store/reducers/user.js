@@ -23,6 +23,11 @@ export const login = createAsyncThunk('user/login', async (_, thunkAPI) => {
     const { email, password } = thunkAPI.getState().user.credentials;
     const { data } = await axiosInstance.post('/login', { email, password });
 
+    // api return {error:string} when user failed to login so we reject the action
+    if (Object.prototype.hasOwnProperty.call(data, 'error')) {
+        return thunkAPI.rejectWithValue(data);
+    }
+
     const userData = decodeToken(data.token);
 
     //store token in local storage
@@ -40,23 +45,19 @@ const userReducer = createReducer(initialState, (builder) => {
             state.loginErrorMessage = '';
         })
         .addCase(login.fulfilled, (state, action) => {
-            if (Object.prototype.hasOwnProperty.call(action.payload, 'error')) {
-                // api send object {error: string} when user failed to login
-                state.loginErrorMessage = action.payload.error;
-            } else {
-                //login is good
-                //TODO add username when availabe
-                //state.username = action.payload.username;
-                state.userId = action.payload.userId;
-                state.role = action.payload.role;
-                state.credentials = { email: '', password: '' };
-                state.loginErrorMessage = initialState.loginErrorMessage;
-            }
+            //TODO add username when availabe
+            //state.username = action.payload.username;
+            state.userId = action.payload.userId;
+            state.role = action.payload.role;
+            state.credentials = { email: '', password: '' };
+            state.loginErrorMessage = initialState.loginErrorMessage;
         })
         .addCase(login.rejected, (state, action) => {
-            // probably not usefull since api send only fulfilled but just in case
-            console.log(action);
-            state.loginErrorMessage = 'An unexpected error occured';
+            if (action.payload) {
+                state.loginErrorMessage = action.payload.error;
+            } else {
+                state.loginErrorMessage = 'An unexpected error occured';
+            }
         })
         .addCase(updateLoginErrorMessage, (state, action) => {
             state.loginErrorMessage = action.payload;

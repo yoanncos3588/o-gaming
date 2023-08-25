@@ -1,9 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
-import App from './App.jsx';
+import App from './components/App';
 import './index.css';
-import TemplateDrawer from './TemplateDrawer';
+import TemplateDrawer from './components/TemplateDrawer';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
     <React.StrictMode>

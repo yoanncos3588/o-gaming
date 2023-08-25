@@ -64,9 +64,6 @@ function SignIn() {
                                                 <button
                                                     className=" mt-4 inline-block px-6 py-2.5 text-black font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-primary hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg transition duration-150 ease-in-out w-full mb-3"
                                                     type="submit"
-                                                    onClick={(e) =>
-                                                        console.log('test')
-                                                    }
                                                 >
                                                     Log in
                                                 </button>

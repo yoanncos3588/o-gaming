@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { ReactComponent as UserCircleIcon } from '../assets/icons/user.svg';
+import { ReactComponent as UserCircleIcon } from '../../assets/icons/user.svg';
 
 const LoginButton = () => {
     return (

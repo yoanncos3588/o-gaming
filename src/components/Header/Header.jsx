@@ -3,7 +3,7 @@ import SearchBar from './SearchBar';
 import Menu from './Menu';
 import LoginButton from './LoginButton';
 import SignUpButton from './SignUpButton';
-import { ReactComponent as IconBurger } from '../assets/icons/burger.svg';
+import { ReactComponent as IconBurger } from '../../assets/icons/burger.svg';
 
 const Header = () => {
     return (

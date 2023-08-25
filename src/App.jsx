@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import Example from './Example';
-import SignIn from "./SignIn/signIn"
+import SignUp from './SignUp/SignUp';
 function App() {
     /** DaisyUI Theme */
     useEffect(() => {
@@ -9,7 +9,7 @@ function App() {
     }, []);
     return (
         <Routes>
-            <Route path="/signin" element={<SignIn />} />
+            <Route path="/signup" element={<SignUp />} />
             <Route path="/example" element={<Example />} />
         </Routes>
     );

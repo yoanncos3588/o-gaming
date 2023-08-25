@@ -17,6 +17,7 @@ function Login() {
     );
     const navigate = useNavigate();
 
+    /** useEffect for success on login */
     useEffect(() => {
         if (typeof username !== 'undefined') {
             toast.success(`Welcome back ${username}, you will be redirected…`);
@@ -24,8 +25,8 @@ function Login() {
         }
     }, [username, navigate]);
 
+    /** useEffect for error on login */
     useEffect(() => {
-        // error happened during login
         if (loginErrorMessage !== '') {
             toast.error(loginErrorMessage, {
                 theme: 'colored',
@@ -44,7 +45,7 @@ function Login() {
     }, [loginErrorMessage, dispatch]);
 
     /**
-     * Handle form field change and update redux store
+     * Handle form fields change and update redux store
      * @param {*} e
      */
     const handleChange = (e) => {

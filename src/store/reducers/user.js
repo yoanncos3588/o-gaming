@@ -38,7 +38,6 @@ const userReducer = createReducer(initialState, (builder) => {
                 // api send object {error: string} when user failed to login
                 state.loginErrorMessage = action.payload.error;
             } else {
-                console.log(action.payload);
                 //login is good
                 state.username = action.payload.username;
                 state.credentials = { email: '', password: '' };
@@ -46,6 +45,7 @@ const userReducer = createReducer(initialState, (builder) => {
             }
         })
         .addCase(login.rejected, (state) => {
+            // probably not usefull since api send only fulfilled but just in case
             state.loginErrorMessage = 'An unexpected error occured';
         })
         .addCase(updateLoginErrorMessage, (state, action) => {

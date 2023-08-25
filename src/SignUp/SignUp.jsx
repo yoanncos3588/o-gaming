@@ -1,6 +1,8 @@
 import axios from 'axios';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import ContentContainer from '../ContentContainer';
+import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 
 function SignIn() {
     const [userInfos, setUserInfos] = useState({
@@ -9,6 +11,17 @@ function SignIn() {
         password: '',
         confirmPassword: '',
         role_id: '2',
+    });
+
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        // redirect user on success
+        toast.onChange((payload) => {
+            if (payload.status === 'removed' && payload.id === 'succesToast') {
+                navigate('/login');
+            }
+        });
     });
 
     const handleChange = (e) => {
@@ -43,22 +56,26 @@ function SignIn() {
                 'http://localhost:3000/signup',
                 userInfos
             );
-            console.log(res);
             if (Object.prototype.hasOwnProperty.call(res.data, 'error')) {
-                console.log('error');
+                toast.error(res.data.error, {
+                    theme: 'colored',
+                });
+            } else {
+                toast.success('Succes, you will be redirect…', {
+                    toastId: 'succesToast',
+                    theme: 'colored',
+                });
             }
         } catch (error) {
             console.log(error);
+            toast.error('An unexpected error occured', {
+                theme: 'colored',
+            });
         }
     };
 
     return (
         <ContentContainer>
-            <div className="toast">
-                <div className="alert alert-info">
-                    <span>New message arrived.</span>
-                </div>
-            </div>
             <section className="gradient-form">
                 <div className="container py-12 px-6">
                     <div className=" flex justify-center items-center flex-col h-full g-6 text-gray-800">

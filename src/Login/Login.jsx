@@ -7,9 +7,7 @@ function SignIn() {
 
     const handleLogin = async (e) => {
         e.preventDefault();
-        console.log('handlelogin');
         if (email === '' || password === '') {
-            console.log('errror');
             toast.error('Missing fields', {
                 theme: 'colored',
             });

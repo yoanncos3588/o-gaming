@@ -1,6 +1,5 @@
 import ContentContainer from './ContentContainer';
 import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 
 /**
  * Example of page using template contentcontainer
@@ -16,7 +15,6 @@ function Example() {
             <div>
                 {' '}
                 <button onClick={notify}>Notify!</button>
-                <ToastContainer />
             </div>
         </ContentContainer>
     );

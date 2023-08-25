@@ -1,10 +1,19 @@
 import { useState } from 'react';
+import { toast } from 'react-toastify';
 
-function signIn() {
+function SignIn() {
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+
     const handleLogin = async (e) => {
-        e.preventdefault();
-        const [email, setEmail] = useState('');
-        const [password, setPassword] = useState('');
+        e.preventDefault();
+        console.log('handlelogin');
+        if (email === '' || password === '') {
+            console.log('errror');
+            toast.error('Missing fields', {
+                theme: 'colored',
+            });
+        }
     };
     return (
         <section className="h-full gradient-form md:h-screen">
@@ -20,7 +29,7 @@ function signIn() {
                                                 Log in
                                             </h4>
                                         </div>
-                                        <form>
+                                        <form onSubmit={handleLogin}>
                                             <p className="mb-4">
                                                 Please Log in if you have an
                                                 account
@@ -32,6 +41,10 @@ function signIn() {
                                                     className="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
                                                     placeholder="email"
                                                     name="pin"
+                                                    value={email}
+                                                    onChange={(e) =>
+                                                        setEmail(e.target.value)
+                                                    }
                                                 />
                                             </div>
                                             <div className="mb-4">
@@ -40,13 +53,22 @@ function signIn() {
                                                     className="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
                                                     placeholder="Password"
                                                     name="pin"
+                                                    value={password}
+                                                    onChange={(e) =>
+                                                        setPassword(
+                                                            e.target.value
+                                                        )
+                                                    }
                                                 />
                                             </div>
 
                                             <div className="text-center pt-1 mb-5 pb-1">
                                                 <button
                                                     className=" mt-4 inline-block px-6 py-2.5 text-black font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-primary hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg transition duration-150 ease-in-out w-full mb-3"
-                                                    type="button"
+                                                    type="submit"
+                                                    onClick={(e) =>
+                                                        console.log('test')
+                                                    }
                                                 >
                                                     Log in
                                                 </button>
@@ -74,4 +96,4 @@ function signIn() {
     );
 }
 
-export default signIn;
+export default SignIn;

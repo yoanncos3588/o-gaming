@@ -1,10 +1,39 @@
-import { useState } from 'react';
 import { toast } from 'react-toastify';
+import { useDispatch, useSelector } from 'react-redux';
+import { login, updateCredentials } from '../../store/reducers/user';
+import { useEffect } from 'react';
 
 function SignIn() {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+    const dispatch = useDispatch();
+    const { email, password } = useSelector((state) => state.user.credentials);
+    const { loginErrorMessage } = useSelector(
+        (state) => state.user.loginErrorMessage
+    );
 
+    useEffect(() => {
+        console.log('useeffect');
+        if (loginErrorMessage !== '') {
+            console.log('error');
+            toast.error(loginErrorMessage, {
+                theme: 'colored',
+            });
+        }
+    }, [loginErrorMessage]);
+
+    /**
+     * Handle form field change and update redux store
+     * @param {*} e
+     */
+    const handleChange = (e) => {
+        dispatch(
+            updateCredentials({ name: e.target.name, value: e.target.value })
+        );
+    };
+
+    /**
+     * Handle form submit and use login action from reducer
+     * @param {*} e : submit event
+     */
     const handleLogin = async (e) => {
         e.preventDefault();
         if (email === '' || password === '') {
@@ -12,7 +41,9 @@ function SignIn() {
                 theme: 'colored',
             });
         }
+        dispatch(login());
     };
+
     return (
         <section className="h-full gradient-form md:h-screen">
             <div className="container py-12 px-6 h-full">
@@ -38,11 +69,9 @@ function SignIn() {
                                                     type="email"
                                                     className="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
                                                     placeholder="email"
-                                                    name="pin"
+                                                    name="email"
                                                     value={email}
-                                                    onChange={(e) =>
-                                                        setEmail(e.target.value)
-                                                    }
+                                                    onChange={handleChange}
                                                 />
                                             </div>
                                             <div className="mb-4">
@@ -50,13 +79,9 @@ function SignIn() {
                                                     type="password"
                                                     className="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
                                                     placeholder="Password"
-                                                    name="pin"
+                                                    name="password"
                                                     value={password}
-                                                    onChange={(e) =>
-                                                        setPassword(
-                                                            e.target.value
-                                                        )
-                                                    }
+                                                    onChange={handleChange}
                                                 />
                                             </div>
 

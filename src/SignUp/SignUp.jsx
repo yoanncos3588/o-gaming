@@ -17,12 +17,13 @@ function SignIn() {
 
     useEffect(() => {
         // redirect user on success
+        console.log('useeffect');
         toast.onChange((payload) => {
             if (payload.status === 'removed' && payload.id === 'succesToast') {
                 navigate('/login');
             }
         });
-    });
+    }, [navigate]);
 
     const handleChange = (e) => {
         setUserInfos({
@@ -31,26 +32,8 @@ function SignIn() {
         });
     };
 
-    // const [email, setEmail] = useState('');
-    // const [password, setPassword] = useState('');
-    // const [username, setUsername] = useState('');
-    // const [confirmPassword, setConfirmPassword] = useState('');
-    // const [role, setRole] = useState(2);
-    // const responseBody = {
-    //     username: '',
-    //     email: '',
-    //     password: '',
-    //     confirmPassword: '',
-    //     role_id: '',
-    // };
     const handleSubmit = async (e) => {
         e.preventDefault();
-        // responseBody.username = username;
-        // responseBody.email = email;
-        // responseBody.password = password;
-        // responseBody.confirmPassword = confirmPassword;
-        // responseBody.avatar = '';
-        // responseBody.role_id = role;
         try {
             const res = await axios.post(
                 'http://localhost:3000/signup',

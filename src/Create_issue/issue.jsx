@@ -1,24 +1,42 @@
-// import axios from 'axios';
+import axios from 'axios';
 import { useEffect, useState } from 'react';
 import ContentContainer from '../ContentContainer';
 import { toast } from 'react-toastify';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 
 function Issue() {
-    // const [IssueInfos, setIssueInfos] = useState({
-    //     title: '',
-    //     is_visibilible: true,
-    //     plateform: '',
-    //     is_online: true,
-    //     description: '',
-    //     tag: '',
-    //     frequency: '',
-    //     replication: '',
-    // });
+    const [IssueInfos, setIssueInfos] = useState({
+        title: '',
+        is_visibilible: true,
+        plateform: '',
+        is_online: true,
+        description: '',
+        tag: '',
+        frequency: '',
+        replication: '',
+    });
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        try {
+            const response = await axios.post('#', IssueInfos);
+            console.log("Réponse de l'API :", response.IssueInfos);
+            // Faites quelque chose avec la réponse, comme mettre à jour l'état ou afficher un message de succès.
+        } catch (error) {
+            console.error('Erreur lors de la requête POST :', error);
+            // Gérez les erreurs de manière appropriée.
+        }
+    };
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setIssueInfos((prevData) => ({
+            ...prevData,
+            [name]: value,
+        }));
+    };
+    const [textIssue, setTextIssue] = useState('');
 
     const navigate = useNavigate();
-    let { gameId } = useParams();
-
     useEffect(() => {
         // redirect user on success
         console.log('useeffect');
@@ -60,21 +78,27 @@ function Issue() {
     //         });
     //     }
     // };
-    const [selectedImage, setSelectedImage] = useState(null);
+    // const [selectedImage, setSelectedImage] = useState(null);
 
-    const handleImageUpload = (event) => {
-        const file = event.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = () => {
-                setSelectedImage(reader.result);
-            };
-            reader.readAsDataURL(file);
-        }
-    };
+    // const handleImageUpload = (event) => {
+    //     const file = event.target.files[0];
+    //     if (file) {
+    //         const reader = new FileReader();
+    //         reader.onload = () => {
+    //             setSelectedImage(reader.result);
+    //         };
+    //         reader.readAsDataURL(file);
+    //     }
+    // };
     return (
-        <ContentContainer className="flex flex-wrap">
-            <main className="w-2/3 flex flex-wrap">
+        <ContentContainer className="flex flex-wrap ">
+            <Link
+                className="text-md font-medium text-blue-800 "
+                to={`/games/game/:gameid`}
+            >
+                Return to game page
+            </Link>
+            <main className=" flex flex-wrap justify-center">
                 <h2 className="text-2xl font-semibold text-white mb-4">
                     Create a Issue
                 </h2>
@@ -83,7 +107,7 @@ function Issue() {
                         <div className="mb-4">
                             <label
                                 htmlFor="name"
-                                className="block text-white text-sm font-medium mb-2"
+                                className="block text-white text-md font-bold mb-2"
                             >
                                 title
                             </label>
@@ -93,6 +117,10 @@ function Issue() {
                                 name="name"
                                 className="w-full px-3 py-2 rounded-md bg-gray-700 text-white focus:outline-none focus:ring focus:border-blue-300"
                                 placeholder="add a title"
+                                onChange={(event) =>
+                                    setTextIssue(event.target.value)
+                                }
+                                value={textIssue}
                             />
                         </div>
 
@@ -191,6 +219,10 @@ function Issue() {
                                 rows="4"
                                 className="w-full px-3 py-2 rounded-md bg-gray-700 text-white focus:outline-none focus:ring focus:border-blue-300"
                                 placeholder="add an description"
+                                onChange={(event) =>
+                                    setTextIssue(event.target.value)
+                                }
+                                value={textIssue}
                             ></textarea>
                         </div>
                         <section className="mb-4 flex flex-wrap ">
@@ -262,31 +294,52 @@ function Issue() {
                                 </label>
                             </div>
                         </section>
-
-                        <Link
-                            className="mb-2 text-md font-medium"
-                            to={`/games/game/:gameid`}
-                        >
-                            return to game page
-                        </Link>
+                        <div className="flex flex-wrap place-content-around m-4">
+                            <p className=" m-1 font-bold">Systeme</p>
+                        </div>
+                        <div className="flex flex-wrap place-content-around m-4">
+                            <div className="dropdown dropdown-bottom w-full hover:bg-neutral-focus btn m-1 bg-neutral border-neutral flex align-middle">
+                                <label tabIndex={0} className="cursor-pointer">
+                                    Systeme
+                                </label>
+                                <ul
+                                    tabIndex={0}
+                                    className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-full"
+                                >
+                                    <li>
+                                        <a>Regular</a>
+                                    </li>
+                                    <li>
+                                        <a>once</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div>
+                            <label
+                                htmlFor="message"
+                                className="block text-white text-sm font-medium mb-2"
+                            >
+                                How to replicate
+                            </label>
+                            <textarea
+                                id="message"
+                                name="message"
+                                rows="4"
+                                className="w-full px-3 py-2 rounded-md bg-gray-700 text-white focus:outline-none focus:ring focus:border-blue-300"
+                                placeholder="Describe how to reproduce your issue"
+                                onChange={(event) =>
+                                    setIssueInfos(event.target.value)
+                                }
+                                value={textIssue}
+                            ></textarea>
+                        </div>
+                        <div className="w-full flex justify-end my-4">
+                            <button className="btn btn-info w-1/6">send</button>
+                        </div>
                     </div>
                 </form>
             </main>
-            <section className="flex justify-end w-1/4">
-                <div className="flex">
-                    <img
-                        className="h-fit mb-8 "
-                        src={
-                            selectedImage ||
-                            'https://img.redbull.com/images/c_crop,w_1920,h_960,x_0,y_103,f_auto,q_auto/c_scale,w_1200/redbullcom/2020/6/5/ctsejxmdtw9inp8zqqqd/red-bull-campus-clutch-valorant-agents'
-                        }
-                        type="file"
-                        accept="image/*"
-                        onClick={handleImageUpload}
-                        alt="User Avatar"
-                    />
-                </div>
-            </section>
         </ContentContainer>
     );
 }

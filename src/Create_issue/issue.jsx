@@ -2,9 +2,9 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import ContentContainer from '../ContentContainer';
 import { toast } from 'react-toastify';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
-function Issue() {
+function CreateIssue() {
     const [IssueInfos, setIssueInfos] = useState({
         title: '',
         is_visibilible: true,
@@ -91,13 +91,32 @@ function Issue() {
     //     }
     // };
     return (
-        <ContentContainer className="flex flex-wrap ">
-            <Link
-                className="text-md font-medium text-blue-800 "
-                to={`/games/game/:gameid`}
-            >
-                Return to game page
-            </Link>
+        <ContentContainer
+            SidebarRight={
+                <div>
+                    <Link
+                        className="text-md font-medium text-blue-800"
+                        to={`/games/game/:gameid`}
+                    >
+                        Return to game page
+                    </Link>
+                    <img
+                        src="https://img.redbull.com/images/c_crop,w_1920,h_960,x_0,y_103,f_auto,q_auto/c_scale,w_1200/redbullcom/2020/6/5/ctsejxmdtw9inp8zqqqd/red-bull-campus-clutch-valorant-agents"
+                        alt="jeu"
+                    />
+                    <h2 className=" font-bold underline mb-2">
+                        Game description
+                    </h2>
+                    <p>
+                        Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                        Facere voluptates veniam ab tempora repellendus ducimus,
+                        animi, necessitatibus delectus aperiam quas deserunt
+                        repudiandae nulla nesciunt dolor, ea sed et laborum
+                        quod?
+                    </p>
+                </div>
+            }
+        >
             <main className=" flex flex-wrap justify-center">
                 <h2 className="text-2xl font-semibold text-white mb-4">
                     Create a Issue
@@ -115,7 +134,7 @@ function Issue() {
                                 type="text"
                                 id="name"
                                 name="name"
-                                className="w-full px-3 py-2 rounded-md bg-gray-700 text-white focus:outline-none focus:ring focus:border-blue-300"
+                                className=" w-2/3 px-3 py-2 rounded-md bg-gray-700 text-white focus:outline-none focus:ring focus:border-blue-300"
                                 placeholder="add a title"
                                 onChange={(event) =>
                                     setTextIssue(event.target.value)
@@ -214,7 +233,7 @@ function Issue() {
                                 Description
                             </label>
                             <textarea
-                                id="message"
+                                id="text"
                                 name="message"
                                 rows="4"
                                 className="w-full px-3 py-2 rounded-md bg-gray-700 text-white focus:outline-none focus:ring focus:border-blue-300"
@@ -323,7 +342,7 @@ function Issue() {
                                 How to replicate
                             </label>
                             <textarea
-                                id="message"
+                                id="replicate"
                                 name="message"
                                 rows="4"
                                 className="w-full px-3 py-2 rounded-md bg-gray-700 text-white focus:outline-none focus:ring focus:border-blue-300"
@@ -344,4 +363,4 @@ function Issue() {
     );
 }
 
-export default Issue;
+export default CreateIssue;

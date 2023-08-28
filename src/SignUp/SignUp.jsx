@@ -4,7 +4,7 @@ import ContentContainer from '../ContentContainer';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 
-function SignIn() {
+function SignUp() {
     const [userInfos, setUserInfos] = useState({
         username: '',
         email: '',
@@ -183,4 +183,4 @@ function SignIn() {
     );
 }
 
-export default SignIn;
+export default SignUp;

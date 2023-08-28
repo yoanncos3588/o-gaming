@@ -79,9 +79,9 @@ function Login() {
 
     return (
         <ContentContainer>
-            <section className="h-full gradient-form md:h-screen">
-                <div className="container py-12 px-6 h-full">
-                    <div className=" flex justify-center items-center flex-col h-full g-6 text-gray-800">
+            <section className="gradient-form">
+                <div className="container py-12 px-6">
+                    <div className=" flex justify-center items-center flex-col g-6 text-gray-800">
                         <div className="">
                             <div className="block bg-white shadow-lg rounded-lg">
                                 <div className="lg:flex lg:flex-wrap g-0">
@@ -121,7 +121,7 @@ function Login() {
 
                                                 <div className="text-center pt-1 mb-5 pb-1">
                                                     <button
-                                                        className=" mt-4 inline-block px-6 py-2.5 text-black font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-primary hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg transition duration-150 ease-in-out w-full mb-3"
+                                                        className=" mt-4 inline-block  btn btn-primary w-full mb-3"
                                                         type="submit"
                                                     >
                                                         Log in

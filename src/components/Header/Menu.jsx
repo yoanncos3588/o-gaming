@@ -1,8 +1,10 @@
 import { Link } from 'react-router-dom';
 
-import { isDeveloper } from '../../utils/userAuth';
+import { isDeveloper } from '../../utils/userStatus';
+import { useSelector } from 'react-redux';
 
 const Menu = () => {
+    const userData = useSelector((state) => state.user.userData);
     return (
         <>
             <li>
@@ -10,7 +12,7 @@ const Menu = () => {
                     All Games
                 </Link>
             </li>
-            {isDeveloper() && (
+            {isDeveloper(userData) && (
                 <li>
                     <Link to="#" className="btn-primary font-bold">
                         Add Game

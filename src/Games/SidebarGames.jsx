@@ -1,15 +1,15 @@
+import axios from 'axios';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 export const SidebarGames = () => {
-    const category = [
-        { id: 0, name: 'Action' },
-        { id: 1, name: 'RPG' },
-        { id: 2, name: 'Sports' },
-        { id: 3, name: 'Simulation' },
+    // const [categories, setCategories] = useState([]);
+    const categories = [
+        { id: 1, name: 'fps' },
+        { id: 2, name: 'sport' },
     ];
     const getYearsList = () => {
         const currentYear = new Date().getFullYear();
-        console.log(currentYear);
         let startingYear = 2000;
         const years = [];
         while (startingYear <= currentYear) {
@@ -17,6 +17,21 @@ export const SidebarGames = () => {
         }
         return years.reverse();
     };
+
+    const getCategories = async () => {
+        console.log('cat');
+        try {
+            const res = await axios.get('http://localhost:3000/categories');
+            console.log(res.data.categories);
+            return res.data.categories;
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    // useEffect(() => {
+    //     setCategories(getCategories());
+    // }, [categories]);
 
     return (
         <>
@@ -31,7 +46,7 @@ export const SidebarGames = () => {
                         Genres
                     </span>
                     <ul className="mb-6">
-                        {category.map((c) => (
+                        {categories.map((c) => (
                             <li key={c.id} className="lg:mb-2 mb-4">
                                 <Link to={'#'} className="hover:underline">
                                     {c.name}

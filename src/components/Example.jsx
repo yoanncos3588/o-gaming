@@ -1,5 +1,5 @@
 import ContentContainer from './ContentContainer';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 
 /**
  * Example of page using template contentcontainer

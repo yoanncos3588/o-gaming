@@ -1,11 +1,10 @@
 import { useEffect } from 'react';
-import Login from './Login/Login';
+import Create_game from './Games/Create_game';
 import { Route, Routes } from 'react-router-dom';
 import Example from './Example';
+import Games from './Games/Games';
+import Game from './Game/Game';
 import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.min.css';
-import Games from '../Games/Games';
-import SignUp from '../SignUp/SignUp';
 
 function App() {
     /** DaisyUI Theme */
@@ -15,11 +14,11 @@ function App() {
     return (
         <>
             <ToastContainer />
-            <Games />
             <Routes>
-                <Route path="/login" element={<Login />} />
-                <Route path="/signup" element={<SignUp />} />
+                <Route path="/" element={<Games />} />
                 <Route path="/example" element={<Example />} />
+                <Route path="/create-game" element={<Create_game />} />
+                <Route path="/game/" element={<Game />} />
             </Routes>
         </>
     );

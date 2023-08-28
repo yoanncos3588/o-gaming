@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import Category from '../Category';
-import { ReactComponent as IconTools } from '../assets/icons/tools.svg';
+import { ReactComponent as IconTools } from '../../assets/icons/tools.svg';
 
 export const IssuesListItem = () => {
     return (

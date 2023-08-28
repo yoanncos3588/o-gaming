@@ -8,9 +8,9 @@ export const initialState = {
         email: '',
         password: '',
     },
-    userId: 1,
+    userId: null,
     username: null,
-    role: 'gamer',
+    role: null,
     loginErrorMessage: '',
 };
 

@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import Games from './Games/Create_game';
 import { Route, Routes } from 'react-router-dom';
 import Example from './Example';
 import Games from './Games/Games';
@@ -11,6 +12,7 @@ function App() {
     }, []);
     return (
         <Routes>
+            <Route path="/games" element={<Games />} />
             <Route path="/example" element={<Example />} />
             <Route path="/games" element={<Games />} />
             <Route path="/game/" element={<Game />} />

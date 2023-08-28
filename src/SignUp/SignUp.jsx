@@ -2,7 +2,7 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import ContentContainer from '../ContentContainer';
 import { toast } from 'react-toastify';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 function SignIn() {
     const [userInfos, setUserInfos] = useState({
@@ -14,10 +14,10 @@ function SignIn() {
     });
 
     const navigate = useNavigate();
+    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
         // redirect user on success
-        console.log('useeffect');
         toast.onChange((payload) => {
             if (payload.status === 'removed' && payload.id === 'succesToast') {
                 navigate('/login');
@@ -25,6 +25,10 @@ function SignIn() {
         });
     }, [navigate]);
 
+    /**
+     * Handle input change on form
+     * @param {*} e
+     */
     const handleChange = (e) => {
         setUserInfos({
             ...userInfos,
@@ -32,6 +36,10 @@ function SignIn() {
         });
     };
 
+    /**
+     * Handle user submit signup form
+     * @param {*} e
+     */
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
@@ -44,7 +52,9 @@ function SignIn() {
                     theme: 'colored',
                 });
             } else {
+                setIsLoading(true);
                 toast.success('Succes, you will be redirect…', {
+                    autoClose: 2000,
                     toastId: 'succesToast',
                     theme: 'colored',
                 });
@@ -61,7 +71,7 @@ function SignIn() {
         <ContentContainer>
             <section className="gradient-form">
                 <div className="container py-12 px-6">
-                    <div className=" flex justify-center items-center flex-col h-full g-6 text-gray-800">
+                    <div className="flex justify-center items-center flex-col g-6 text-gray-800">
                         <div className="">
                             <div className="block bg-white shadow-lg rounded-lg">
                                 <div className="lg:flex lg:flex-wrap g-0">
@@ -127,49 +137,73 @@ function SignIn() {
                                                         name="confirmPassword"
                                                     />
                                                 </div>
-                                                <div className="join w-80 flex justify-center">
+                                                <div className="join w-full">
                                                     <input
-                                                        className="join-horizontal btn bg-white  text-black hover:text-white focus:bg-black border-gray-300"
+                                                        className={`join-item btn ${
+                                                            userInfos.role_id !==
+                                                                '1' &&
+                                                            'btn-outline'
+                                                        } !w-1/2`}
                                                         type="radio"
-                                                        name="role"
+                                                        name="role_id"
                                                         aria-label="Developpeur"
                                                         value={1}
                                                         onChange={handleChange}
                                                         checked={
-                                                            userInfos.role === 1
+                                                            userInfos.role_id ===
+                                                            1
                                                         }
                                                     />
                                                     <input
-                                                        className="join-horizontal btn bg-white mb-2 text-black hover:text-white border-gray-300"
+                                                        className={`join-item btn ${
+                                                            userInfos.role_id !==
+                                                                '2' &&
+                                                            'btn-outline'
+                                                        } !w-1/2`}
                                                         type="radio"
-                                                        name="role"
+                                                        name="role_id"
                                                         aria-label="Gamer"
                                                         value={2}
                                                         onChange={handleChange}
                                                         checked={
-                                                            userInfos.role === 2
+                                                            userInfos.role_id ===
+                                                            2
                                                         }
                                                     />
                                                 </div>
                                                 <div className="text-center pt-1 mb-5 pb-1">
-                                                    <button
-                                                        className="btn btn-primary mt-4 inline-block px-6 py-2.5 shadow-md hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg transition duration-150 ease-in-out w-full mb-3"
-                                                        type="submit"
-                                                    >
-                                                        Sign Up
-                                                    </button>
+                                                    {!isLoading ? (
+                                                        <button
+                                                            className="btn btn-primary mt-4 w-full mb-3"
+                                                            type="submit"
+                                                        >
+                                                            Sign Up
+                                                        </button>
+                                                    ) : (
+                                                        <button className="btn btn-primary mt-4 w-full mb-3">
+                                                            <span className="loading loading-spinner"></span>
+                                                            loading
+                                                        </button>
+                                                    )}
                                                 </div>
                                             </form>
                                             <div className="flex items-center justify-between pb-6 border-t-2 border-gray-300 pt-4">
                                                 <p className="mb-0 mr-2">
                                                     Do you have an account?
                                                 </p>
-                                                <button
-                                                    type="button"
-                                                    className="inline-block px-6 py-2 border-2 border-success text-success font-medium text-xs leading-tight uppercase rounded hover:bg-success hover:text-white focus:outline-none focus:ring-0 transition duration-150 ease-in-out"
+                                                <Link
+                                                    to={`${
+                                                        !isLoading
+                                                            ? '/login'
+                                                            : '#'
+                                                    }`}
+                                                    className={`${
+                                                        isLoading &&
+                                                        'btn-disabled'
+                                                    } btn btn-success btn-sm btn-outline`}
                                                 >
-                                                    Log In
-                                                </button>
+                                                    Log in
+                                                </Link>
                                             </div>
                                         </div>
                                     </div>

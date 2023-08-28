@@ -4,7 +4,9 @@ import { Route, Routes } from 'react-router-dom';
 import Example from './Example';
 import Games from './Games/Games';
 import Game from './Game/Game';
+import Login from './Login/Login';
 import { ToastContainer } from 'react-toastify';
+import SignUp from './SignUp/SignUp';
 
 function App() {
     /** DaisyUI Theme */
@@ -13,12 +15,13 @@ function App() {
     }, []);
     return (
         <>
-            <ToastContainer />
             <Routes>
                 <Route path="/" element={<Games />} />
                 <Route path="/example" element={<Example />} />
+                <Route path="/login" element={<Login />} />
                 <Route path="/create-game" element={<Create_game />} />
                 <Route path="/game/" element={<Game />} />
+                <Route path="/signup/" element={<SignUp />} />
             </Routes>
         </>
     );

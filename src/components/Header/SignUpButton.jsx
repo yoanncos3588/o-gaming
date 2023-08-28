@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 
 const SignUpButton = () => {
-    return <Link to="#">Sign up</Link>;
+    return <Link to="/signup">Sign up</Link>;
 };
 
 export default SignUpButton;

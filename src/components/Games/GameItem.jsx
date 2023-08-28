@@ -16,7 +16,7 @@ export const GameItem = ({
     return (
         <article className="grid gird-cols-1 lg:grid-cols-2 gap-6 bg-base-200 p-6">
             <div className="">
-                <Link to={`/games/game/${id}`}>
+                <Link to={`/game`}>
                     <img
                         src={image}
                         alt={`image cover of ${name}`}
@@ -24,10 +24,7 @@ export const GameItem = ({
                     />
                 </Link>
                 <h2 className=" text-xl font-black my-4">
-                    <Link
-                        to={`/games/game/${id}`}
-                        className="hover:underline uppercase"
-                    >
+                    <Link to={`/game`} className="hover:underline uppercase">
                         {name}
                     </Link>
                 </h2>

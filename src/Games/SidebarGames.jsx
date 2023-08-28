@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
-import { Link, NavLink, useLocation, useSearchParams } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 
 export const SidebarGames = () => {
     const [categories, setCategories] = useState([]);
@@ -22,7 +22,9 @@ export const SidebarGames = () => {
         const getCategories = async () => {
             try {
                 const res = await axios.get('http://localhost:3000/categories');
-                setCategories(res.data.categories);
+                if (res.status === 200) {
+                    setCategories(res.data.categories);
+                }
             } catch (error) {
                 console.log(error);
             }
@@ -69,7 +71,6 @@ export const SidebarGames = () => {
                         <li className="lg:mb-2 mb-4">
                             <Link
                                 onClick={(e) => handleChangeCategory(e, 'all')}
-                                // to={`/games?cat=${'all'}`}
                                 className={`hover:underline ${
                                     searchParams.get('cat') === 'all'
                                         ? 'text-accent'

@@ -4,7 +4,7 @@ function Profil() {
     return (
         <ContentContainer>
             <div className=" min-h-screen py-8 flex-auto">
-                <div className=" md:mx-auto max-w-6xl min-w-xs mx-3 bg-white shadow-md p-6 rounded-lg justify-center">
+                <div className=" md:mx-auto max-w-6xl min-w-xs mx-3 bg-neutral shadow-md p-6 rounded-lg justify-center">
                     <div className="flex items-center">
                         <img
                             className="lg:w-60 lg:h-60 md:w-48 md:h-48 w-32 h-32 rounded-full mr-4"

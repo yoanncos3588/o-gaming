@@ -1,7 +1,7 @@
 import { createReducer } from '@reduxjs/toolkit';
 import { createAction, createAsyncThunk } from '@reduxjs/toolkit';
 import { axiosInstance } from '../../utils/axios';
-import { decodeToken } from '../../utils/jwt-decode';
+import { decodeToken } from '../../utils/jwtDecode';
 
 export const initialState = {
     credentials: {

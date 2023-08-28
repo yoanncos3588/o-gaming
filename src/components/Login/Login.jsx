@@ -5,11 +5,12 @@ import {
     updateCredentials,
     updateLoginErrorMessage,
 } from '../../store/reducers/user';
-import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import ContentContainer from '../ContentContainer';
 
 function Login() {
+    const [isLoading, setIsLoading] = useState(false);
     const dispatch = useDispatch();
     const { email, password } = useSelector((state) => state.user.credentials);
     const username = useSelector((state) => state.user.userData?.username);
@@ -21,6 +22,7 @@ function Login() {
     /** useEffect for success on login */
     useEffect(() => {
         if (username) {
+            setIsLoading(true);
             toast.success(`Welcome back ${username}, you will be redirected…`, {
                 autoClose: 2000,
                 theme: 'colored',
@@ -73,6 +75,7 @@ function Login() {
             toast.error('Missing fields', {
                 theme: 'colored',
             });
+            return;
         }
         dispatch(login());
     };
@@ -120,23 +123,37 @@ function Login() {
                                                 </div>
 
                                                 <div className="text-center pt-1 mb-5 pb-1">
-                                                    <button
-                                                        className=" mt-4 inline-block  btn btn-primary w-full mb-3"
-                                                        type="submit"
-                                                    >
-                                                        Log in
-                                                    </button>
+                                                    {!isLoading ? (
+                                                        <button
+                                                            className=" mt-4 btn btn-primary w-full mb-3"
+                                                            type="submit"
+                                                        >
+                                                            Log in
+                                                        </button>
+                                                    ) : (
+                                                        <button className="btn btn-primary mt-4 w-full mb-3">
+                                                            <span className="loading loading-spinner"></span>
+                                                            loading
+                                                        </button>
+                                                    )}
                                                 </div>
                                                 <div className="flex items-center justify-between pb-6 border-t-2 border-gray-300 pt-4">
                                                     <p className="mb-0 mr-2">
                                                         Dont have an account?
                                                     </p>
-                                                    <button
-                                                        type="button"
-                                                        className="inline-block px-6 py-2 border-2 border-green-600 text-green-600 font-medium text-xs leading-tight uppercase rounded hover:bg-green-700 hover:text-white focus:outline-none focus:ring-0 transition duration-150 ease-in-out"
+                                                    <Link
+                                                        to={`${
+                                                            !isLoading
+                                                                ? '/signup'
+                                                                : '#'
+                                                        } `}
+                                                        className={`${
+                                                            isLoading &&
+                                                            'btn-disabled'
+                                                        } btn btn-outline btn-success btn-sm`}
                                                     >
-                                                        sign In
-                                                    </button>
+                                                        Sign up
+                                                    </Link>
                                                 </div>
                                             </form>
                                         </div>

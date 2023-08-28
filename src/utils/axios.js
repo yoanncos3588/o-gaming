@@ -7,9 +7,9 @@ export const axiosInstance = axios.create({
 
 /** Intercept request and add user token if exist to request header auth */
 axiosInstance.interceptors.request.use((config) => {
-    const user = JSON.parse(localStorage.getItem('user'));
-    if (user) {
-        config.headers.Authorization = `Bearer ${user.token}`;
+    const token = JSON.parse(localStorage.getItem('token'));
+    if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
 });

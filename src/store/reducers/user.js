@@ -8,9 +8,7 @@ export const initialState = {
         email: '',
         password: '',
     },
-    userId: 1,
-    username: null,
-    role: 'gamer',
+    userData: JSON.parse(localStorage.getItem('user')),
     loginErrorMessage: '',
 };
 
@@ -28,11 +26,13 @@ export const login = createAsyncThunk('user/login', async (_, thunkAPI) => {
         return thunkAPI.rejectWithValue(data);
     }
 
+    // get values from token and create new object after decode
+    // TODO GET USER FROM API WITH TOKEN IS BETTER THAN DECODE TOKEN
     const userData = decodeToken(data.token);
 
-    //store token in local storage
-    // TODO use token in same-site cookie
-    localStorage.setItem('user', JSON.stringify(data));
+    //store user data in local storage
+    localStorage.setItem('user', JSON.stringify(userData));
+    localStorage.setItem('token', JSON.stringify(data.token));
 
     return userData;
 });
@@ -45,10 +45,7 @@ const userReducer = createReducer(initialState, (builder) => {
             state.loginErrorMessage = '';
         })
         .addCase(login.fulfilled, (state, action) => {
-            //TODO add username when availabe
-            //state.username = action.payload.username;
-            state.userId = action.payload.userId;
-            if (state.role === '') state.role = action.payload.role;
+            state.userData = action.payload;
             state.credentials = { email: '', password: '' };
             state.loginErrorMessage = initialState.loginErrorMessage;
         })

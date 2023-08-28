@@ -137,13 +137,13 @@ function SignIn() {
                                                         name="confirmPassword"
                                                     />
                                                 </div>
-                                                <div className="join w-full">
+                                                <div className="join w-full flex-wrap">
                                                     <input
-                                                        className={`join-item btn ${
+                                                        className={`join-item btn btn-accent ${
                                                             userInfos.role_id !==
                                                                 '1' &&
                                                             'btn-outline'
-                                                        } !w-1/2`}
+                                                        } lg:!w-1/2 !w-full`}
                                                         type="radio"
                                                         name="role_id"
                                                         aria-label="Developpeur"
@@ -155,11 +155,11 @@ function SignIn() {
                                                         }
                                                     />
                                                     <input
-                                                        className={`join-item btn ${
+                                                        className={`join-item btn btn-accent ${
                                                             userInfos.role_id !==
                                                                 '2' &&
                                                             'btn-outline'
-                                                        } !w-1/2`}
+                                                        } lg:!w-1/2 !w-full`}
                                                         type="radio"
                                                         name="role_id"
                                                         aria-label="Gamer"

@@ -1,8 +1,9 @@
 import Menu from '../Header/Menu';
-import LoginButton from '../Header/LoginButton';
+import LoginLogOutButton from '../Header/LoginLogOutButton';
 import SignUpButton from '../Header/SignUpButton';
 import Logo from '../Logo';
 import { Link } from 'react-router-dom';
+import { isLoggedIn } from '../../utils/userAuth';
 
 const Drawer = () => {
     return (
@@ -15,13 +16,15 @@ const Drawer = () => {
                     </Link>
                 </div>
                 <ul>
-                    <li>
-                        <LoginButton />
-                    </li>
-                    <li>
-                        <SignUpButton />
-                    </li>
                     <Menu />
+                    <li>
+                        <LoginLogOutButton />
+                    </li>
+                    {!isLoggedIn && (
+                        <li>
+                            <SignUpButton />
+                        </li>
+                    )}
                 </ul>
             </div>
         </div>

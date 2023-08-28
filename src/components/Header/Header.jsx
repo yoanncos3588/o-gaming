@@ -1,9 +1,10 @@
 import Logo from '../Logo';
 import SearchBar from './SearchBar';
 import Menu from './Menu';
-import LoginButton from './LoginButton';
+import LoginLogOutButton from './LoginLogOutButton';
 import SignUpButton from './SignUpButton';
 import { ReactComponent as IconBurger } from '../../assets/icons/burger.svg';
+import { isDeveloper, isLoggedIn } from '../../utils/userAuth';
 
 const Header = () => {
     return (
@@ -20,14 +21,16 @@ const Header = () => {
                 </div>
             </div>
 
-            <div className="menu menu-horizontal hidden lg:flex">
+            <ul className="menu menu-horizontal hidden lg:flex">
                 <li>
-                    <LoginButton />
+                    <LoginLogOutButton />
                 </li>
-                <li>
-                    <SignUpButton />
-                </li>
-            </div>
+                {!isLoggedIn() && (
+                    <li>
+                        <SignUpButton />
+                    </li>
+                )}
+            </ul>
             <div className="flex-none lg:hidden">
                 <label
                     htmlFor="my-drawer-3"

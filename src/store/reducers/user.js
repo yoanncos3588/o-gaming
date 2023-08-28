@@ -8,9 +8,9 @@ export const initialState = {
         email: '',
         password: '',
     },
-    userId: undefined,
-    username: undefined,
-    role: undefined,
+    userId: 1,
+    username: null,
+    role: 'gamer',
     loginErrorMessage: '',
 };
 
@@ -48,7 +48,7 @@ const userReducer = createReducer(initialState, (builder) => {
             //TODO add username when availabe
             //state.username = action.payload.username;
             state.userId = action.payload.userId;
-            state.role = action.payload.role;
+            if (state.role === '') state.role = action.payload.role;
             state.credentials = { email: '', password: '' };
             state.loginErrorMessage = initialState.loginErrorMessage;
         })

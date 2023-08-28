@@ -1,18 +1,22 @@
 import { Link } from 'react-router-dom';
 
+import { isDeveloper } from '../../utils/userAuth';
+
 const Menu = () => {
     return (
         <>
             <li>
-                <Link to="#" className="font-bold">
+                <Link to="#" className="btn-primary font-bold">
                     All Games
                 </Link>
             </li>
-            <li>
-                <Link to="#" className="font-bold">
-                    Add Game
-                </Link>
-            </li>
+            {isDeveloper() && (
+                <li>
+                    <Link to="#" className="btn-primary font-bold">
+                        Add Game
+                    </Link>
+                </li>
+            )}
         </>
     );
 };

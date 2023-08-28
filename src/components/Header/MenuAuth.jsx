@@ -1,10 +1,11 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../../store/reducers/user';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { ReactComponent as UserCircleIcon } from '../../assets/icons/user.svg';
 
 export const MenuAuth = () => {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const user = useSelector((state) => state.user.userData);
 
     /**
@@ -14,6 +15,7 @@ export const MenuAuth = () => {
     const handleLogout = (e) => {
         e.preventDefault();
         dispatch(logout());
+        navigate('/');
     };
 
     return (

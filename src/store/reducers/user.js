@@ -61,7 +61,6 @@ const userReducer = createReducer(initialState, (builder) => {
             state.loginErrorMessage = action.payload;
         })
         .addCase(logout, (state) => {
-            console.log('logout action');
             state.userData = null;
             localStorage.removeItem('user');
             localStorage.removeItem('token');

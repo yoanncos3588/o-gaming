@@ -1,37 +1,37 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, NavLink, useLocation, useSearchParams } from 'react-router-dom';
 
 export const SidebarGames = () => {
-    // const [categories, setCategories] = useState([]);
-    const categories = [
-        { id: 1, name: 'fps' },
-        { id: 2, name: 'sport' },
-    ];
+    const [categories, setCategories] = useState([]);
+
+    const { search } = useLocation();
+    const categoryPath = new URLSearchParams(search).get('cat');
+
+    console.log(categoryPath);
+
     const getYearsList = () => {
         const currentYear = new Date().getFullYear();
         let startingYear = 2000;
         const years = [];
         while (startingYear <= currentYear) {
-            years.push(startingYear++);
+            years.unshift(startingYear++);
         }
-        return years.reverse();
+        years.unshift('All');
+        return years;
     };
 
-    const getCategories = async () => {
-        console.log('cat');
-        try {
-            const res = await axios.get('http://localhost:3000/categories');
-            console.log(res.data.categories);
-            return res.data.categories;
-        } catch (error) {
-            console.log(error);
-        }
-    };
-
-    // useEffect(() => {
-    //     setCategories(getCategories());
-    // }, [categories]);
+    useEffect(() => {
+        const getCategories = async () => {
+            try {
+                const res = await axios.get('http://localhost:3000/categories');
+                setCategories(res.data.categories);
+            } catch (error) {
+                console.log(error);
+            }
+        };
+        getCategories();
+    }, []);
 
     return (
         <>
@@ -43,12 +43,29 @@ export const SidebarGames = () => {
                 </div>
                 <div className="collapse-content">
                     <span className="font-bold mb-4 uppercase text-sm inline-block text-secondary">
-                        Genres
+                        Categories
                     </span>
                     <ul className="mb-6">
+                        <li className="lg:mb-2 mb-4">
+                            <Link
+                                to={`/games?cat=${'all'}`}
+                                className={`hover:underline ${
+                                    categoryPath === 'all' ? 'text-accent' : ''
+                                }`}
+                            >
+                                All
+                            </Link>
+                        </li>
                         {categories.map((c) => (
                             <li key={c.id} className="lg:mb-2 mb-4">
-                                <Link to={'#'} className="hover:underline">
+                                <Link
+                                    to={`/games?cat=${c.name.toLowerCase()}`}
+                                    className={`hover:underline ${
+                                        categoryPath === c.name.toLowerCase()
+                                            ? 'text-accent'
+                                            : ''
+                                    }`}
+                                >
                                     {c.name}
                                 </Link>
                             </li>

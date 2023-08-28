@@ -1,10 +1,8 @@
 import Logo from '../Logo';
 import SearchBar from './SearchBar';
 import Menu from './Menu';
-import LoginLogOutButton from './LoginLogOutButton';
-import SignUpButton from './SignUpButton';
 import { ReactComponent as IconBurger } from '../../assets/icons/burger.svg';
-import { isDeveloper, isLoggedIn } from '../../utils/userAuth';
+import { MenuAuth } from './MenuAuth';
 
 const Header = () => {
     return (
@@ -22,14 +20,7 @@ const Header = () => {
             </div>
 
             <ul className="menu menu-horizontal hidden lg:flex">
-                <li>
-                    <LoginLogOutButton />
-                </li>
-                {!isLoggedIn() && (
-                    <li>
-                        <SignUpButton />
-                    </li>
-                )}
+                <MenuAuth />
             </ul>
             <div className="flex-none lg:hidden">
                 <label

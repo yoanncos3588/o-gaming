@@ -27,7 +27,6 @@ export const login = createAsyncThunk('user/login', async (_, thunkAPI) => {
     }
 
     // get values from token and create new object after decode
-    // TODO GET USER FROM API WITH TOKEN IS BETTER THAN DECODE TOKEN
     const userData = decodeToken(data.token);
 
     //store user data in local storage
@@ -36,6 +35,8 @@ export const login = createAsyncThunk('user/login', async (_, thunkAPI) => {
 
     return userData;
 });
+
+export const logout = createAction('user/logout');
 
 const userReducer = createReducer(initialState, (builder) => {
     builder
@@ -58,6 +59,12 @@ const userReducer = createReducer(initialState, (builder) => {
         })
         .addCase(updateLoginErrorMessage, (state, action) => {
             state.loginErrorMessage = action.payload;
+        })
+        .addCase(logout, (state) => {
+            console.log('logout action');
+            state.userData = null;
+            localStorage.removeItem('user');
+            localStorage.removeItem('token');
         });
 });
 

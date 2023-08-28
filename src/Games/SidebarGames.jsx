@@ -22,7 +22,10 @@ export const SidebarGames = () => {
         const getCategories = async () => {
             try {
                 const res = await axios.get('http://localhost:3000/categories');
-                if (res.status === 200) {
+                if (
+                    res.status === 200 ||
+                    !Object.prototype.hasOwnProperty.call(res.data, 'error')
+                ) {
                     setCategories(res.data.categories);
                 }
             } catch (error) {

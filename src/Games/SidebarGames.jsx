@@ -4,11 +4,7 @@ import { Link, NavLink, useLocation, useSearchParams } from 'react-router-dom';
 
 export const SidebarGames = () => {
     const [categories, setCategories] = useState([]);
-
-    const { search } = useLocation();
-    const categoryPath = new URLSearchParams(search).get('cat');
-
-    console.log(categoryPath);
+    const [searchParams, setSearchParams] = useSearchParams();
 
     const getYearsList = () => {
         const currentYear = new Date().getFullYear();
@@ -21,6 +17,7 @@ export const SidebarGames = () => {
         return years;
     };
 
+    // get categories from api
     useEffect(() => {
         const getCategories = async () => {
             try {
@@ -32,6 +29,29 @@ export const SidebarGames = () => {
         };
         getCategories();
     }, []);
+
+    /**
+     * handle click on filter by category
+     * @param {string} categoryName
+     */
+    const handleChangeCategory = (e, categoryName) => {
+        e.preventDefault();
+        setSearchParams((prev) => {
+            prev.set('cat', categoryName.toLowerCase());
+            return prev;
+        });
+    };
+
+    /**
+     * handle change on filter by year
+     * @param {Event} e
+     */
+    const handleSelectYear = (e) => {
+        setSearchParams((prev) => {
+            prev.set('year', e.target.value.toLowerCase());
+            return prev;
+        });
+    };
 
     return (
         <>
@@ -48,9 +68,12 @@ export const SidebarGames = () => {
                     <ul className="mb-6">
                         <li className="lg:mb-2 mb-4">
                             <Link
-                                to={`/games?cat=${'all'}`}
+                                onClick={(e) => handleChangeCategory(e, 'all')}
+                                // to={`/games?cat=${'all'}`}
                                 className={`hover:underline ${
-                                    categoryPath === 'all' ? 'text-accent' : ''
+                                    searchParams.get('cat') === 'all'
+                                        ? 'text-accent'
+                                        : ''
                                 }`}
                             >
                                 All
@@ -59,9 +82,12 @@ export const SidebarGames = () => {
                         {categories.map((c) => (
                             <li key={c.id} className="lg:mb-2 mb-4">
                                 <Link
-                                    to={`/games?cat=${c.name.toLowerCase()}`}
+                                    onClick={(e) =>
+                                        handleChangeCategory(e, c.name)
+                                    }
                                     className={`hover:underline ${
-                                        categoryPath === c.name.toLowerCase()
+                                        searchParams.get('cat') ===
+                                        c.name.toLowerCase()
                                             ? 'text-accent'
                                             : ''
                                     }`}
@@ -75,7 +101,10 @@ export const SidebarGames = () => {
                         Release date
                     </span>{' '}
                     <form action="">
-                        <select className="select select-bordered w-full">
+                        <select
+                            className="select select-bordered w-full"
+                            onChange={handleSelectYear}
+                        >
                             {getYearsList().map((y) => (
                                 <option key={y}>{y}</option>
                             ))}

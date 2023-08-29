@@ -35,7 +35,7 @@ export const MenuAuth = () => {
             </li>
             {!userData && (
                 <li>
-                    <Link to="#">Sign up</Link>
+                    <Link to="/signup">Sign up</Link>
                 </li>
             )}
         </>

@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import Login from './Login/Login';
+import Login from './components/Login/Login';
 import { Route, Routes } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';

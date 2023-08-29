@@ -33,7 +33,7 @@ const ProtectedRoute = ({ role = '', id = null }) => {
                 replace: true,
             });
         }
-    });
+    }, []);
 
     return <Outlet />;
 };

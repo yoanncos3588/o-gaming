@@ -15,10 +15,10 @@ function App() {
             <ToastContainer />
             <Routes>
                 <Route path="/" element={'homepage'} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/signup" element={<SignUp />} />
                 <Route element={<ProtectedRoute role={'visitor'} />}>
                     {/* {Les routes que pour les visiteurs vont ici} */}
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/signup" element={<SignUp />} />
                 </Route>
                 <Route element={<ProtectedRoute />}>
                     {/* {Les routes que pour les membres connectés vont ici} */}

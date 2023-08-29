@@ -8,25 +8,59 @@ import axios from 'axios';
 
 function Games() {
     const [games, setGames] = useState([]);
+    const [filteredGames, setFilteredGames] = useState([]);
 
-    const authorTestToDelete = {
-        id: 0,
-        username: 'DevTeam',
+    const [categoryFilter, setCategoryFilter] = useState('all');
+    const [dateFilter, setDateFilter] = useState('all');
+
+    // to delete
+    const addfakecategorie = (games) => {
+        games.forEach((g) => {
+            console.log(g);
+            g.categories = [
+                {
+                    id: 1,
+                    name: 'Sport',
+                    color: 'red',
+                },
+            ];
+            if (g.id === 2) {
+                g.categories = [
+                    {
+                        id: 1,
+                        name: 'RPG',
+                        color: 'red',
+                    },
+                ];
+            }
+            if (g.id === 1) {
+                g.categories = [
+                    {
+                        id: 1,
+                        name: 'Action',
+                        color: 'red',
+                    },
+                    {
+                        id: 1,
+                        name: 'RPG',
+                        color: 'red',
+                    },
+                ];
+            }
+            if (g.id === 3) {
+                g.categories = [
+                    {
+                        id: 1,
+                        name: 'Action',
+                        color: 'red',
+                    },
+                ];
+            }
+        });
+        return games;
     };
 
-    const categoriesTestToDelete = [
-        {
-            id: 1,
-            name: 'FPS',
-            color: 'red',
-        },
-        {
-            id: 2,
-            name: 'Action',
-            color: 'red',
-        },
-    ];
-
+    /** fetch games */
     useEffect(() => {
         const fetchGames = async () => {
             try {
@@ -42,8 +76,8 @@ function Games() {
                         }
                     );
                 }
-                console.log(res.data.games);
-                setGames(res.data.games);
+                // setGames(res.data.games);
+                setGames(addfakecategorie(res.data.games));
                 return res.data.games;
             } catch (error) {
                 console.log(error);
@@ -51,27 +85,85 @@ function Games() {
         };
         fetchGames();
     }, []);
+
+    // filter games
+    useEffect(() => {
+        /**
+         * Filter games by category name
+         * @param {array} games an array of games object containing categories prop
+         * @returns {array} filtered result
+         */
+        const filterByCategory = (games) => {
+            if (categoryFilter === 'all') {
+                return false;
+            }
+            const list = games.filter((game) => {
+                console.log(game);
+                return game.categories.some(
+                    (item) =>
+                        item.name.toLowerCase() === categoryFilter.toLowerCase()
+                );
+            });
+            return list;
+        };
+        let result = filterByCategory(games);
+        setFilteredGames(result);
+    }, [categoryFilter, games]);
+
     return (
-        <ContentContainer SidebarLeft={<SidebarGames />}>
+        <ContentContainer
+            SidebarLeft={
+                <SidebarGames
+                    setCategoryFilter={setCategoryFilter}
+                    setDateFilter={setDateFilter}
+                />
+            }
+        >
             <h1 className="text-3xl font-bold mb-6">
                 Games trending right now
             </h1>
             <ul>
-                {games.map((g) => (
-                    <li className="mb-6" key={g.id}>
-                        <GameItem
-                            id={g.id}
-                            name={g.name}
-                            image={g.image}
-                            publisher={authorTestToDelete}
-                            realeaseDate={g.release_date}
-                            description={g.description}
-                            categories={categoriesTestToDelete}
-                            totalIssues={102}
-                            totalSuggestions={44}
-                        />
-                    </li>
-                ))}
+                {categoryFilter !== 'all' || dateFilter !== 'all' ? (
+                    filteredGames.length > 0 ? (
+                        filteredGames.map((g) => (
+                            <li className="mb-6" key={g.id}>
+                                <GameItem
+                                    id={g.id}
+                                    name={g.name}
+                                    image={g.image}
+                                    publisher={g.author}
+                                    publisherId={g.user_id}
+                                    realeaseDate={g.release_date}
+                                    description={g.description}
+                                    categories={g.categories}
+                                    totalIssues={102}
+                                    totalSuggestions={44}
+                                />
+                            </li>
+                        ))
+                    ) : (
+                        <p className=" text-xl font-bold opacity-40">
+                            No result found
+                        </p>
+                    )
+                ) : (
+                    games.map((g) => (
+                        <li className="mb-6" key={g.id}>
+                            <GameItem
+                                id={g.id}
+                                name={g.name}
+                                image={g.image}
+                                publisher={g.author}
+                                publisherId={g.user_id}
+                                realeaseDate={g.release_date}
+                                description={g.description}
+                                categories={g.categories}
+                                totalIssues={102}
+                                totalSuggestions={44}
+                            />
+                        </li>
+                    ))
+                )}
             </ul>
         </ContentContainer>
     );

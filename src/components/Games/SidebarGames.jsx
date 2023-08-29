@@ -2,7 +2,7 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 
-export const SidebarGames = () => {
+export const SidebarGames = ({ setCategoryFilter, setDateFilter }) => {
     const [categories, setCategories] = useState([]);
     const [searchParams, setSearchParams] = useSearchParams();
 
@@ -41,6 +41,7 @@ export const SidebarGames = () => {
      */
     const handleChangeCategory = (e, categoryName) => {
         e.preventDefault();
+        setCategoryFilter(categoryName);
         setSearchParams((prev) => {
             prev.set('cat', categoryName.toLowerCase());
             return prev;
@@ -52,6 +53,7 @@ export const SidebarGames = () => {
      * @param {Event} e
      */
     const handleSelectYear = (e) => {
+        setDateFilter(e.target.value.toLowerCase());
         setSearchParams((prev) => {
             prev.set('year', e.target.value.toLowerCase());
             return prev;

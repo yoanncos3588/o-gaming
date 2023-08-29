@@ -8,6 +8,7 @@ export const GameItem = ({
     name,
     image,
     publisher,
+    publisherId,
     realeaseDate,
     description,
     categories,
@@ -23,8 +24,6 @@ export const GameItem = ({
         const newDate = new Date(date);
         return newDate.toISOString().split('T')[0];
     };
-
-    formatDate(realeaseDate);
 
     return (
         <article className="grid gird-cols-1 lg:grid-cols-2 gap-6 bg-base-200 p-6">
@@ -48,10 +47,10 @@ export const GameItem = ({
                     <span className="">Publisher : </span>
                     <span>
                         <Link
-                            to={`/user/${publisher.username.toLowerCase()}`}
+                            to={`/user/${publisher.toLowerCase()}`}
                             className="underline"
                         >
-                            {publisher.username}
+                            {publisher}
                         </Link>
                     </span>
                 </div>
@@ -101,7 +100,7 @@ GameItem.propTypes = {
     id: PropTypes.number,
     name: PropTypes.string,
     image: PropTypes.string,
-    publisher: PropTypes.object,
+    publisher: PropTypes.string,
     realeaseDate: PropTypes.string,
     description: PropTypes.string,
     categories: PropTypes.array,

@@ -1,9 +1,8 @@
 import Logo from '../Logo';
 import SearchBar from './SearchBar';
 import Menu from './Menu';
-import LoginButton from './LoginButton';
-import SignUpButton from './SignUpButton';
-import { ReactComponent as IconBurger } from '../assets/icons/burger.svg';
+import { ReactComponent as IconBurger } from '../../assets/icons/burger.svg';
+import { MenuAuth } from './MenuAuth';
 
 const Header = () => {
     return (
@@ -20,14 +19,9 @@ const Header = () => {
                 </div>
             </div>
 
-            <div className="menu menu-horizontal hidden lg:flex">
-                <li>
-                    <LoginButton />
-                </li>
-                <li>
-                    <SignUpButton />
-                </li>
-            </div>
+            <ul className="menu menu-horizontal hidden lg:flex">
+                <MenuAuth />
+            </ul>
             <div className="flex-none lg:hidden">
                 <label
                     htmlFor="my-drawer-3"

@@ -135,7 +135,15 @@ function Games() {
             }
         >
             <h1 className="text-3xl font-bold mb-6">
-                Games trending right now
+                {categoryFilter !== 'all'
+                    ? `${categoryFilter} games ${
+                          dateFilter !== 'all' ? `in ${dateFilter}` : ''
+                      }`
+                    : `Games trending ${
+                          dateFilter === 'all'
+                              ? 'right now'
+                              : `in ${dateFilter}`
+                      }`}
             </h1>
             <ul>
                 {categoryFilter !== 'all' || dateFilter !== 'all' ? (

@@ -7,6 +7,7 @@ export const GameItem = ({
     name,
     image,
     publisher,
+    publisherId,
     realeaseDate,
     description,
     categories,
@@ -44,10 +45,7 @@ export const GameItem = ({
                 <div className="text-sm my-2">
                     <span className="">Publisher : </span>
                     <span>
-                        <Link
-                            to={`/user/${publisher.toLowerCase()}`}
-                            className="underline"
-                        >
+                        <Link to={`/user/${publisherId}`} className="underline">
                             {publisher}
                         </Link>
                     </span>
@@ -99,6 +97,7 @@ GameItem.propTypes = {
     name: PropTypes.string,
     image: PropTypes.string,
     publisher: PropTypes.string,
+    publisherId: PropTypes.number,
     realeaseDate: PropTypes.string,
     description: PropTypes.string,
     categories: PropTypes.array,

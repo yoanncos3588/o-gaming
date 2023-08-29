@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
 export const SidebarGames = ({ setCategoryFilter, setDateFilter }) => {
     const [categories, setCategories] = useState([]);
@@ -120,4 +121,9 @@ export const SidebarGames = ({ setCategoryFilter, setDateFilter }) => {
             </div>
         </>
     );
+};
+
+SidebarGames.propTypes = {
+    setCategoryFilter: PropTypes.func,
+    setDateFilter: PropTypes.func,
 };

@@ -121,7 +121,6 @@ function Games() {
             return list;
         };
         let result = filterByCategory(games);
-        console.log(result);
         result = filterByDate(result);
         setFilteredGames(result);
     }, [categoryFilter, games, dateFilter]);

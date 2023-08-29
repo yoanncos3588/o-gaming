@@ -4,11 +4,9 @@ import PropTypes from 'prop-types';
 import placeholder from '/placeholder.jpg';
 
 export const GameItem = ({
-    id,
     name,
     image,
     publisher,
-    publisherId,
     realeaseDate,
     description,
     categories,

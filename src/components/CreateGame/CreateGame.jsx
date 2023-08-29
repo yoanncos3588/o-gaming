@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 import Select from 'react-select';
-function Create_game() {
+function CreateGame() {
     const [selectedImage, setSelectedImage] = useState(null);
 
     const handleImageUpload = (event) => {
@@ -211,4 +211,4 @@ function Create_game() {
     );
 }
 
-export default Create_game;
+export default CreateGame;

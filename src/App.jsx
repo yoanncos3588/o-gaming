@@ -1,7 +1,9 @@
 import { useEffect } from 'react';
-import Games from './Games/Create_game';
+import Login from './components/Login/Login';
 import { Route, Routes } from 'react-router-dom';
-import Example from './Example';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.min.css';
+import CreateGame from './components/CreateGame/CreateGame';
 
 function App() {
     /** DaisyUI Theme */
@@ -9,10 +11,14 @@ function App() {
         document.querySelector('html')?.setAttribute('data-theme', 'business');
     }, []);
     return (
-        <Routes>
-            <Route path="/games" element={<Games />} />
-            <Route path="/example" element={<Example />} />
-        </Routes>
+        <>
+            <ToastContainer />
+            <Routes>
+                <Route path="/" />
+                <Route path="/login" element={<Login />} />
+                <Route path="/create-game" element={<CreateGame />} />
+            </Routes>
+        </>
     );
 }
 

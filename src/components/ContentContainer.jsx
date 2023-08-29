@@ -6,11 +6,13 @@ const ContentContainer = ({
     SidebarRight = null,
 }) => {
     return (
-        <div className="container grid grid-cols-12 gap-4 mx-auto h-full p-4 auto-rows-min">
+        <main className="container grid grid-cols-12 lg:gap-16 gap-8 mx-auto h-full px-4 lg:py-16 py-4 auto-rows-min">
             {SidebarLeft && (
-                <div className="col-span-12 lg:col-span-4">{SidebarLeft}</div>
+                <section className="col-span-12 lg:col-span-4">
+                    {SidebarLeft}
+                </section>
             )}
-            <div
+            <section
                 className={`col-span-12 order-2 ${
                     SidebarRight || SidebarLeft
                         ? 'lg:col-span-8'
@@ -18,13 +20,13 @@ const ContentContainer = ({
                 }`}
             >
                 {children}
-            </div>
+            </section>
             {SidebarRight && (
-                <div className="col-span-12 lg:col-span-4 lg:order-3 order-1">
+                <section className="col-span-12 lg:col-span-4 lg:order-3 order-1">
                     {SidebarRight}
-                </div>
+                </section>
             )}
-        </div>
+        </main>
     );
 };
 

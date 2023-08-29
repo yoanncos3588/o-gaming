@@ -3,9 +3,9 @@ export const isLoggedIn = (userData) => {
 };
 
 export const isDeveloper = (userData) => {
-    return userData?.role === 'developer' && isLoggedIn();
+    return userData?.role === 'developer';
 };
 
 export const isGamer = (userData) => {
-    return userData?.role === 'gamer' && isLoggedIn();
+    return userData?.role === 'gamer';
 };

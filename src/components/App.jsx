@@ -1,9 +1,9 @@
 import { useEffect } from 'react';
+import Login from './Login/Login';
 import { Route, Routes } from 'react-router-dom';
-import Example from './Example';
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
-import Issue from './Create_issue/issue';
+import Issue from './CreateIssue/issue';
 
 function App() {
     /** DaisyUI Theme */
@@ -14,8 +14,9 @@ function App() {
         <>
             <ToastContainer />
             <Routes>
-                <Route path="/CreateIssue" element={<Issue />} />
-                <Route path="/example" element={<Example />} />
+                <Route path="/" />
+                <Route path="/login" element={<Login />} />
+                <Route path="/create-issue" element={<Issue />} />
             </Routes>
         </>
     );

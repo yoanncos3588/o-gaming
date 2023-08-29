@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
+import Login from './Login/Login';
 import { Route, Routes } from 'react-router-dom';
-import Example from './Example';
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
 
 function App() {
@@ -13,7 +13,8 @@ function App() {
         <>
             <ToastContainer />
             <Routes>
-                <Route path="/example" element={<Example />} />
+                <Route path="/" />
+                <Route path="/login" element={<Login />} />
             </Routes>
         </>
     );

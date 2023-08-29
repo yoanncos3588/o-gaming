@@ -1,74 +1,77 @@
+import { useEffect, useState } from 'react';
 import ContentContainer from '../ContentContainer';
 import { GameItem } from './GameItem';
 import { SidebarGames } from './SidebarGames';
+import { toast } from 'react-toastify';
+
+import axios from 'axios';
 
 function Games() {
+    const [games, setGames] = useState([]);
+
+    const authorTestToDelete = {
+        id: 0,
+        username: 'DevTeam',
+    };
+
+    const categoriesTestToDelete = [
+        {
+            id: 1,
+            name: 'FPS',
+            color: 'red',
+        },
+        {
+            id: 2,
+            name: 'Action',
+            color: 'red',
+        },
+    ];
+
+    useEffect(() => {
+        const fetchGames = async () => {
+            try {
+                const res = await axios.get('http://localhost:3000/games');
+                if (
+                    res.status === 500 ||
+                    Object.prototype.hasOwnProperty.call(res.data, 'error')
+                ) {
+                    toast.error(
+                        'An unexpected error has occured, try to refresh',
+                        {
+                            theme: 'colored',
+                        }
+                    );
+                }
+                console.log(res.data.games);
+                setGames(res.data.games);
+                return res.data.games;
+            } catch (error) {
+                console.log(error);
+            }
+        };
+        fetchGames();
+    }, []);
     return (
         <ContentContainer SidebarLeft={<SidebarGames />}>
             <h1 className="text-3xl font-bold mb-6">
                 Games trending right now
             </h1>
             <ul>
-                <li className="mb-6">
-                    <GameItem
-                        id={1}
-                        name={'The Elder Scrolls V Skyrim Special Edition'}
-                        image={'https://placehold.co/600x300'}
-                        publisher={{ id: 0, name: 'Bethesda Softwokrs' }}
-                        realeaseDate={'12/02/2014'}
-                        totalIssues={133}
-                        totalSuggestions={12}
-                        description={
-                            'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc ac aliquet mi. Fusce dictum facilisis enim in mollis. Nam eu diam eu diam tristique feugiat. Praesent risus orci, accumsan sit amet dui at, scelerisque sollicitudin sem. Pellentesque gravida ante sed magna sodales, eu feugiat tortor vestibulum. Etiam orci felis, rhoncus a libero sit amet, interdum dictum odio. Ut sagittis nulla dolor, eget auctor ligula pellentesque vel. Maecenas accumsan enim ac neque commodo, sed tincidunt nibh fermentum.'
-                        }
-                        categories={['FPS', 'Action']}
-                    />
-                </li>
-                <li className="mb-6">
-                    <GameItem
-                        id={1}
-                        name={'The Elder Scrolls V Skyrim Special Edition'}
-                        image={'https://placehold.co/600x300'}
-                        publisher={{ id: 0, name: 'Bethesda Softwokrs' }}
-                        realeaseDate={'12/02/2014'}
-                        totalIssues={133}
-                        totalSuggestions={12}
-                        description={
-                            'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc ac aliquet mi. Fusce dictum facilisis enim in mollis. Nam eu diam eu diam tristique feugiat. Praesent risus orci, accumsan sit amet dui at, scelerisque sollicitudin sem. Pellentesque gravida ante sed magna sodales, eu feugiat tortor vestibulum. Etiam orci felis, rhoncus a libero sit amet, interdum dictum odio. Ut sagittis nulla dolor, eget auctor ligula pellentesque vel. Maecenas accumsan enim ac neque commodo, sed tincidunt nibh fermentum.'
-                        }
-                        categories={['FPS', 'Action']}
-                    />
-                </li>
-                <li className="mb-6">
-                    <GameItem
-                        id={1}
-                        name={'The Elder Scrolls V Skyrim Special Edition'}
-                        image={'https://placehold.co/600x300'}
-                        publisher={{ id: 0, name: 'Bethesda Softwokrs' }}
-                        realeaseDate={'12/02/2014'}
-                        totalIssues={133}
-                        totalSuggestions={12}
-                        description={
-                            'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc ac aliquet mi. Fusce dictum facilisis enim in mollis. Nam eu diam eu diam tristique feugiat. Praesent risus orci, accumsan sit amet dui at, scelerisque sollicitudin sem. Pellentesque gravida ante sed magna sodales, eu feugiat tortor vestibulum. Etiam orci felis, rhoncus a libero sit amet, interdum dictum odio. Ut sagittis nulla dolor, eget auctor ligula pellentesque vel. Maecenas accumsan enim ac neque commodo, sed tincidunt nibh fermentum.'
-                        }
-                        categories={['FPS', 'Action']}
-                    />
-                </li>
-                <li className="mb-6">
-                    <GameItem
-                        id={1}
-                        name={'The Elder Scrolls V Skyrim Special Edition'}
-                        image={'https://placehold.co/600x300'}
-                        publisher={{ id: 0, name: 'Bethesda Softwokrs' }}
-                        realeaseDate={'12/02/2014'}
-                        totalIssues={133}
-                        totalSuggestions={12}
-                        description={
-                            'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc ac aliquet mi. Fusce dictum facilisis enim in mollis. Nam eu diam eu diam tristique feugiat. Praesent risus orci, accumsan sit amet dui at, scelerisque sollicitudin sem. Pellentesque gravida ante sed magna sodales, eu feugiat tortor vestibulum. Etiam orci felis, rhoncus a libero sit amet, interdum dictum odio. Ut sagittis nulla dolor, eget auctor ligula pellentesque vel. Maecenas accumsan enim ac neque commodo, sed tincidunt nibh fermentum.'
-                        }
-                        categories={['FPS', 'Action']}
-                    />
-                </li>
+                {games.map((g) => (
+                    <li className="mb-6" key={g.id}>
+                        <GameItem
+                            id={g.id}
+                            name={g.name}
+                            image={g.image}
+                            publisher={authorTestToDelete}
+                            realeaseDate={g.release_date}
+                            description={g.description}
+                            categories={categoriesTestToDelete}
+                            totalIssues={102}
+                            totalSuggestions={44}
+                        />
+                    </li>
+                ))}
             </ul>
         </ContentContainer>
     );

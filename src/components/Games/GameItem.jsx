@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import Category from '../Category';
 import PropTypes from 'prop-types';
+import placeholder from '/placeholder.jpg';
 
 export const GameItem = ({
     id,
@@ -8,24 +9,36 @@ export const GameItem = ({
     image,
     publisher,
     realeaseDate,
-    totalIssues,
-    totalSuggestions,
     description,
     categories,
+    totalIssues,
+    totalSuggestions,
 }) => {
+    /**
+     * Format string to date yyyy-mm-dd
+     * @param {string} date
+     * @returns {string} date with format yyyy-mm-dd
+     */
+    const formatDate = (date) => {
+        const newDate = new Date(date);
+        return newDate.toISOString().split('T')[0];
+    };
+
+    formatDate(realeaseDate);
+
     return (
         <article className="grid gird-cols-1 lg:grid-cols-2 gap-6 bg-base-200 p-6">
             <div className="">
-                <Link to={`/games/game/${id}`}>
+                <Link to={`/games/${name}`}>
                     <img
-                        src={image}
-                        alt={`image cover of ${name}`}
+                        src={image ? image : placeholder}
+                        alt={`image cover of ${name.toLowerCase()}`}
                         className="w-full"
                     />
                 </Link>
                 <h2 className=" text-xl font-black my-4">
                     <Link
-                        to={`/games/game/${id}`}
+                        to={`/games/${name.toLowerCase()}`}
                         className="hover:underline uppercase"
                     >
                         {name}
@@ -35,16 +48,16 @@ export const GameItem = ({
                     <span className="">Publisher : </span>
                     <span>
                         <Link
-                            to={`/user/${publisher.id}`}
+                            to={`/user/${publisher.username.toLowerCase()}`}
                             className="underline"
                         >
-                            {publisher.name}
+                            {publisher.username}
                         </Link>
                     </span>
                 </div>
                 <div className="text-sm my-2">
                     <span>Released : </span>
-                    <span>{realeaseDate}</span>
+                    <span>{formatDate(realeaseDate)}</span>
                 </div>
             </div>
             <div className="">
@@ -52,7 +65,10 @@ export const GameItem = ({
                     <span className="p-1 inline-block min-w-[120px] shadow-[inset_0_0_0_1px_rgba(0,0,0,0.6)] shadow-warning">
                         <span className="font-bold">{totalIssues}</span> issues
                     </span>
-                    <Link to={'#'} className="btn btn-warning btn-xs">
+                    <Link
+                        to={`/games/${name.toLowerCase()}/create-issue`}
+                        className="btn btn-warning btn-xs"
+                    >
                         Add
                     </Link>
                 </div>
@@ -61,7 +77,10 @@ export const GameItem = ({
                         <span className="font-bold">{totalSuggestions}</span>{' '}
                         suggestions
                     </span>
-                    <Link to={'#'} className="btn btn-info btn-xs">
+                    <Link
+                        to={`/games/${name.toLowerCase()}/create-suggestion`}
+                        className="btn btn-info btn-xs"
+                    >
                         Add
                     </Link>
                 </div>
@@ -69,7 +88,7 @@ export const GameItem = ({
                 <ul className="mt-4 -mx-1">
                     {categories.map((c) => (
                         <li className="mx-1 inline-block" key={c.id}>
-                            <Category name={c} />
+                            <Category name={c.name} />
                         </li>
                     ))}
                 </ul>
@@ -84,8 +103,8 @@ GameItem.propTypes = {
     image: PropTypes.string,
     publisher: PropTypes.object,
     realeaseDate: PropTypes.string,
-    totalIssues: PropTypes.number,
-    totalSuggestions: PropTypes.number,
     description: PropTypes.string,
     categories: PropTypes.array,
+    totalIssues: PropTypes.number,
+    totalSuggestions: PropTypes.number,
 };

@@ -3,7 +3,11 @@ import { useEffect, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
-export const SidebarGames = ({ setCategoryFilter, setDateFilter }) => {
+export const SidebarGames = ({
+    setCategoryFilter,
+    setDateFilter,
+    categoryFilter,
+}) => {
     const [categories, setCategories] = useState([]);
     const [searchParams, setSearchParams] = useSearchParams();
 
@@ -43,10 +47,10 @@ export const SidebarGames = ({ setCategoryFilter, setDateFilter }) => {
     const handleChangeCategory = (e, categoryName) => {
         e.preventDefault();
         setCategoryFilter(categoryName);
-        setSearchParams((prev) => {
-            prev.set('cat', categoryName.toLowerCase());
-            return prev;
-        });
+        // setSearchParams((prev) => {
+        //     prev.set('cat', categoryName.toLowerCase());
+        //     return prev;
+        // });
     };
 
     /**
@@ -55,10 +59,10 @@ export const SidebarGames = ({ setCategoryFilter, setDateFilter }) => {
      */
     const handleSelectYear = (e) => {
         setDateFilter(e.target.value.toLowerCase());
-        setSearchParams((prev) => {
-            prev.set('year', e.target.value.toLowerCase());
-            return prev;
-        });
+        // setSearchParams((prev) => {
+        //     prev.set('year', e.target.value.toLowerCase());
+        //     return prev;
+        // });
     };
 
     return (
@@ -77,8 +81,13 @@ export const SidebarGames = ({ setCategoryFilter, setDateFilter }) => {
                         <li className="lg:mb-2 mb-4">
                             <Link
                                 onClick={(e) => handleChangeCategory(e, 'all')}
+                                // className={`hover:underline ${
+                                //     searchParams.get('cat') === 'all'
+                                //         ? 'text-accent'
+                                //         : ''
+                                // }`}
                                 className={`hover:underline ${
-                                    searchParams.get('cat') === 'all'
+                                    categoryFilter.toLowerCase() === 'all'
                                         ? 'text-accent'
                                         : ''
                                 }`}
@@ -92,8 +101,14 @@ export const SidebarGames = ({ setCategoryFilter, setDateFilter }) => {
                                     onClick={(e) =>
                                         handleChangeCategory(e, c.name)
                                     }
+                                    // className={`hover:underline ${
+                                    //     searchParams.get('cat') ===
+                                    //     c.name.toLowerCase()
+                                    //         ? 'text-accent'
+                                    //         : ''
+                                    // }`}
                                     className={`hover:underline ${
-                                        searchParams.get('cat') ===
+                                        categoryFilter.toLowerCase() ===
                                         c.name.toLowerCase()
                                             ? 'text-accent'
                                             : ''
@@ -126,4 +141,5 @@ export const SidebarGames = ({ setCategoryFilter, setDateFilter }) => {
 SidebarGames.propTypes = {
     setCategoryFilter: PropTypes.func,
     setDateFilter: PropTypes.func,
+    categoryFilter: PropTypes.string,
 };

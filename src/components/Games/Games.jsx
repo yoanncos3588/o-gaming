@@ -131,6 +131,7 @@ function Games() {
                 <SidebarGames
                     setCategoryFilter={setCategoryFilter}
                     setDateFilter={setDateFilter}
+                    categoryFilter={categoryFilter}
                 />
             }
         >

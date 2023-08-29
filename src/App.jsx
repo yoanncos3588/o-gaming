@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import Login from './components/Login/Login';
 import { Route, Routes } from 'react-router-dom';
-import Games from './Games/Games';
+import Games from './components/Games/Games';
 
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';

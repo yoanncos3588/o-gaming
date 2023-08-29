@@ -16,7 +16,6 @@ function Games() {
     // to delete
     const addfakecategorie = (games) => {
         games.forEach((g) => {
-            console.log(g);
             g.categories = [
                 {
                     id: 1,
@@ -76,6 +75,7 @@ function Games() {
                         }
                     );
                 }
+                //TODO ne plus utiliser les fakes data
                 // setGames(res.data.games);
                 setGames(addfakecategorie(res.data.games));
                 return res.data.games;
@@ -95,10 +95,9 @@ function Games() {
          */
         const filterByCategory = (games) => {
             if (categoryFilter === 'all') {
-                return false;
+                return games;
             }
             const list = games.filter((game) => {
-                console.log(game);
                 return game.categories.some(
                     (item) =>
                         item.name.toLowerCase() === categoryFilter.toLowerCase()
@@ -106,9 +105,26 @@ function Games() {
             });
             return list;
         };
+        /**
+         * Filter games by release date
+         * @@param {array} games an array of games object containing release_date prop
+         * @returns filtered result
+         */
+        const filterByDate = (games) => {
+            if (dateFilter === 'all') {
+                return games;
+            }
+            const list = games.filter((game) => {
+                const year = new Date(game.release_date).getFullYear();
+                return Number(year) === Number(dateFilter);
+            });
+            return list;
+        };
         let result = filterByCategory(games);
+        console.log(result);
+        result = filterByDate(result);
         setFilteredGames(result);
-    }, [categoryFilter, games]);
+    }, [categoryFilter, games, dateFilter]);
 
     return (
         <ContentContainer

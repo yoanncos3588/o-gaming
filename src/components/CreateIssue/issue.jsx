@@ -3,8 +3,9 @@ import { useEffect, useState } from 'react';
 import ContentContainer from '../ContentContainer';
 import { toast } from 'react-toastify';
 import { Link, useNavigate } from 'react-router-dom';
+import { axiosInstance } from '../../utils/axios';
 
-function CreateIssue({ idGame, description, imageUrl }) {
+function CreateIssue({ description, imageUrl }) {
     const [issueInfos, setIssueInfos] = useState({
         title: '',
         is_public: true,
@@ -32,25 +33,13 @@ function CreateIssue({ idGame, description, imageUrl }) {
         { id: 4, title: 'Spell' },
     ];
 
+    const idGame = 1;
+
     const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(false);
-    // const [selectedContextOption, setSelectedContextOption] = useState(
-    //     contextOptions[0].value
-    // );
-    // const [selectedSystemeOption, setSelectedSystemeOption] = useState(
-    //     systemeOptions[0].value
-    // );
-
-    // const handleSystemeOptionChange = (event) => {
-    //     setSelectedSystemeOption(event.target.value);
-    // };
-    // const handleContextOptionChange = (event) => {
-    //     setSelectedContextOption(event.target.value);
-    // };
 
     useEffect(() => {
         // redirect user on success
-        console.log(issueInfos);
         toast.onChange((payload) => {
             if (payload.status === 'removed' && payload.id === 'succesToast') {
                 navigate('/games/game/:id_game');
@@ -58,11 +47,17 @@ function CreateIssue({ idGame, description, imageUrl }) {
         });
     }, [navigate]);
 
+    /** Handle change on form inputs */
     const handleChange = (e) => {
         if (e.target.value === 'true' || e.target.value === 'false') {
             setIssueInfos({
                 ...issueInfos,
                 [e.target.name]: convertValueToBoolean(e.target.value),
+            });
+        } else if (e.target.name === 'platform_id') {
+            setIssueInfos({
+                ...issueInfos,
+                [e.target.name]: Number(e.target.value),
             });
         } else {
             console.log(e.target.value);
@@ -71,20 +66,17 @@ function CreateIssue({ idGame, description, imageUrl }) {
                 [e.target.name]: e.target.value,
             });
         }
-        console.log(issueInfos);
     };
 
     /** Handle checkbox for tags */
     const addTag = (e, tag) => {
         console.log(e.target.checked);
         if (e.target.checked) {
-            console.log('isChecked');
             setIssueInfos((prev) => {
                 const newTags = [...prev.tags, tag];
                 return { ...prev, tags: newTags };
             });
         } else {
-            console.log('isUnchecked');
             setIssueInfos((prev) => {
                 const newTags = prev.tags.filter(
                     (oldTag) => oldTag.id !== tag.id
@@ -100,10 +92,8 @@ function CreateIssue({ idGame, description, imageUrl }) {
 
     const convertValueToBoolean = (value) => {
         if (value === 'true') {
-            console.log('convert to true');
             return true;
         } else {
-            console.log('convert to false');
             return false;
         }
     };
@@ -111,19 +101,19 @@ function CreateIssue({ idGame, description, imageUrl }) {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const res = await axios.post(
-                'http://localhost:3000/games/game/:id_game/issue',
+            const res = await axiosInstance.post(
+                `http://localhost:3000/games/game/${idGame}/issues`,
                 issueInfos
             );
-            if (Object.prototype.hasOwnProperty.call(res.data, 'error')) {
-                toast.error(res.data.error, {
-                    theme: 'colored',
-                });
-            } else {
+            if (res.status === 201) {
                 setIsLoading(false);
                 toast.success('Succes, you will be redirect…', {
                     autoClose: 2000,
                     toastId: 'succesToast',
+                    theme: 'colored',
+                });
+            } else {
+                toast.error(res.data.error, {
                     theme: 'colored',
                 });
             }
@@ -166,7 +156,7 @@ function CreateIssue({ idGame, description, imageUrl }) {
                 <h2 className="text-2xl font-semibold text-white mb-4">
                     Create a Issue
                 </h2>
-                <form className="w-full">
+                <form className="w-full" onSubmit={handleSubmit}>
                     <div className="w-full">
                         <div className="mb-4">
                             <label
@@ -248,7 +238,7 @@ function CreateIssue({ idGame, description, imageUrl }) {
                                             key={option.id}
                                             value={option.id}
                                         >
-                                            {option.name} {option.id}
+                                            {option.name}
                                         </option>
                                     ))}
                                 </select>
@@ -284,7 +274,6 @@ function CreateIssue({ idGame, description, imageUrl }) {
                             ></textarea>
                         </div>
                         <section className="mb-4 flex flex-wrap ">
-                            {/* TAGGGGGGGG */}
                             {tags.map((tag) => (
                                 <div
                                     className="form-control w-1/4 mr-3"
@@ -297,7 +286,10 @@ function CreateIssue({ idGame, description, imageUrl }) {
                                         <input
                                             type="checkbox"
                                             className="checkbox checkbox-info"
-                                            // checked={}
+                                            checked={issueInfos.tags.some(
+                                                (stateTag) =>
+                                                    tag.id === stateTag.id
+                                            )}
                                             onChange={(e) => addTag(e, tag)}
                                         />
                                     </label>
@@ -309,20 +301,18 @@ function CreateIssue({ idGame, description, imageUrl }) {
                         </div>
                         <div className="flex flex-wrap place-content-around m-4">
                             <div className="dropdown dropdown-bottom w-full hover:bg-neutral-focus btn m-1 bg-neutral border-neutral flex align-middle">
-                                <label tabIndex={0} className="cursor-pointer">
-                                    frequency
-                                </label>
-                                <ul
-                                    tabIndex={0}
-                                    className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-full"
+                                <select
+                                    className="select select-bordered w-full max-w-xs"
+                                    onChange={handleChange}
+                                    name="frequency"
+                                    defaultValue={'Regular'}
                                 >
-                                    <li>
-                                        <a>Regular</a>
-                                    </li>
-                                    <li>
-                                        <a>once</a>
-                                    </li>
-                                </ul>
+                                    <option value={'Regular'}>Regular</option>
+                                    <option value={'Sometimes'}>
+                                        Sometimes
+                                    </option>
+                                    <option value={'Once'}>Once</option>
+                                </select>
                             </div>
                         </div>
                         <div>

@@ -7,89 +7,84 @@ import { Link, useNavigate } from 'react-router-dom';
 function CreateIssue() {
     const [IssueInfos, setIssueInfos] = useState({
         title: '',
-        is_visibilible: true,
+        is_visible: true,
         plateform: '',
         is_online: true,
         description: '',
-        tag: '',
+        category: '',
         frequency: '',
         replication: '',
     });
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-
-        try {
-            const response = await axios.post('#', IssueInfos);
-            console.log("Réponse de l'API :", response.IssueInfos);
-            // Faites quelque chose avec la réponse, comme mettre à jour l'état ou afficher un message de succès.
-        } catch (error) {
-            console.error('Erreur lors de la requête POST :', error);
-            // Gérez les erreurs de manière appropriée.
-        }
-    };
-    const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        setIssueInfos((prevData) => ({
-            ...prevData,
-            [name]: value,
-        }));
-    };
-    const [textIssue, setTextIssue] = useState('');
-
+    const SystemeOptions = [
+        { value: 'ps5', label: 'Option 1' },
+        { value: 'ps4', label: 'Option 2' },
+        { value: 'ps3', label: 'Option 3' },
+        { value: 'computer', label: 'Option 4' },
+        { value: 'switch', label: 'Option 5' },
+    ];
+    const contextOptions = [
+        { value: 'online', label: 'Option 1' },
+        { value: 'offline', label: 'Option 2' },
+    ];
     const navigate = useNavigate();
+    const [isLoading, setIsLoading] = useState(false);
+    const [selectedContextOption, setSelectedContextOption] = useState(
+        contextOptions[0].value
+    );
+    const [selectedSystemeOption, setSelectedSystemeOption] = useState(
+        SystemeOptions[0].value
+    );
+
+    const handleSystemeOptionChange = (event) => {
+        setSelectedSystemeOption(event.target.value);
+    };
+    const handleContextOptionChange = (event) => {
+        setSelectedContextOption(event.target.value);
+    };
+
     useEffect(() => {
         // redirect user on success
-        console.log('useeffect');
+
         toast.onChange((payload) => {
             if (payload.status === 'removed' && payload.id === 'succesToast') {
-                navigate('/');
+                navigate('/games/game/:id_game');
             }
         });
     }, [navigate]);
 
-    // const handleChange = (e) => {
-    //     setIssueInfos({
-    //         ...IssueInfos,
-    //         [e.target.name]: e.target.value,
-    //     });
-    // };
+    const handleChange = (e) => {
+        setIssueInfos({
+            ...IssueInfos,
+            [e.target.name]: e.target.value,
+        });
+    };
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            const res = await axios.post(
+                'http://localhost:3000/games/game/:ig_game/issue',
+                IssueInfos
+            );
+            if (Object.prototype.hasOwnProperty.call(res.data, 'error')) {
+                toast.error(res.data.error, {
+                    theme: 'colored',
+                });
+            } else {
+                setIsLoading(false);
+                toast.success('Succes, you will be redirect…', {
+                    autoClose: 2000,
+                    toastId: 'succesToast',
+                    theme: 'colored',
+                });
+            }
+        } catch (error) {
+            console.log(error);
+            toast.error('An unexpected error occured', {
+                theme: 'colored',
+            });
+        }
+    };
 
-    // const handleSubmit = async (e) => {
-    //     e.preventDefault();
-    //     try {
-    //         const res = await axios.post(
-    //             'http://localhost:3000//games/game/:id_game/issue',
-    //             IssueInfos
-    //         );
-    //         if (Object.prototype.hasOwnProperty.call(res.data, 'error')) {
-    //             toast.error(res.data.error, {
-    //                 theme: 'colored',
-    //             });
-    //         } else {
-    //             toast.success('Succes, you will be redirect…', {
-    //                 toastId: 'succesToast',
-    //                 theme: 'colored',
-    //             });
-    //         }
-    //     } catch (error) {
-    //         console.log(error);
-    //         toast.error('An unexpected error occured', {
-    //             theme: 'colored',
-    //         });
-    //     }
-    // };
-    // const [selectedImage, setSelectedImage] = useState(null);
-
-    // const handleImageUpload = (event) => {
-    //     const file = event.target.files[0];
-    //     if (file) {
-    //         const reader = new FileReader();
-    //         reader.onload = () => {
-    //             setSelectedImage(reader.result);
-    //         };
-    //         reader.readAsDataURL(file);
-    //     }
-    // };
     return (
         <ContentContainer
             SidebarRight={
@@ -126,7 +121,7 @@ function CreateIssue() {
                         <div className="mb-4">
                             <label
                                 htmlFor="name"
-                                className="block text-white text-md font-bold mb-2"
+                                className="block text-white text-md font-bold mb-2 "
                             >
                                 title
                             </label>
@@ -134,12 +129,10 @@ function CreateIssue() {
                                 type="text"
                                 id="name"
                                 name="name"
-                                className=" w-2/3 px-3 py-2 rounded-md bg-gray-700 text-white focus:outline-none focus:ring focus:border-blue-300"
+                                className=" w-full px-3 py-2 rounded-md bg-gray-700 text-white focus:outline-none focus:ring focus:border-blue-300"
                                 placeholder="add a title"
-                                onChange={(event) =>
-                                    setTextIssue(event.target.value)
-                                }
-                                value={textIssue}
+                                onChange={handleChange}
+                                value={IssueInfos.title}
                             />
                         </div>
 
@@ -157,29 +150,31 @@ function CreateIssue() {
                             </i>
                         </p>
                         <div className=" flex ">
-                            <div className="form-control w-fit mr-2">
-                                <label className="cursor-pointer label ">
-                                    <input
-                                        type="radio"
-                                        name="radio-7"
-                                        className="radio radio-info"
-                                    />
-                                    <span className="label-text pl-2">
-                                        is not visible
-                                    </span>
-                                </label>
-                            </div>
-                            <div className="form-control w-fit mr-2">
-                                <label className="cursor-pointer label ">
-                                    <input
-                                        type="radio"
-                                        name="radio-7"
-                                        className="radio radio-info"
-                                    />
-                                    <span className="label-text pl-2">
-                                        is not visible
-                                    </span>
-                                </label>
+                            <div className="join w-full flex-wrap">
+                                <input
+                                    className={`join-item btn btn-primary ${
+                                        IssueInfos.is_visible !== '1' &&
+                                        'btn-outline'
+                                    } lg:!w-1/2 !w-full`}
+                                    type="radio"
+                                    name="is_visibilible"
+                                    aria-label="is visible"
+                                    value={1}
+                                    onChange={handleChange}
+                                    checked={IssueInfos.is_visible === 1}
+                                />
+                                <input
+                                    className={`join-item btn btn-primary ${
+                                        IssueInfos.is_visible !== '2' &&
+                                        'btn-outline'
+                                    } lg:!w-1/2 !w-full`}
+                                    type="radio"
+                                    name="is_visibilible"
+                                    aria-label="is not visible"
+                                    value={2}
+                                    onChange={handleChange}
+                                    checked={IssueInfos.is_visible === 2}
+                                />
                             </div>
                         </div>
                         <div className="flex flex-wrap place-content-around m-4">
@@ -193,28 +188,33 @@ function CreateIssue() {
                         <div className="flex flex-wrap place-content-around m-4">
                             <div className="dropdown dropdown-bottom w-1/3 hover:bg-neutral-focus btn m-1 bg-neutral border-neutral flex align-middle cursor-pointer">
                                 <label tabIndex={0} className="cursor-pointer">
-                                    Systeme
+                                    {selectedSystemeOption}
                                 </label>
-                                <ul
-                                    tabIndex={0}
-                                    className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-full"
+                                <select
+                                    className="dropdown-content z-[1] menu  shadow bg-base-100 rounded-box w-full"
+                                    onChange={handleSystemeOptionChange}
+                                    value={selectedSystemeOption}
                                 >
-                                    <li>
-                                        <a>ps5</a>
-                                    </li>
-                                    <li>
-                                        <a>pc</a>
-                                    </li>
-                                </ul>
+                                    {SystemeOptions.map((Option) => (
+                                        <option
+                                            key={Option.value}
+                                            value={Option.value}
+                                        >
+                                            {SystemeOptions.value}
+                                        </option>
+                                    ))}
+                                </select>
                             </div>
 
                             <div className="dropdown dropdown-bottom w-1/3 hover:bg-neutral-focus btn m-1 bg-neutral border-neutral flex align-middle ">
                                 <label tabIndex={0} className="cursor-pointer">
-                                    online
+                                    {selectedContextOption}
                                 </label>
                                 <ul
                                     tabIndex={0}
                                     className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-full"
+                                    onChange={handleContextOptionChange}
+                                    value={selectedContextOption}
                                 >
                                     <li>
                                         <a>online</a>
@@ -238,10 +238,8 @@ function CreateIssue() {
                                 rows="4"
                                 className="w-full px-3 py-2 rounded-md bg-gray-700 text-white focus:outline-none focus:ring focus:border-blue-300"
                                 placeholder="add an description"
-                                onChange={(event) =>
-                                    setTextIssue(event.target.value)
-                                }
-                                value={textIssue}
+                                onChange={handleChange}
+                                value={IssueInfos.description}
                             ></textarea>
                         </div>
                         <section className="mb-4 flex flex-wrap ">
@@ -314,12 +312,12 @@ function CreateIssue() {
                             </div>
                         </section>
                         <div className="flex flex-wrap place-content-around m-4">
-                            <p className=" m-1 font-bold">Systeme</p>
+                            <p className=" m-1 font-bold">frequency</p>
                         </div>
                         <div className="flex flex-wrap place-content-around m-4">
                             <div className="dropdown dropdown-bottom w-full hover:bg-neutral-focus btn m-1 bg-neutral border-neutral flex align-middle">
                                 <label tabIndex={0} className="cursor-pointer">
-                                    Systeme
+                                    frequency
                                 </label>
                                 <ul
                                     tabIndex={0}
@@ -347,14 +345,24 @@ function CreateIssue() {
                                 rows="4"
                                 className="w-full px-3 py-2 rounded-md bg-gray-700 text-white focus:outline-none focus:ring focus:border-blue-300"
                                 placeholder="Describe how to reproduce your issue"
-                                onChange={(event) =>
-                                    setIssueInfos(event.target.value)
-                                }
-                                value={textIssue}
+                                onChange={handleChange}
+                                value={IssueInfos.replication}
                             ></textarea>
                         </div>
-                        <div className="w-full flex justify-end my-4">
-                            <button className="btn btn-info w-1/6">send</button>
+                        <div className="text-center pt-1 mb-5 pb-1">
+                            {!isLoading ? (
+                                <button
+                                    className="btn btn-primary mt-4 w-full mb-3"
+                                    type="submit"
+                                >
+                                    create issue
+                                </button>
+                            ) : (
+                                <button className="btn btn-primary mt-4 w-full mb-3">
+                                    <span className="loading loading-spinner"></span>
+                                    loading
+                                </button>
+                            )}
                         </div>
                     </div>
                 </form>

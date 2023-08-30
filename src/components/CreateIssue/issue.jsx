@@ -4,47 +4,53 @@ import ContentContainer from '../ContentContainer';
 import { toast } from 'react-toastify';
 import { Link, useNavigate } from 'react-router-dom';
 
-function CreateIssue() {
-    const [IssueInfos, setIssueInfos] = useState({
+function CreateIssue({ idGame, description, imageUrl }) {
+    const [issueInfos, setIssueInfos] = useState({
         title: '',
-        is_visible: true,
-        plateform: '',
+        is_public: true,
+        platform_id: 1,
         is_online: true,
         description: '',
         category: '',
         frequency: '',
         replication: '',
+        tags: [],
     });
-    const SystemeOptions = [
-        { value: 'ps5', label: 'Option 1' },
-        { value: 'ps4', label: 'Option 2' },
-        { value: 'ps3', label: 'Option 3' },
-        { value: 'computer', label: 'Option 4' },
-        { value: 'switch', label: 'Option 5' },
+
+    const systemeOptions = [
+        { id: 1, name: 'ps5' },
+        { id: 2, name: 'ps4' },
+        { id: 3, name: 'Xbox' },
+        { id: 4, name: 'PC' },
+        { id: 5, name: 'Switch' },
     ];
-    const contextOptions = [
-        { value: 'online', label: 'Option 1' },
-        { value: 'offline', label: 'Option 2' },
+
+    const tags = [
+        { id: 1, title: 'Weapon' },
+        { id: 2, title: 'Lobby' },
+        { id: 3, title: 'Character' },
+        { id: 4, title: 'Spell' },
     ];
+
     const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(false);
-    const [selectedContextOption, setSelectedContextOption] = useState(
-        contextOptions[0].value
-    );
-    const [selectedSystemeOption, setSelectedSystemeOption] = useState(
-        SystemeOptions[0].value
-    );
+    // const [selectedContextOption, setSelectedContextOption] = useState(
+    //     contextOptions[0].value
+    // );
+    // const [selectedSystemeOption, setSelectedSystemeOption] = useState(
+    //     systemeOptions[0].value
+    // );
 
-    const handleSystemeOptionChange = (event) => {
-        setSelectedSystemeOption(event.target.value);
-    };
-    const handleContextOptionChange = (event) => {
-        setSelectedContextOption(event.target.value);
-    };
+    // const handleSystemeOptionChange = (event) => {
+    //     setSelectedSystemeOption(event.target.value);
+    // };
+    // const handleContextOptionChange = (event) => {
+    //     setSelectedContextOption(event.target.value);
+    // };
 
     useEffect(() => {
         // redirect user on success
-
+        console.log(issueInfos);
         toast.onChange((payload) => {
             if (payload.status === 'removed' && payload.id === 'succesToast') {
                 navigate('/games/game/:id_game');
@@ -53,17 +59,61 @@ function CreateIssue() {
     }, [navigate]);
 
     const handleChange = (e) => {
-        setIssueInfos({
-            ...IssueInfos,
-            [e.target.name]: e.target.value,
-        });
+        if (e.target.value === 'true' || e.target.value === 'false') {
+            setIssueInfos({
+                ...issueInfos,
+                [e.target.name]: convertValueToBoolean(e.target.value),
+            });
+        } else {
+            console.log(e.target.value);
+            setIssueInfos({
+                ...issueInfos,
+                [e.target.name]: e.target.value,
+            });
+        }
+        console.log(issueInfos);
     };
+
+    /** Handle checkbox for tags */
+    const addTag = (e, tag) => {
+        console.log(e.target.checked);
+        if (e.target.checked) {
+            console.log('isChecked');
+            setIssueInfos((prev) => {
+                const newTags = [...prev.tags, tag];
+                return { ...prev, tags: newTags };
+            });
+        } else {
+            console.log('isUnchecked');
+            setIssueInfos((prev) => {
+                const newTags = prev.tags.filter(
+                    (oldTag) => oldTag.id !== tag.id
+                );
+                return { ...prev, tags: newTags };
+            });
+        }
+    };
+
+    useEffect(() => {
+        console.log(issueInfos);
+    });
+
+    const convertValueToBoolean = (value) => {
+        if (value === 'true') {
+            console.log('convert to true');
+            return true;
+        } else {
+            console.log('convert to false');
+            return false;
+        }
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
             const res = await axios.post(
-                'http://localhost:3000/games/game/:ig_game/issue',
-                IssueInfos
+                'http://localhost:3000/games/game/:id_game/issue',
+                issueInfos
             );
             if (Object.prototype.hasOwnProperty.call(res.data, 'error')) {
                 toast.error(res.data.error, {
@@ -128,11 +178,11 @@ function CreateIssue() {
                             <input
                                 type="text"
                                 id="name"
-                                name="name"
+                                name="title"
                                 className=" w-full px-3 py-2 rounded-md bg-gray-700 text-white focus:outline-none focus:ring focus:border-blue-300"
                                 placeholder="add a title"
                                 onChange={handleChange}
-                                value={IssueInfos.title}
+                                value={issueInfos.title}
                             />
                         </div>
 
@@ -153,33 +203,31 @@ function CreateIssue() {
                             <div className="join w-full flex-wrap">
                                 <input
                                     className={`join-item btn btn-primary ${
-                                        IssueInfos.is_visible !== '1' &&
-                                        'btn-outline'
+                                        !issueInfos.is_public && 'btn-outline'
                                     } lg:!w-1/2 !w-full`}
                                     type="radio"
-                                    name="is_visibilible"
+                                    name="is_public"
                                     aria-label="is visible"
-                                    value={1}
+                                    value={true}
                                     onChange={handleChange}
-                                    checked={IssueInfos.is_visible === 1}
+                                    checked={issueInfos.is_public}
                                 />
                                 <input
                                     className={`join-item btn btn-primary ${
-                                        IssueInfos.is_visible !== '2' &&
-                                        'btn-outline'
+                                        issueInfos.is_public && 'btn-outline'
                                     } lg:!w-1/2 !w-full`}
                                     type="radio"
-                                    name="is_visibilible"
+                                    name="is_public"
                                     aria-label="is not visible"
-                                    value={2}
+                                    value={false}
                                     onChange={handleChange}
-                                    checked={IssueInfos.is_visible === 2}
+                                    checked={!issueInfos.is_public}
                                 />
                             </div>
                         </div>
                         <div className="flex flex-wrap place-content-around m-4">
                             <p className="w-1/3 m-1  flex align-middle font-bold">
-                                Systeme
+                                Plateform
                             </p>
                             <p className="w-1/3 m-1  flex align-middle font-bold">
                                 Context
@@ -187,42 +235,35 @@ function CreateIssue() {
                         </div>
                         <div className="flex flex-wrap place-content-around m-4">
                             <div className="dropdown dropdown-bottom w-1/3 hover:bg-neutral-focus btn m-1 bg-neutral border-neutral flex align-middle cursor-pointer">
-                                <label tabIndex={0} className="cursor-pointer">
-                                    {selectedSystemeOption}
-                                </label>
                                 <select
-                                    className="dropdown-content z-[1] menu  shadow bg-base-100 rounded-box w-full"
-                                    onChange={handleSystemeOptionChange}
-                                    value={selectedSystemeOption}
+                                    className="select select-bordered w-full max-w-xs"
+                                    onChange={handleChange}
+                                    name="platform_id"
+                                    defaultValue={Number(
+                                        issueInfos.platform_id
+                                    )}
                                 >
-                                    {SystemeOptions.map((Option) => (
+                                    {systemeOptions.map((option) => (
                                         <option
-                                            key={Option.value}
-                                            value={Option.value}
+                                            key={option.id}
+                                            value={option.id}
                                         >
-                                            {SystemeOptions.value}
+                                            {option.name} {option.id}
                                         </option>
                                     ))}
                                 </select>
                             </div>
 
                             <div className="dropdown dropdown-bottom w-1/3 hover:bg-neutral-focus btn m-1 bg-neutral border-neutral flex align-middle ">
-                                <label tabIndex={0} className="cursor-pointer">
-                                    {selectedContextOption}
-                                </label>
-                                <ul
-                                    tabIndex={0}
-                                    className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-full"
-                                    onChange={handleContextOptionChange}
-                                    value={selectedContextOption}
+                                <select
+                                    className="select select-bordered w-full max-w-xs"
+                                    onChange={handleChange}
+                                    name="is_online"
+                                    defaultValue={true}
                                 >
-                                    <li>
-                                        <a>online</a>
-                                    </li>
-                                    <li>
-                                        <a>offline</a>
-                                    </li>
-                                </ul>
+                                    <option value={true}>Online</option>
+                                    <option value={false}>Offline</option>
+                                </select>
                             </div>
                         </div>
                         <div>
@@ -234,82 +275,34 @@ function CreateIssue() {
                             </label>
                             <textarea
                                 id="text"
-                                name="message"
+                                name="description"
                                 rows="4"
                                 className="w-full px-3 py-2 rounded-md bg-gray-700 text-white focus:outline-none focus:ring focus:border-blue-300"
                                 placeholder="add an description"
                                 onChange={handleChange}
-                                value={IssueInfos.description}
+                                value={issueInfos.description}
                             ></textarea>
                         </div>
                         <section className="mb-4 flex flex-wrap ">
-                            <div className="form-control w-1/4 mr-3">
-                                <label className="cursor-pointer label ">
-                                    <span className="label-text">map</span>
-                                    <input
-                                        type="checkbox"
-                                        className="checkbox checkbox-info"
-                                    />
-                                </label>
-                            </div>
-                            <div className="form-control w-1/4 mr-3">
-                                <label className="cursor-pointer label ">
-                                    <span className="label-text">Weapon</span>
-                                    <input
-                                        type="checkbox"
-                                        className="checkbox checkbox-info"
-                                    />
-                                </label>
-                            </div>
-                            <div className="form-control w-1/4 mr-2">
-                                <label className="cursor-pointer label ">
-                                    <span className="label-text">Lobby</span>
-                                    <input
-                                        type="checkbox"
-                                        className="checkbox checkbox-info"
-                                    />
-                                </label>
-                            </div>
-                            <div className="form-control w-1/4 mr-3">
-                                <label className="cursor-pointer label ">
-                                    <span className="label-text">Points</span>
-                                    <input
-                                        type="checkbox"
-                                        className="checkbox checkbox-info"
-                                    />
-                                </label>
-                            </div>
-                            <div className="form-control w-1/4 mr-3">
-                                <label className="cursor-pointer label ">
-                                    <span className="label-text">spell</span>
-                                    <input
-                                        type="checkbox"
-                                        className="checkbox checkbox-info"
-                                    />
-                                </label>
-                            </div>
-                            <div className="form-control w-1/4 mr-3">
-                                <label className="cursor-pointer label ">
-                                    <span className="label-text">
-                                        Character
-                                    </span>
-                                    <input
-                                        type="checkbox"
-                                        className="checkbox checkbox-info"
-                                    />
-                                </label>
-                            </div>
-                            <div className="form-control w-1/4 mr-3">
-                                <label className="cursor-pointer label ">
-                                    <span className="label-text">
-                                        interface
-                                    </span>
-                                    <input
-                                        type="checkbox"
-                                        className="checkbox checkbox-info"
-                                    />
-                                </label>
-                            </div>
+                            {/* TAGGGGGGGG */}
+                            {tags.map((tag) => (
+                                <div
+                                    className="form-control w-1/4 mr-3"
+                                    key={tag.id}
+                                >
+                                    <label className="cursor-pointer label ">
+                                        <span className="label-text">
+                                            {tag.title}
+                                        </span>
+                                        <input
+                                            type="checkbox"
+                                            className="checkbox checkbox-info"
+                                            // checked={}
+                                            onChange={(e) => addTag(e, tag)}
+                                        />
+                                    </label>
+                                </div>
+                            ))}
                         </section>
                         <div className="flex flex-wrap place-content-around m-4">
                             <p className=" m-1 font-bold">frequency</p>
@@ -341,12 +334,12 @@ function CreateIssue() {
                             </label>
                             <textarea
                                 id="replicate"
-                                name="message"
+                                name="replication"
                                 rows="4"
                                 className="w-full px-3 py-2 rounded-md bg-gray-700 text-white focus:outline-none focus:ring focus:border-blue-300"
                                 placeholder="Describe how to reproduce your issue"
                                 onChange={handleChange}
-                                value={IssueInfos.replication}
+                                value={issueInfos.replication}
                             ></textarea>
                         </div>
                         <div className="text-center pt-1 mb-5 pb-1">

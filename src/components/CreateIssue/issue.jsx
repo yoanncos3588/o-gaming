@@ -138,9 +138,10 @@ function CreateIssue({ description, imageUrl }) {
                         className="text-md font-medium text-blue-800"
                         to={`/games/game/:gameid`}
                     >
-                        Return to game page
+                        ⬅️ ​Return to game page
                     </Link>
                     <img
+                        className="my-3"
                         src="https://img.redbull.com/images/c_crop,w_1920,h_960,x_0,y_103,f_auto,q_auto/c_scale,w_1200/redbullcom/2020/6/5/ctsejxmdtw9inp8zqqqd/red-bull-campus-clutch-valorant-agents"
                         alt="jeu"
                     />
@@ -229,7 +230,7 @@ function CreateIssue({ description, imageUrl }) {
                             </p>
                         </div>
                         <div className="flex flex-wrap place-content-around m-4">
-                            <div className="dropdown dropdown-bottom w-1/3 hover:bg-neutral-focus btn m-1 bg-neutral border-neutral flex align-middle cursor-pointer">
+                            <div className=" w-1/3 flex align-middle cursor-pointer">
                                 <select
                                     className="select select-bordered w-full max-w-xs"
                                     onChange={handleChange}
@@ -249,7 +250,7 @@ function CreateIssue({ description, imageUrl }) {
                                 </select>
                             </div>
 
-                            <div className="dropdown dropdown-bottom w-1/3 hover:bg-neutral-focus btn m-1 bg-neutral border-neutral flex align-middle ">
+                            <div className=" w-1/3  flex align-middle ">
                                 <select
                                     className="select select-bordered w-full max-w-xs"
                                     onChange={handleChange}
@@ -305,7 +306,7 @@ function CreateIssue({ description, imageUrl }) {
                             <p className=" m-1 font-bold">frequency</p>
                         </div>
                         <div className="flex flex-wrap place-content-around m-4">
-                            <div className="dropdown dropdown-bottom w-full hover:bg-neutral-focus btn m-1 bg-neutral border-neutral flex align-middle">
+                            <div className=" w-1/2 flex align-middle justify-center">
                                 <select
                                     className="select select-bordered w-full max-w-xs"
                                     onChange={handleChange}

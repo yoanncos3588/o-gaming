@@ -60,7 +60,7 @@ export const getTokenExpirationDate = () => {
  * @returns {boolean}
  */
 export const isTokenExpired = () => {
-    const exp = localStorage.getItem('token_exp');
+    const exp = Number(localStorage.getItem('token_exp'));
     if (!exp) {
         return true;
     }

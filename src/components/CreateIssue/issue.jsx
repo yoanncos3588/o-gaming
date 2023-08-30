@@ -1,9 +1,10 @@
-import axios from 'axios';
+// import axios from 'axios';
 import { useEffect, useState } from 'react';
 import ContentContainer from '../ContentContainer';
 import { toast } from 'react-toastify';
 import { Link, useNavigate } from 'react-router-dom';
 import { axiosInstance } from '../../utils/axios';
+import { useSelector } from 'react-redux';
 
 function CreateIssue({ description, imageUrl }) {
     const [issueInfos, setIssueInfos] = useState({
@@ -13,10 +14,14 @@ function CreateIssue({ description, imageUrl }) {
         is_online: true,
         description: '',
         category: '',
-        frequency: '',
+        frequency: 'Regular',
+        is_minor: true,
         replication: '',
         tags: [],
     });
+
+    const userId = useSelector((state) => state.user.userData.userId);
+    const publishedAt = new Date();
 
     const systemeOptions = [
         { id: 1, name: 'ps5' },
@@ -60,7 +65,6 @@ function CreateIssue({ description, imageUrl }) {
                 [e.target.name]: Number(e.target.value),
             });
         } else {
-            console.log(e.target.value);
             setIssueInfos({
                 ...issueInfos,
                 [e.target.name]: e.target.value,
@@ -70,7 +74,6 @@ function CreateIssue({ description, imageUrl }) {
 
     /** Handle checkbox for tags */
     const addTag = (e, tag) => {
-        console.log(e.target.checked);
         if (e.target.checked) {
             setIssueInfos((prev) => {
                 const newTags = [...prev.tags, tag];
@@ -100,6 +103,8 @@ function CreateIssue({ description, imageUrl }) {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        issueInfos.user_id = userId;
+        issueInfos.published_at = publishedAt;
         try {
             const res = await axiosInstance.post(
                 `http://localhost:3000/games/game/${idGame}/issues`,
@@ -305,7 +310,7 @@ function CreateIssue({ description, imageUrl }) {
                                     className="select select-bordered w-full max-w-xs"
                                     onChange={handleChange}
                                     name="frequency"
-                                    defaultValue={'Regular'}
+                                    defaultValue={issueInfos.frequency}
                                 >
                                     <option value={'Regular'}>Regular</option>
                                     <option value={'Sometimes'}>

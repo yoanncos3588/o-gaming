@@ -4,10 +4,13 @@ import Select from 'react-select';
 import CreatableSelect from 'react-select/creatable';
 import ContentContainer from '../ContentContainer';
 import axios from 'axios';
+import isUrl from 'is-url';
+
 function CreateGame() {
-    // const [selectedImage, setSelectedImage] = useState(null);
+    // tag and categories from api
     const [categories, setCategories] = useState([]);
     const [tags, setTags] = useState([]);
+    const [imageUrl, setImageUrl] = useState('');
 
     const [gameData, setGameData] = useState({
         name: '',
@@ -18,6 +21,74 @@ function CreateGame() {
         categories: [],
         tags: [],
     });
+
+    /**
+     * Create an image object from image url to get meta
+     * @param {string} url image url
+     * @returns
+     */
+    function getImageMeta(url) {
+        return new Promise((resolve, reject) => {
+            let img = new Image();
+            img.onload = () => resolve(img);
+            img.onerror = () => reject();
+            img.src = url;
+        });
+    }
+
+    /**
+     * Handle when user click on add image cover
+     * @param {Event} e
+     */
+    const handleAddImage = async (e) => {
+        e.preventDefault();
+        try {
+            // test if url is realy an url
+            if (!isUrl(imageUrl)) {
+                throw new Error('Image url is not valid');
+            }
+            const extension = imageUrl.slice(-4);
+            // test if url end by image extension
+            if (extension !== '.jpg' && extension !== '.png') {
+                throw new Error('url is not an image url');
+            }
+            const img = await getImageMeta(imageUrl);
+            const w = img.width;
+            const h = img.height;
+            // check image size
+            if (w && w === 1200 && h && h === 600) {
+                setGameData((prev) => {
+                    return { ...prev, picture: imageUrl };
+                });
+            } else {
+                throw new Error('Image is too big');
+            }
+        } catch (error) {
+            if (error !== undefined) {
+                toast.error(error.message, {
+                    theme: 'colored',
+                    toastId: 'errorImage',
+                });
+            } else {
+                toast.error('An unexpected error has occurred', {
+                    theme: 'colored',
+                    toastId: 'errorImage',
+                });
+            }
+        }
+    };
+
+    /**
+     * Handle when an user click on delete image in form
+     * @param {Event} e
+     */
+    const handleDeleteImage = (e) => {
+        e.preventDefault();
+        setGameData((prev) => {
+            return { ...prev, picture: '' };
+        });
+        setImageUrl('');
+    };
 
     /**
      * Handle react-select for categories
@@ -170,21 +241,39 @@ function CreateGame() {
                     </div>
 
                     <div className="form-control mb-8">
+                        {gameData.picture && (
+                            <img
+                                src={gameData.picture}
+                                alt="selected cover image"
+                                className="mb-4"
+                            />
+                        )}
                         <label className="label">
                             <span className="label-text">
-                                Add an image cover from external URL
+                                Add an image cover from external URL{' '}
+                                <span className="text-sm opacity-50">
+                                    (1200x600px only, .jpg and .png only)
+                                </span>
                             </span>
                         </label>
                         <input
                             type="text"
                             placeholder="Your image url"
                             className="input input-bordered w-full"
+                            value={imageUrl}
+                            onChange={(e) => setImageUrl(e.target.value)}
                         />
                         <div className="flex">
-                            <button className="btn btn-warning w-1/2">
+                            <button
+                                className="btn btn-warning w-1/2"
+                                onClick={(e) => handleDeleteImage(e)}
+                            >
                                 Delete image
                             </button>
-                            <button className="btn btn-success w-1/2">
+                            <button
+                                className="btn btn-success w-1/2"
+                                onClick={handleAddImage}
+                            >
                                 Add image
                             </button>
                         </div>

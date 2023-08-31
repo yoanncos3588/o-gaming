@@ -5,6 +5,7 @@ import CreatableSelect from 'react-select/creatable';
 import ContentContainer from '../ContentContainer';
 import axios from 'axios';
 import isUrl from 'is-url';
+import { axiosInstance } from '../../utils/axios';
 
 function CreateGame() {
     // tag and categories from api
@@ -165,6 +166,39 @@ function CreateGame() {
         fetchCategories();
     }, []);
 
+    /**
+     * Handle form submit and create game with api
+     * @param {Event} e
+     */
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            const res = await axiosInstance.post(
+                'http://localhost:3000/games/game',
+                gameData
+            );
+            console.log(res);
+            if (res.status === 200) {
+                toast.success('Your game was created', {
+                    theme: 'colored',
+                    toastId: 'successCreateGame',
+                });
+                return;
+            }
+        } catch (error) {
+            console.log(error.response.data.error);
+            if (
+                error.response.data.error &&
+                error.response.data.error !== undefined
+            ) {
+                toast.error(error.response.data.error, {
+                    theme: 'colored',
+                    toastId: 'errorCreateGame',
+                });
+            }
+        }
+    };
+
     /** fetch tags */
     useEffect(() => {
         const fetchTags = async () => {
@@ -194,7 +228,7 @@ function CreateGame() {
                 <h1 className="text-2xl font-black text-white mb-4">
                     Create a game
                 </h1>
-                <form>
+                <form onSubmit={handleSubmit}>
                     <div className="form-control w-full  mb-8">
                         <label className="label">
                             <span className="label-text">Title</span>

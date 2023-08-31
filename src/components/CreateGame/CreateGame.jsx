@@ -7,15 +7,38 @@ function CreateGame() {
     // const [selectedImage, setSelectedImage] = useState(null);
     const [categories, setCategories] = useState([]);
     const [tags, setTags] = useState([]);
-    const [selectedCategories, setSelectedCategories] = useState([]);
-    const [selectedTags, setSelectedTags] = useState([]);
+
+    const [gameData, setGameData] = useState({
+        name: '',
+        description: '',
+        picture: '',
+        external_link: '',
+        release_date: '',
+        categories: [],
+        tags: [],
+    });
 
     const onOptionChangeForCategories = (options) => {
-        setSelectedCategories(options);
+        setGameData((prev) => {
+            return { ...prev, categories: options };
+        });
     };
 
     const onOptionChangeForTags = (options) => {
-        setSelectedTags(options);
+        setGameData((prev) => {
+            return { ...prev, tags: options };
+        });
+    };
+
+    /**
+     * Handle input change on form
+     * @param {*} e
+     */
+    const handleChange = (e) => {
+        setGameData({
+            ...gameData,
+            [e.target.name]: e.target.value,
+        });
     };
 
     /** fetch categories */
@@ -42,6 +65,7 @@ function CreateGame() {
         fetchCategories();
     }, []);
 
+    /** fetch tags */
     useEffect(() => {
         const fetchTags = async () => {
             try {
@@ -66,7 +90,7 @@ function CreateGame() {
 
     return (
         <ContentContainer>
-            <div className=" w-full md:w-1/2 xl:w-3/5 bg-base-200 p-8 rounded-lg shadow-lg mx-auto">
+            <div className=" w-full  xl:w-3/5 bg-base-200 p-8 rounded-lg shadow-lg mx-auto">
                 <h1 className="text-2xl font-black text-white mb-4">
                     Create a game
                 </h1>
@@ -77,8 +101,11 @@ function CreateGame() {
                         </label>
                         <input
                             type="text"
+                            value={gameData.name}
+                            name="name"
                             placeholder="Type here"
                             className="input input-bordered w-full "
+                            onChange={handleChange}
                         />
                     </div>
 
@@ -87,13 +114,13 @@ function CreateGame() {
                             <span className="label-text">Categories</span>
                         </label>
                         <Select
-                            name="colors"
+                            name="categories"
                             options={categories}
                             className="basic-multi-select"
                             classNamePrefix="select"
                             closeMenuOnSelect={false}
                             onChange={onOptionChangeForCategories}
-                            value={selectedCategories}
+                            value={gameData.categories}
                             getOptionLabel={(option) => `${option.name}`}
                             getOptionValue={(option) => option.name}
                             isMulti
@@ -106,7 +133,10 @@ function CreateGame() {
                         </label>
                         <textarea
                             className="textarea textarea-bordered h-24"
+                            name="description"
                             placeholder="Your game description"
+                            value={gameData.description}
+                            onChange={handleChange}
                         ></textarea>
                     </div>
 
@@ -143,7 +173,7 @@ function CreateGame() {
                             classNamePrefix="select"
                             closeMenuOnSelect={false}
                             onChange={onOptionChangeForTags}
-                            value={selectedTags}
+                            value={gameData.tags}
                             getOptionLabel={(option) => `${option.title}`}
                             getOptionValue={(option) => option.title}
                             isMulti
@@ -157,8 +187,11 @@ function CreateGame() {
                         </label>
                         <input
                             type="text"
-                            placeholder="Type here"
+                            placeholder="Your url"
                             className="input input-bordered w-full"
+                            name="external_link"
+                            onChange={handleChange}
+                            value={gameData.external_link}
                         />
                     </div>
                     <div className="form-control w-full mb-8">
@@ -167,8 +200,11 @@ function CreateGame() {
                         </label>
                         <input
                             type="date"
+                            name="release_date"
                             placeholder="Type here"
                             className="input input-bordered w-full"
+                            value={gameData.release_date}
+                            onChange={handleChange}
                         />
                     </div>
 

@@ -64,17 +64,19 @@ function Games() {
         const fetchGames = async () => {
             try {
                 const res = await axios.get('http://localhost:3000/games');
-                if (
-                    res.status === 500 ||
-                    Object.prototype.hasOwnProperty.call(res.data, 'error')
-                ) {
-                    toast.error(
-                        'An unexpected error has occured, try to refresh',
-                        {
-                            theme: 'colored',
-                        }
-                    );
+                if (res.status !== 200) {
+                    if (
+                        Object.prototype.hasOwnProperty.call(res.data, 'error')
+                    ) {
+                        toast.error(
+                            'An unexpected error has occured, try to refresh',
+                            {
+                                theme: 'colored',
+                            }
+                        );
+                    }
                 }
+
                 //TODO ne plus utiliser les fakes data
                 // setGames(res.data.games);
                 setGames(addfakecategorie(res.data.games));

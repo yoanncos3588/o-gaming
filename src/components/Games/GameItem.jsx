@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import placeholder from '/placeholder.jpg';
 
 export const GameItem = ({
+    id,
     name,
     image,
     publisher,
@@ -27,7 +28,7 @@ export const GameItem = ({
     return (
         <article className="grid gird-cols-1 lg:grid-cols-2 gap-6 bg-base-200 p-6">
             <div className="">
-                <Link to={`/games/${name}`}>
+                <Link to={`/games/${id}`}>
                     <img
                         src={image ? image : placeholder}
                         alt={`image cover of ${name.toLowerCase()}`}
@@ -36,7 +37,7 @@ export const GameItem = ({
                 </Link>
                 <h2 className=" text-xl font-black my-4">
                     <Link
-                        to={`/games/${name.toLowerCase()}`}
+                        to={`/games/${id}`}
                         className="hover:underline uppercase"
                     >
                         {name}
@@ -61,7 +62,7 @@ export const GameItem = ({
                         <span className="font-bold">{totalIssues}</span> issues
                     </span>
                     <Link
-                        to={`/games/${name.toLowerCase()}/create-issue`}
+                        to={`/games/${id}/create-issue`}
                         className="btn btn-warning btn-xs"
                     >
                         Add
@@ -73,7 +74,7 @@ export const GameItem = ({
                         suggestions
                     </span>
                     <Link
-                        to={`/games/${name.toLowerCase()}/create-suggestion`}
+                        to={`/games/${id}/create-suggestion`}
                         className="btn btn-info btn-xs"
                     >
                         Add

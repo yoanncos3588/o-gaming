@@ -2,18 +2,8 @@ import { useState } from 'react';
 
 import Select from 'react-select';
 function CreateGame() {
-    const [selectedImage, setSelectedImage] = useState(null);
+    // const [selectedImage, setSelectedImage] = useState(null);
 
-    const handleImageUpload = (event) => {
-        const file = event.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = () => {
-                setSelectedImage(reader.result);
-            };
-            reader.readAsDataURL(file);
-        }
-    };
     return (
         <main>
             <div className="flex justify-center items-center">
@@ -154,17 +144,19 @@ function CreateGame() {
                         </p>
                         <div className="flex">
                             <img
-                                className="w-full h-56 mb-8 "
+                                className="w-full h-fit mb-8 "
                                 src={
-                                    selectedImage ||
                                     'https://img.redbull.com/images/c_crop,w_1920,h_960,x_0,y_103,f_auto,q_auto/c_scale,w_1200/redbullcom/2020/6/5/ctsejxmdtw9inp8zqqqd/red-bull-campus-clutch-valorant-agents'
                                 }
                                 type="file"
                                 accept="image/*"
-                                onClick={handleImageUpload}
                                 alt="User Avatar"
                             />
                         </div>
+                        <input
+                            type="file"
+                            className="file-input file-input-bordered file-input-primary w-full max-w-xs"
+                        />
                         <p className="mb-2 text-md font-medium">
                             add tags to reference your issues
                         </p>

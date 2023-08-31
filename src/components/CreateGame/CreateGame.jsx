@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import Select from 'react-select';
+import CreatableSelect from 'react-select/creatable';
 import ContentContainer from '../ContentContainer';
 import axios from 'axios';
 function CreateGame() {
@@ -18,15 +19,43 @@ function CreateGame() {
         tags: [],
     });
 
+    /**
+     * Handle react-select for categories
+     * @param {Array} options array of categories from react-select component
+     */
     const onOptionChangeForCategories = (options) => {
         setGameData((prev) => {
             return { ...prev, categories: options };
         });
     };
 
+    /**
+     * Handle react-select for tags
+     * @param {Array} options array of tags from react-select component
+     */
     const onOptionChangeForTags = (options) => {
         setGameData((prev) => {
             return { ...prev, tags: options };
+        });
+    };
+
+    /**
+     * Format new created tag object
+     * @param {string} label
+     * @returns {object} formated object for new tags to save in tags array
+     */
+    const createTag = (label) => ({
+        title: label,
+    });
+
+    /**
+     * Handle when user create a new tag with react-select component
+     * @param {string} inputValue
+     */
+    const handleCreateTag = (inputValue) => {
+        const newOption = createTag(inputValue);
+        setGameData((prev) => {
+            return { ...prev, tags: [...prev.tags, newOption] };
         });
     };
 
@@ -166,8 +195,8 @@ function CreateGame() {
                                 Select or create tags
                             </span>
                         </label>
-                        <Select
-                            name="colors"
+                        <CreatableSelect
+                            name="tags"
                             options={tags}
                             className="basic-multi-select"
                             classNamePrefix="select"
@@ -176,6 +205,7 @@ function CreateGame() {
                             value={gameData.tags}
                             getOptionLabel={(option) => `${option.title}`}
                             getOptionValue={(option) => option.title}
+                            onCreateOption={handleCreateTag}
                             isMulti
                         />
                     </div>

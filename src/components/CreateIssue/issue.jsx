@@ -12,6 +12,7 @@ function CreateIssue({ description, imageUrl }) {
         title: '',
         is_public: true,
         platform_id: 1,
+
         is_online: true,
         description: '',
         category: '',
@@ -20,7 +21,7 @@ function CreateIssue({ description, imageUrl }) {
         replication: '',
         tags: [],
     });
-
+    const [platforms, setPlatform] = useState([]);
     const userId = useSelector((state) => state.user.userData.userId);
     const publishedAt = new Date();
 
@@ -40,24 +41,34 @@ function CreateIssue({ description, imageUrl }) {
     ];
 
     const idGame = 1;
-    const [plateforms, setplatforms] = useState([]);
+
     useEffect(() => {
         const fetchdata = async () => {
             try {
                 const resPlateform = await axios.get(
                     'http://localhost:3000/platforms'
                 );
-
-                setplatforms(resPlateform.data);
-                console.log(typeof plateforms);
-
-                console.log(resPlateform);
+                setPlatform(resPlateform.data.platforms);
             } catch (error) {
                 console.log(error);
             }
         };
         fetchdata();
-    });
+    }, []);
+
+    useEffect(() => {
+        const fetchdata = async () => {
+            try {
+                const resTags = await axios.get(
+                    `http://localhost:3000/games/game/${idGame}/tags`
+                );
+                setPlatform(resTags);
+            } catch (error) {
+                console.log(error);
+            }
+        };
+        fetchdata();
+    }, []);
 
     const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(false);
@@ -66,7 +77,7 @@ function CreateIssue({ description, imageUrl }) {
         // redirect user on success
         toast.onChange((payload) => {
             if (payload.status === 'removed' && payload.id === 'succesToast') {
-                navigate('/games/game/:id_game');
+                navigate(`/games/game/${idGame}`);
             }
         });
     }, [navigate]);
@@ -254,7 +265,7 @@ function CreateIssue({ description, imageUrl }) {
                                         issueInfos.platform_id
                                     )}
                                 >
-                                    {plateforms.map((Plateform) => (
+                                    {platforms.map((Plateform) => (
                                         <option
                                             key={Plateform.id}
                                             value={Plateform.id}

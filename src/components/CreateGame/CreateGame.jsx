@@ -61,6 +61,7 @@ function CreateGame() {
                 setGameData((prev) => {
                     return { ...prev, picture: imageUrl };
                 });
+                setImageUrl('');
             } else {
                 throw new Error('Image is too big');
             }
@@ -299,13 +300,21 @@ function CreateGame() {
                         />
                         <div className="flex">
                             <button
-                                className="btn btn-warning w-1/2"
+                                className={`btn  w-1/2 ${
+                                    gameData.picture
+                                        ? 'btn-warning'
+                                        : 'btn-disabled'
+                                }`}
                                 onClick={(e) => handleDeleteImage(e)}
                             >
                                 Delete image
                             </button>
                             <button
-                                className="btn btn-success w-1/2"
+                                className={`btn  w-1/2 ${
+                                    imageUrl || gameData.picture === ''
+                                        ? 'btn-success'
+                                        : 'btn-disabled'
+                                }`}
                                 onClick={handleAddImage}
                             >
                                 Add image

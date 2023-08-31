@@ -1,10 +1,26 @@
 import { Link } from 'react-router-dom';
 import ContentContainer from '../ContentContainer';
-import Category from '../Category';
+import Category from '../../Category';
 import { IssuesListItem } from './IssuesListItem';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
 
 const Game = () => {
-    const categories = ['FPS', 'Action'];
+    const [categories, setCategories] = useState([]);
+
+    useEffect(() => {
+        const fetchCategories = async () => {
+            try {
+                const res = await axios.get('http://localhost:3000/categories');
+                setCategories(res.data.value);
+                console.log(res.data.categories);
+            } catch (error) {
+                console.log(error);
+            }
+        };
+        fetchCategories();
+    }, []);
+    // const categories = ['FPS', 'Action'];
     return (
         <ContentContainer>
             <div className="grid grid-cols-12 lg:gap-16 gap-0">
@@ -60,7 +76,7 @@ const Game = () => {
             <ul className="mt-4 -mx-1">
                 {categories.map((c) => (
                     <li className="mx-1 inline-block" key={c.id}>
-                        <Category name={c} />
+                        <Category name={c.name} />
                     </li>
                 ))}
             </ul>

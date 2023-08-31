@@ -1,9 +1,13 @@
 import { useEffect } from 'react';
+import Login from './components/Login/Login';
 import { Route, Routes } from 'react-router-dom';
-import Example from './Example';
-import Games from './Games/Games';
-import Game from './Game/Game';
+import Example from './components/Example';
+import Games from './/components/Games/Games';
+import Game from './components/Game/Game';
 
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.min.css';
+import SignUp from './components/SignUp/SignUp';
 function App() {
     /** DaisyUI Theme */
     useEffect(() => {
@@ -13,7 +17,9 @@ function App() {
         <Routes>
             <Route path="/example" element={<Example />} />
             <Route path="/games" element={<Games />} />
-            <Route path="/game/" element={<Game />} />
+            <Route path="/game" element={<Game />} />
+            <Route path="/signup" element={<SignUp />} />
+            <Route path="/login" element={<Login />} />
         </Routes>
     );
 }

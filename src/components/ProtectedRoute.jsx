@@ -3,33 +3,39 @@ import { useNavigate, Outlet } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { isDeveloper, isLoggedIn } from '../utils/userStatus';
 import PropTypes from 'prop-types';
+import { toast } from 'react-toastify';
 
-const ProtectedRoute = ({ role = '', id = null }) => {
+const ProtectedRoute = ({ role = '' }) => {
     const navigate = useNavigate();
     const userData = useSelector((state) => state.user.userData);
 
     useEffect(() => {
         // only for visitor
-        if (role === 'visitor' && isLoggedIn(userData)) {
+        if (role === 'guest' && isLoggedIn()) {
+            console.log('guest only');
             return navigate('/', {
                 replace: true,
             });
         }
         // only if connected
-        if (!userData) {
+        if (role === 'logged' && !isLoggedIn()) {
+            console.log('logged only');
+            toast.error(
+                'You are not connected or your session has expired, please login',
+                {
+                    autoClose: 2000,
+                    theme: 'colored',
+                    toastId: 'redirectLogin',
+                }
+            );
             return navigate('/login', {
                 replace: true,
             });
         }
         // only if dev
-        if (role === 'developer' && !isDeveloper(userData)) {
-            return navigate('/', {
-                replace: true,
-            });
-        }
-        // only if is equal id user
-        if (id && Number(id) !== Number(userData.userId)) {
-            return navigate('/', {
+        if (role === 'developer' && (!isLoggedIn() || !isDeveloper(userData))) {
+            console.log('dev only');
+            return navigate('/login', {
                 replace: true,
             });
         }
@@ -40,7 +46,6 @@ const ProtectedRoute = ({ role = '', id = null }) => {
 
 ProtectedRoute.propTypes = {
     role: PropTypes.string,
-    id: PropTypes.number,
 };
 
 export default ProtectedRoute;

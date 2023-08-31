@@ -1,6 +1,4 @@
 import jwt_decode from 'jwt-decode';
-import store from './../store';
-import { logout } from './../store/reducers/user';
 
 /**
  * Retrieve user info frome token body
@@ -65,8 +63,6 @@ export const isTokenExpired = () => {
         return true;
     }
     if (exp * 1000 < new Date().getTime()) {
-        //disconnect user
-        store.dispatch(logout());
         return true;
     } else {
         return false;

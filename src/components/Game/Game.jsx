@@ -1,44 +1,54 @@
 import { Link } from 'react-router-dom';
 import ContentContainer from '../ContentContainer';
-import Category from '../../Category';
+
 import { IssuesListItem } from './IssuesListItem';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 
 const Game = () => {
-    const [categories, setCategories] = useState([]);
+    const [game, setGame] = useState({});
+    const gameId = 1;
 
     useEffect(() => {
-        const fetchCategories = async () => {
+        const fetchGame = async () => {
             try {
-                const res = await axios.get('http://localhost:3000/categories');
-                setCategories(res.data.value);
-                console.log(res.data.categories);
+                const res = await axios.get(
+                    `http://localhost:3000/games/game/${gameId}`
+                );
+                console.log(res.data);
+                setGame(res.data.game[0]);
             } catch (error) {
                 console.log(error);
             }
         };
-        fetchCategories();
+        fetchGame();
     }, []);
+
     // const categories = ['FPS', 'Action'];
+    useEffect(() => {
+        console.log('state', game);
+    });
     return (
         <ContentContainer>
             <div className="grid grid-cols-12 lg:gap-16 gap-0">
                 <div className="lg:col-span-8 col-span-12">
                     <div className="flex flex-col">
                         <img
-                            src="https://placehold.co/600x300"
+                            src={game.picture}
                             alt=""
                             className="mb-8 order-2 lg:order-1"
                         />
                         <h1 className="text-4xl font-black mb-8 order-1 lg:order-2">
-                            The Elder Scrolls V Skyrim Special Edition
+                            {game.name}
                         </h1>
                     </div>
                 </div>
                 <div className="lg:col-span-4 col-span-12">
                     <div className="flex justify-center flex-col items-center ">
-                        <Link to={'#'} className="btn w-full mb-4">
+                        <Link
+                            to={game.external_link}
+                            className="btn w-full mb-4"
+                        >
                             Official website
                         </Link>
                         <Link to={'#'} className="btn btn-warning w-full mb-4">
@@ -58,27 +68,17 @@ const Game = () => {
                     </Link>
                 </div>
                 <div className="text-sm m-2">
-                    <span>Released : </span>
+                    <span>Released : {game.release_date} </span>
                     <span>2014</span>
                 </div>
             </div>
-            <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc ac
-                aliquet mi. Fusce dictum facilisis enim in mollis. Nam eu diam
-                eu diam tristique feugiat. Praesent risus orci, accumsan sit
-                amet dui at, scelerisque sollicitudin sem. Pellentesque gravida
-                ante sed magna sodales, eu feugiat tortor vestibulum. Etiam orci
-                felis, rhoncus a libero sit amet, interdum dictum odio. Ut
-                sagittis nulla dolor, eget auctor ligula pellentesque vel.
-                Maecenas accumsan enim ac neque commodo, sed tincidunt nibh
-                fermentum.
-            </p>
+            <p>{game.description}</p>
             <ul className="mt-4 -mx-1">
-                {categories.map((c) => (
+                {/* {categories.map((c) => (
                     <li className="mx-1 inline-block" key={c.id}>
                         <Category name={c.name} />
                     </li>
-                ))}
+                ))} */}
             </ul>
 
             <div className="tabs tabs-boxed mt-8">
@@ -87,12 +87,13 @@ const Game = () => {
             </div>
             <form action="" className="w-full mt-4">
                 <div className="join w-full flex lg:flex-row flex-col">
-                    <select className="select select-bordered lg:join-item bg-neutral">
-                        <option disabled selected>
-                            Filter
-                        </option>
-                        <option>Weapons</option>
-                        <option>Main character</option>
+                    <select
+                        className="select select-bordered lg:join-item bg-neutral"
+                        defaultValue={1}
+                    >
+                        <option disabled>Filter</option>
+                        <option value={1}>Weapons</option>
+                        <option value={2}>Main character</option>
                     </select>
                     <div className="flex-1">
                         <div>

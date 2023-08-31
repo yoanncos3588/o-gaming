@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { isTokenExpired } from '../utils/token';
 
 /** instance of axios to access data with token */
 export const axiosInstance = axios.create({
@@ -8,7 +9,7 @@ export const axiosInstance = axios.create({
 /** Intercept request and add user token if exist to request header auth */
 axiosInstance.interceptors.request.use((config) => {
     const token = JSON.parse(localStorage.getItem('token'));
-    if (token) {
+    if (token && !isTokenExpired()) {
         config.headers.Authorization = `Bearer ${token}`;
     }
     return config;

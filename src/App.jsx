@@ -23,11 +23,9 @@ function App() {
                 </Route>
                 <Route element={<ProtectedRoute role="logged" />}>
                     {/* {routes for connected user only here} */}
-                    <Route path="/only-online" element={<div>only-dev</div>} />
                 </Route>
                 <Route element={<ProtectedRoute role="developer" />}>
                     {/* {routes for dev only here} */}
-                    <Route path="/only-dev" element={<div>only-dev</div>} />
                 </Route>
             </Routes>
         </>

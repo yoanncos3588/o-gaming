@@ -1,11 +1,9 @@
-import React from 'react';
 import Menu from '../Header/Menu';
-import LoginButton from '../Header/LoginButton';
-import SignUpButton from '../Header/SignUpButton';
 import Logo from '../Logo';
 import { Link } from 'react-router-dom';
+import { MenuAuth } from '../Header/MenuAuth';
 
-const Drawer = (props) => {
+const Drawer = () => {
     return (
         <div className="drawer-side">
             <label htmlFor="my-drawer-3" className="drawer-overlay"></label>
@@ -16,13 +14,8 @@ const Drawer = (props) => {
                     </Link>
                 </div>
                 <ul>
-                    <li>
-                        <LoginButton />
-                    </li>
-                    <li>
-                        <SignUpButton />
-                    </li>
                     <Menu />
+                    <MenuAuth />
                 </ul>
             </div>
         </div>

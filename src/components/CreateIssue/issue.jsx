@@ -5,6 +5,7 @@ import { toast } from 'react-toastify';
 import { Link, useNavigate } from 'react-router-dom';
 import { axiosInstance } from '../../utils/axios';
 import { useSelector } from 'react-redux';
+import axios from 'axios';
 
 function CreateIssue({ description, imageUrl }) {
     const [issueInfos, setIssueInfos] = useState({
@@ -23,13 +24,13 @@ function CreateIssue({ description, imageUrl }) {
     const userId = useSelector((state) => state.user.userData.userId);
     const publishedAt = new Date();
 
-    const systemeOptions = [
-        { id: 1, name: 'ps5' },
-        { id: 2, name: 'ps4' },
-        { id: 3, name: 'Xbox' },
-        { id: 4, name: 'PC' },
-        { id: 5, name: 'Switch' },
-    ];
+    // const systemeOptions = [
+    //     { id: 1, name: 'ps5' },
+    //     { id: 2, name: 'ps4' },
+    //     { id: 3, name: 'Xbox' },
+    //     { id: 4, name: 'PC' },
+    //     { id: 5, name: 'Switch' },
+    // ];
 
     const tags = [
         { id: 1, title: 'Weapon' },
@@ -39,6 +40,24 @@ function CreateIssue({ description, imageUrl }) {
     ];
 
     const idGame = 1;
+    const [plateforms, setplatforms] = useState([]);
+    useEffect(() => {
+        const fetchdata = async () => {
+            try {
+                const resPlateform = await axios.get(
+                    'http://localhost:3000/platforms'
+                );
+
+                setplatforms(resPlateform.data);
+                console.log(typeof plateforms);
+
+                console.log(resPlateform);
+            } catch (error) {
+                console.log(error);
+            }
+        };
+        fetchdata();
+    });
 
     const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(false);
@@ -88,10 +107,6 @@ function CreateIssue({ description, imageUrl }) {
             });
         }
     };
-
-    useEffect(() => {
-        console.log(issueInfos);
-    });
 
     const convertValueToBoolean = (value) => {
         if (value === 'true') {
@@ -239,12 +254,12 @@ function CreateIssue({ description, imageUrl }) {
                                         issueInfos.platform_id
                                     )}
                                 >
-                                    {systemeOptions.map((option) => (
+                                    {plateforms.map((Plateform) => (
                                         <option
-                                            key={option.id}
-                                            value={option.id}
+                                            key={Plateform.id}
+                                            value={Plateform.id}
                                         >
-                                            {option.name}
+                                            {Plateform.name}
                                         </option>
                                     ))}
                                 </select>

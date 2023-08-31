@@ -1,7 +1,11 @@
 import { createReducer } from '@reduxjs/toolkit';
 import { createAction, createAsyncThunk } from '@reduxjs/toolkit';
 import { axiosInstance } from '../../utils/axios';
-import { decodeToken } from '../../utils/jwtDecode';
+import {
+    decodeToken,
+    removeUserTokens,
+    setUserTokens,
+} from '../../utils/token';
 
 export const initialState = {
     credentials: {
@@ -30,8 +34,7 @@ export const login = createAsyncThunk('user/login', async (_, thunkAPI) => {
     const userData = decodeToken(data.token);
 
     //store user data in local storage
-    localStorage.setItem('user', JSON.stringify(userData));
-    localStorage.setItem('token', JSON.stringify(data.token));
+    setUserTokens(userData, data.token);
 
     return userData;
 });
@@ -62,8 +65,7 @@ const userReducer = createReducer(initialState, (builder) => {
         })
         .addCase(logout, (state) => {
             state.userData = null;
-            localStorage.removeItem('user');
-            localStorage.removeItem('token');
+            removeUserTokens();
         });
 });
 

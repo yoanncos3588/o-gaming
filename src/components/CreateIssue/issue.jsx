@@ -60,9 +60,9 @@ function CreateIssue({ description, imageUrl }) {
         const fetchdata = async () => {
             try {
                 const resTags = await axios.get(
-                    `http://localhost:3000/games/game/${idGame}/tags`
+                    'http://localhost:3000/games/game/:id_game/tags'
                 );
-                setPlatform(resTags);
+                setPlatform(resTags.data.platforms);
             } catch (error) {
                 console.log(error);
             }

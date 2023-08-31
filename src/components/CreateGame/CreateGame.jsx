@@ -1,205 +1,183 @@
-import { useState } from 'react';
-
+import { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 import Select from 'react-select';
+import ContentContainer from '../ContentContainer';
+import axios from 'axios';
 function CreateGame() {
     // const [selectedImage, setSelectedImage] = useState(null);
+    const [categories, setCategories] = useState([]);
+    const [tags, setTags] = useState([]);
+    const [selectedCategories, setSelectedCategories] = useState([]);
+    const [selectedTags, setSelectedTags] = useState([]);
+
+    const onOptionChangeForCategories = (options) => {
+        setSelectedCategories(options);
+    };
+
+    const onOptionChangeForTags = (options) => {
+        setSelectedTags(options);
+    };
+
+    /** fetch categories */
+    useEffect(() => {
+        const fetchCategories = async () => {
+            try {
+                const res = await axios.get('http://localhost:3000/categories');
+
+                if (res.status !== 200) {
+                    toast.error(res.data.error, {
+                        theme: 'colored',
+                        toastId: 'errorFetchCategories',
+                    });
+                    return;
+                }
+                setCategories(res.data.categories);
+            } catch (error) {
+                toast.error('An unexpected error has occurred', {
+                    theme: 'colored',
+                    toastId: 'errorFetchCategories',
+                });
+            }
+        };
+        fetchCategories();
+    }, []);
+
+    useEffect(() => {
+        const fetchTags = async () => {
+            try {
+                const res = await axios.get('http://localhost:3000/tags');
+                if (res.status !== 200) {
+                    toast.error(res.data.error, {
+                        theme: 'colored',
+                        toastId: 'errorFetchCategories',
+                    });
+                    return;
+                }
+                setTags(res.data.tags);
+            } catch (error) {
+                toast.error('An unexpected error has occurred', {
+                    theme: 'colored',
+                    toastId: 'errorFetchCategories',
+                });
+            }
+        };
+        fetchTags();
+    }, []);
 
     return (
-        <main>
-            <div className="flex justify-center items-center">
-                <div className=" w-full md:w-1/2 xl:w-3/5 bg-neutral p-8 rounded-lg shadow-lg m-2">
-                    <h2 className="text-2xl font-semibold text-white mb-4">
-                        Create a game
-                    </h2>
-                    <form>
-                        <div className="mb-4">
-                            <label
-                                htmlFor="name"
-                                className="block text-white text-sm font-medium mb-2"
-                            >
-                                title
-                            </label>
-                            <input
-                                type="text"
-                                id="name"
-                                name="name"
-                                className="w-full px-3 py-2 rounded-md bg-gray-700 text-white focus:outline-none focus:ring focus:border-blue-300"
-                                placeholder="add a title"
-                            />
-                        </div>
-
-                        <section className="mb-4 flex flex-wrap ">
-                            <div className="form-control w-1/4 mr-3">
-                                <label className="cursor-pointer label ">
-                                    <span className="label-text">action</span>
-                                    <input
-                                        type="checkbox"
-                                        className="checkbox checkbox-info"
-                                    />
-                                </label>
-                            </div>
-                            <div className="form-control w-1/4 mr-3">
-                                <label className="cursor-pointer label ">
-                                    <span className="label-text">
-                                        Simulation
-                                    </span>
-                                    <input
-                                        type="checkbox"
-                                        className="checkbox checkbox-info"
-                                    />
-                                </label>
-                            </div>
-                            <div className="form-control w-1/4 mr-2">
-                                <label className="cursor-pointer label ">
-                                    <span className="label-text">aventure</span>
-                                    <input
-                                        type="checkbox"
-                                        className="checkbox checkbox-info"
-                                    />
-                                </label>
-                            </div>
-                            <div className="form-control w-1/4 mr-3">
-                                <label className="cursor-pointer label ">
-                                    <span className="label-text">compte</span>
-                                    <input
-                                        type="checkbox"
-                                        className="checkbox checkbox-info"
-                                    />
-                                </label>
-                            </div>
-                            <div className="form-control w-1/4 mr-3">
-                                <label className="cursor-pointer label ">
-                                    <span className="label-text">
-                                        interface
-                                    </span>
-                                    <input
-                                        type="checkbox"
-                                        className="checkbox checkbox-info"
-                                    />
-                                </label>
-                            </div>
-                            <div className="form-control w-1/4 mr-3">
-                                <label className="cursor-pointer label ">
-                                    <span className="label-text">
-                                        interface
-                                    </span>
-                                    <input
-                                        type="checkbox"
-                                        className="checkbox checkbox-info"
-                                    />
-                                </label>
-                            </div>
-                            <div className="form-control w-1/4 mr-3">
-                                <label className="cursor-pointer label ">
-                                    <span className="label-text">
-                                        interface
-                                    </span>
-                                    <input
-                                        type="checkbox"
-                                        className="checkbox checkbox-info"
-                                    />
-                                </label>
-                            </div>
-                            <div className="form-control w-1/4 mr-3">
-                                <label className="cursor-pointer label ">
-                                    <span className="label-text">
-                                        interface
-                                    </span>
-                                    <input
-                                        type="checkbox"
-                                        className="checkbox checkbox-info"
-                                    />
-                                </label>
-                            </div>
-                            <div className="form-control w-1/4 mr-3">
-                                <label className="cursor-pointer label ">
-                                    <span className="label-text">
-                                        interface
-                                    </span>
-                                    <input
-                                        type="checkbox"
-                                        className="checkbox checkbox-info"
-                                    />
-                                </label>
-                            </div>
-                        </section>
-
-                        <div>
-                            <label
-                                htmlFor="message"
-                                className="block text-white text-sm font-medium mb-2"
-                            >
-                                description
-                            </label>
-                            <textarea
-                                id="message"
-                                name="message"
-                                rows="4"
-                                className="w-full px-3 py-2 rounded-md bg-gray-700 text-white focus:outline-none focus:ring focus:border-blue-300"
-                                placeholder="add an description"
-                            ></textarea>
-                        </div>
-                        <p className="mb-2 text-md font-medium">
-                            add a image for your game
-                        </p>
-                        <div className="flex">
-                            <img
-                                className="w-full h-fit mb-8 "
-                                src={
-                                    'https://img.redbull.com/images/c_crop,w_1920,h_960,x_0,y_103,f_auto,q_auto/c_scale,w_1200/redbullcom/2020/6/5/ctsejxmdtw9inp8zqqqd/red-bull-campus-clutch-valorant-agents'
-                                }
-                                type="file"
-                                accept="image/*"
-                                alt="User Avatar"
-                            />
-                        </div>
+        <ContentContainer>
+            <div className=" w-full md:w-1/2 xl:w-3/5 bg-base-200 p-8 rounded-lg shadow-lg mx-auto">
+                <h1 className="text-2xl font-black text-white mb-4">
+                    Create a game
+                </h1>
+                <form>
+                    <div className="form-control w-full  mb-8">
+                        <label className="label">
+                            <span className="label-text">Title</span>
+                        </label>
                         <input
-                            type="file"
-                            className="file-input file-input-bordered file-input-primary w-full max-w-xs"
+                            type="text"
+                            placeholder="Type here"
+                            className="input input-bordered w-full "
                         />
-                        <p className="mb-2 text-md font-medium">
-                            add tags to reference your issues
-                        </p>
-                        <Select
-                            defaultValue={[]}
-                            isMulti
-                            name="colors"
-                            // options={}
-                            className="basic-multi-select mb-5 bg-gray-700"
-                            classNamePrefix="select"
-                        />
-                        <div className="w-full">
-                            <label htmlFor="urlInput">Entrez un lien :</label>
-                            <input
-                                type="url"
-                                id="urlInput"
-                                className="w-full py-1.5 bg-gray-700 rounded-md my-2 pl-2"
-                                name="urlInput"
-                                placeholder="add external link"
-                                pattern="https?://.*"
-                            ></input>
-                        </div>
-                        <div className="w-full">
-                            <label htmlFor="dateInput">Entrez une date :</label>
-                            <input
-                                type="date"
-                                id="dateInput"
-                                className="w-full py-1.5 bg-gray-700 rounded-md mt-2 pl-2 mb-5"
-                                name="dateInput"
-                                required
-                            ></input>
-                        </div>
+                    </div>
 
-                        <button
-                            type="submit"
-                            className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring focus:border-blue-300"
-                        >
-                            Envoyer
-                        </button>
-                    </form>
-                </div>
+                    <div className="form-control w-full mb-8">
+                        <label className="label">
+                            <span className="label-text">Categories</span>
+                        </label>
+                        <Select
+                            name="colors"
+                            options={categories}
+                            className="basic-multi-select"
+                            classNamePrefix="select"
+                            closeMenuOnSelect={false}
+                            onChange={onOptionChangeForCategories}
+                            value={selectedCategories}
+                            getOptionLabel={(option) => `${option.name}`}
+                            getOptionValue={(option) => option.name}
+                            isMulti
+                        />
+                    </div>
+
+                    <div className="form-control mb-8">
+                        <label className="label">
+                            <span className="label-text">Description</span>
+                        </label>
+                        <textarea
+                            className="textarea textarea-bordered h-24"
+                            placeholder="Your game description"
+                        ></textarea>
+                    </div>
+
+                    <div className="form-control mb-8">
+                        <label className="label">
+                            <span className="label-text">
+                                Add an image cover from external URL
+                            </span>
+                        </label>
+                        <input
+                            type="text"
+                            placeholder="Your image url"
+                            className="input input-bordered w-full"
+                        />
+                        <div className="flex">
+                            <button className="btn btn-warning w-1/2">
+                                Delete image
+                            </button>
+                            <button className="btn btn-success w-1/2">
+                                Add image
+                            </button>
+                        </div>
+                    </div>
+                    <div className="form-control mb-8">
+                        <label className="label">
+                            <span className="label-text">
+                                Select or create tags
+                            </span>
+                        </label>
+                        <Select
+                            name="colors"
+                            options={tags}
+                            className="basic-multi-select"
+                            classNamePrefix="select"
+                            closeMenuOnSelect={false}
+                            onChange={onOptionChangeForTags}
+                            value={selectedTags}
+                            getOptionLabel={(option) => `${option.title}`}
+                            getOptionValue={(option) => option.title}
+                            isMulti
+                        />
+                    </div>
+                    <div className="form-control w-full mb-8">
+                        <label className="label">
+                            <span className="label-text">
+                                Official website or buy page
+                            </span>
+                        </label>
+                        <input
+                            type="text"
+                            placeholder="Type here"
+                            className="input input-bordered w-full"
+                        />
+                    </div>
+                    <div className="form-control w-full mb-8">
+                        <label className="label">
+                            <span className="label-text">Release date</span>
+                        </label>
+                        <input
+                            type="date"
+                            placeholder="Type here"
+                            className="input input-bordered w-full"
+                        />
+                    </div>
+
+                    <button type="submit" className="btn btn-primary w-full">
+                        Envoyer
+                    </button>
+                </form>
             </div>
-        </main>
+        </ContentContainer>
     );
 }
 

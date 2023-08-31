@@ -12,14 +12,12 @@ const ProtectedRoute = ({ role = '' }) => {
     useEffect(() => {
         // only for visitor
         if (role === 'guest' && isLoggedIn()) {
-            console.log('guest only');
             return navigate('/', {
                 replace: true,
             });
         }
         // only if connected
         if (role === 'logged' && !isLoggedIn()) {
-            console.log('logged only');
             toast.error(
                 'You are not connected or your session has expired, please login',
                 {
@@ -34,12 +32,11 @@ const ProtectedRoute = ({ role = '' }) => {
         }
         // only if dev
         if (role === 'developer' && (!isLoggedIn() || !isDeveloper(userData))) {
-            console.log('dev only');
             return navigate('/login', {
                 replace: true,
             });
         }
-    }, []);
+    }, [role, userData, navigate]);
 
     return <Outlet />;
 };

@@ -6,10 +6,10 @@ import { logout } from '../store/reducers/user';
  * check if user is still connected by checking token expiration time and store for more security
  */
 export const isLoggedIn = () => {
-    // verifie si le token est présent
+    // if token exist user is logged
     if (localStorage.getItem('token')) {
         if (isTokenExpired()) {
-            // si le token est expiré on logout
+            // if token is expired we disconnect user
             store.dispatch(logout());
             return false;
         } else {

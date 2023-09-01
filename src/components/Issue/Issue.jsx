@@ -47,7 +47,7 @@ const Issue = () => {
                 <section>
                     <Link
                         to={`/game/${idGame}`}
-                        className="mb-4 inline-block underline hover:text-accent text-sm"
+                        className="mb-8 inline-block underline hover:text-accent text-sm"
                     >
                         Return to game page
                     </Link>
@@ -58,7 +58,7 @@ const Issue = () => {
                             </span>
                             {issue.title}
                         </h1>
-                        <span className=" opacity-50 italic text-sm">
+                        <span className=" opacity-50 italic text-xs">
                             Created by{' '}
                             <Link
                                 to={`user/${issue.user_id}`}
@@ -93,8 +93,23 @@ const Issue = () => {
                         </ul>
                     </div>
                     <div className="divider"></div>
-                    <div>
-                        <h2 className="font-bold text-xl">Description</h2>
+                    <div className="mb-8">
+                        <h2 className="font-bold text-sm mb-4 uppercase  inline-block text-secondary">
+                            Description
+                        </h2>
+                        <p>{issue.description}</p>
+                    </div>
+                    <div className="mb-8">
+                        <h2 className="font-bold text-sm mb-4 uppercase  inline-block text-secondary">
+                            Frequency
+                        </h2>
+                        <p>{issue.frequency}</p>
+                    </div>
+                    <div className="mb-8">
+                        <h2 className="font-bold text-sm mb-4 uppercase  inline-block text-secondary">
+                            How to replicate
+                        </h2>
+                        <p>{issue.replication}</p>
                     </div>
                 </section>
             )}

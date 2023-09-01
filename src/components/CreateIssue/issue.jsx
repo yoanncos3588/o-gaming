@@ -22,6 +22,7 @@ function CreateIssue({ description, imageUrl }) {
         tags: [],
     });
     const [platforms, setPlatform] = useState([]);
+
     const userId = useSelector((state) => state.user.userData.userId);
     const publishedAt = new Date();
 
@@ -33,12 +34,12 @@ function CreateIssue({ description, imageUrl }) {
     //     { id: 5, name: 'Switch' },
     // ];
 
-    const tags = [
-        { id: 1, title: 'Weapon' },
-        { id: 2, title: 'Lobby' },
-        { id: 3, title: 'Character' },
-        { id: 4, title: 'Spell' },
-    ];
+    // const tags = [
+    //     { id: 1, title: 'Weapon' },
+    //     { id: 2, title: 'Lobby' },
+    //     { id: 3, title: 'Character' },
+    //     { id: 4, title: 'Spell' },
+    // ];
 
     const idGame = 1;
 
@@ -56,13 +57,15 @@ function CreateIssue({ description, imageUrl }) {
         fetchdata();
     }, []);
 
+    const [tags, settags] = useState([]);
     useEffect(() => {
         const fetchdata = async () => {
             try {
                 const resTags = await axios.get(
-                    'http://localhost:3000/games/game/:id_game/tags'
+                    `http://localhost:3000/games/game/${idGame}/tags`
                 );
-                setPlatform(resTags.data.platforms);
+                settags(resTags.data.tags);
+                console.log(resTags.data);
             } catch (error) {
                 console.log(error);
             }
@@ -162,7 +165,7 @@ function CreateIssue({ description, imageUrl }) {
                 <div>
                     <Link
                         className="text-md font-medium text-blue-800"
-                        to={`/games/game/:gameid`}
+                        to={`/games/game/:${idGame}`}
                     >
                         ⬅️ ​Return to game page
                     </Link>

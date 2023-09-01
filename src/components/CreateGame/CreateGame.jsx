@@ -6,6 +6,7 @@ import ContentContainer from '../ContentContainer';
 import axios from 'axios';
 import { axiosInstance } from '../../utils/axios';
 import { isImageValid } from '../../utils/imageValidator';
+import { useNavigate } from 'react-router-dom';
 
 function CreateGame() {
     // tag and categories from api
@@ -13,12 +14,13 @@ function CreateGame() {
     const [selectedCategories, setSelectedCategories] = useState([]);
     const [tags, setTags] = useState([]);
     const [selectedTags, setSelectedTags] = useState([]);
-    const [imageUrl, setImageUrl] = useState('');
+    const [imageUrl, setImageUrl] = useState(''); //https://i.imgur.com/asAuCMn.jpg image valid for testing
+    const navigate = useNavigate();
 
     const [gameData, setGameData] = useState({
         name: '',
         description: '',
-        picture: 'https://i.imgur.com/asAuCMn.jpg',
+        picture: '',
         external_link: '',
         release_date: '',
         categories: [],
@@ -181,12 +183,12 @@ function CreateGame() {
                 'http://localhost:3000/games/game',
                 gameData
             );
-            console.log(res);
             if (res.status === 200) {
                 toast.success('Your game was created', {
                     theme: 'colored',
                     toastId: 'successCreateGame',
                 });
+                navigate('/');
                 return;
             }
         } catch (error) {

@@ -1,12 +1,14 @@
 import { useEffect } from 'react';
 import Login from './components/Login/Login';
+import SignUp from './components/SignUp/SignUp';
 import { Route, Routes } from 'react-router-dom';
 import Games from './components/Games/Games';
 
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
-import SignUp from './components/SignUp/SignUp';
+import CreateGame from './components/CreateGame/CreateGame';
 import ProtectedRoute from './components/ProtectedRoute';
+
 function App() {
     /** DaisyUI Theme */
     useEffect(() => {
@@ -28,6 +30,7 @@ function App() {
                 </Route>
                 <Route element={<ProtectedRoute role="developer" />}>
                     {/* {routes for dev only here} */}
+                    <Route path="/create-game" element={<CreateGame />} />
                 </Route>
             </Routes>
         </>

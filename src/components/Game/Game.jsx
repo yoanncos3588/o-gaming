@@ -1,13 +1,13 @@
 import { Link } from 'react-router-dom';
 import ContentContainer from '../ContentContainer';
-
+import Category from '../../Category';
 import { IssuesListItem } from './IssuesListItem';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 
 const Game = () => {
     const [game, setGame] = useState({});
-    const gameId = 1;
+    const [gameId, setGameId] = useState();
 
     useEffect(() => {
         const fetchGame = async () => {
@@ -15,7 +15,8 @@ const Game = () => {
                 const res = await axios.get(
                     `http://localhost:3000/games/game/${gameId}`
                 );
-                console.log(res.data);
+                console.log(setGame);
+
                 setGame(res.data.game[0]);
             } catch (error) {
                 console.log(error);
@@ -63,8 +64,8 @@ const Game = () => {
             <div className="flex -m-2 flex-wrap flex-col lg:flex-row my-4 lg:mt-0">
                 <div className="text-sm m-2">
                     <span>Publisher : </span>
-                    <Link to={`#`} className="underline">
-                        Bethesda Softworks
+                    <Link to={`user/${game.user_Id}`} className="underline">
+                        {game.author}
                     </Link>
                 </div>
                 <div className="text-sm m-2">
@@ -74,11 +75,12 @@ const Game = () => {
             </div>
             <p>{game.description}</p>
             <ul className="mt-4 -mx-1">
-                {/* {categories.map((c) => (
-                    <li className="mx-1 inline-block" key={c.id}>
-                        <Category name={c.name} />
-                    </li>
-                ))} */}
+                {game.categories &&
+                    game.categories.map((c, index) => (
+                        <li className="mx-1 inline-block" key={index}>
+                            <Category name={c} />
+                        </li>
+                    ))}
             </ul>
 
             <div className="tabs tabs-boxed mt-8">

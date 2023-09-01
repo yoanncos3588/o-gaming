@@ -1,4 +1,6 @@
 import PropTypes from 'prop-types';
+// import { useState } from 'react';
+// const [categories, setcategories] = useState([]);
 
 const Category = ({ name }) => {
     return (

@@ -6,7 +6,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
 import CreateGame from './components/CreateGame/CreateGame';
 import ProtectedRoute from './components/ProtectedRoute';
-
+import Games from './components/Games/Games';
 function App() {
     /** DaisyUI Theme */
     useEffect(() => {
@@ -17,7 +17,7 @@ function App() {
             <ToastContainer />
             <Routes>
                 {/* {routes for everybody} */}
-                <Route path="/" element="homepage" />
+                <Route path="/" element={<Games />} />
                 <Route element={<ProtectedRoute role="guest" />}>
                     {/* {routes for guest only here} */}
                     <Route path="/login" element={<Login />} />

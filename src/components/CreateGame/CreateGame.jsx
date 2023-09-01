@@ -10,13 +10,14 @@ import { axiosInstance } from '../../utils/axios';
 function CreateGame() {
     // tag and categories from api
     const [categories, setCategories] = useState([]);
+    const [selectedCategories, setSelectedCategories] = useState([]);
     const [tags, setTags] = useState([]);
     const [imageUrl, setImageUrl] = useState('');
 
     const [gameData, setGameData] = useState({
         name: '',
         description: '',
-        picture: '',
+        picture: 'https://i.imgur.com/asAuCMn.jpg',
         external_link: '',
         release_date: '',
         categories: [],
@@ -97,9 +98,7 @@ function CreateGame() {
      * @param {Array} options array of categories from react-select component
      */
     const onOptionChangeForCategories = (options) => {
-        setGameData((prev) => {
-            return { ...prev, categories: options };
-        });
+        setSelectedCategories(options);
     };
 
     /**
@@ -167,12 +166,21 @@ function CreateGame() {
         fetchCategories();
     }, []);
 
+    const formatCategoriesForApi = () => {
+        let categoriesForAPI = [];
+        selectedCategories.map((c) => categoriesForAPI.push(c.name));
+        setGameData((prev) => {
+            return { ...prev, categories: categoriesForAPI };
+        });
+    };
+
     /**
      * Handle form submit and create game with api
      * @param {Event} e
      */
     const handleSubmit = async (e) => {
         e.preventDefault();
+        formatCategoriesForApi();
         try {
             const res = await axiosInstance.post(
                 'http://localhost:3000/games/game',
@@ -239,7 +247,7 @@ function CreateGame() {
                             value={gameData.name}
                             name="name"
                             placeholder="Type here"
-                            className="input input-bordered w-full "
+                            className="input input-bordered w-full bg-neutral"
                             onChange={handleChange}
                         />
                     </div>
@@ -255,7 +263,7 @@ function CreateGame() {
                             classNamePrefix="select"
                             closeMenuOnSelect={false}
                             onChange={onOptionChangeForCategories}
-                            value={gameData.categories}
+                            value={selectedCategories}
                             getOptionLabel={(option) => `${option.name}`}
                             getOptionValue={(option) => option.name}
                             isMulti
@@ -267,7 +275,7 @@ function CreateGame() {
                             <span className="label-text">Description</span>
                         </label>
                         <textarea
-                            className="textarea textarea-bordered h-24"
+                            className="textarea textarea-bordered h-24 bg-neutral"
                             name="description"
                             placeholder="Your game description"
                             value={gameData.description}
@@ -294,7 +302,7 @@ function CreateGame() {
                         <input
                             type="text"
                             placeholder="Your image url"
-                            className="input input-bordered w-full"
+                            className="input input-bordered w-full bg-neutral"
                             value={imageUrl}
                             onChange={(e) => setImageUrl(e.target.value)}
                         />
@@ -350,7 +358,7 @@ function CreateGame() {
                         <input
                             type="text"
                             placeholder="Your url"
-                            className="input input-bordered w-full"
+                            className="input input-bordered w-full bg-neutral"
                             name="external_link"
                             onChange={handleChange}
                             value={gameData.external_link}
@@ -364,7 +372,7 @@ function CreateGame() {
                             type="date"
                             name="release_date"
                             placeholder="Type here"
-                            className="input input-bordered w-full"
+                            className="input input-bordered w-full bg-neutral"
                             value={gameData.release_date}
                             onChange={handleChange}
                         />

@@ -64,6 +64,7 @@ function Games() {
         const fetchGames = async () => {
             try {
                 const res = await axios.get('http://localhost:3000/games');
+                console.log(res);
                 if (res.status !== 200) {
                     if (
                         Object.prototype.hasOwnProperty.call(res.data, 'error')
@@ -77,9 +78,8 @@ function Games() {
                     }
                 }
 
-                //TODO ne plus utiliser les fakes data
-                // setGames(res.data.games);
-                setGames(addfakecategorie(res.data.games));
+                setGames(res.data.games);
+                // setGames(addfakecategorie(res.data.games));
                 return res.data.games;
             } catch (error) {
                 console.log(error);
@@ -102,7 +102,7 @@ function Games() {
             const list = games.filter((game) => {
                 return game.categories.some(
                     (item) =>
-                        item.name.toLowerCase() === categoryFilter.toLowerCase()
+                        item.toLowerCase() === categoryFilter.toLowerCase()
                 );
             });
             return list;

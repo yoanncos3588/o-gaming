@@ -10,6 +10,7 @@ export const axiosInstance = axios.create({
 axiosInstance.interceptors.request.use((config) => {
     const token = JSON.parse(localStorage.getItem('token'));
     if (token && !isTokenExpired()) {
+        console.log('bearer');
         config.headers.Authorization = `Bearer ${token}`;
     }
     return config;

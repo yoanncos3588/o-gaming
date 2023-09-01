@@ -4,8 +4,8 @@ import Select from 'react-select';
 import CreatableSelect from 'react-select/creatable';
 import ContentContainer from '../ContentContainer';
 import axios from 'axios';
-import isUrl from 'is-url';
 import { axiosInstance } from '../../utils/axios';
+import { isImageValid } from '../../utils/imageValidator';
 
 function CreateGame() {
     // tag and categories from api
@@ -26,46 +26,20 @@ function CreateGame() {
     });
 
     /**
-     * Create an image object from image url to get meta
-     * @param {string} url image url
-     * @returns
-     */
-    function getImageMeta(url) {
-        return new Promise((resolve, reject) => {
-            let img = new Image();
-            img.onload = () => resolve(img);
-            img.onerror = () => reject();
-            img.src = url;
-        });
-    }
-
-    /**
      * Handle when user click on add image cover
      * @param {Event} e
      */
     const handleAddImage = async (e) => {
         e.preventDefault();
         try {
-            // test if url is realy an url
-            if (!isUrl(imageUrl)) {
-                throw new Error('Image url is not valid');
-            }
-            const extension = imageUrl.slice(-4);
-            // test if url end by image extension
-            if (extension !== '.jpg' && extension !== '.png') {
-                throw new Error('url is not an image url');
-            }
-            const img = await getImageMeta(imageUrl);
-            const w = img.width;
-            const h = img.height;
-            // check image size
-            if (w && w === 1200 && h && h === 600) {
+            const validImage = await isImageValid(imageUrl);
+            if (!validImage) {
+                throw Error('Image is not valid');
+            } else {
                 setGameData((prev) => {
                     return { ...prev, picture: imageUrl };
                 });
                 setImageUrl('');
-            } else {
-                throw new Error('Image is too big');
             }
         } catch (error) {
             if (error !== undefined) {

@@ -166,6 +166,9 @@ function CreateGame() {
         fetchCategories();
     }, []);
 
+    /**
+     * Get categories from state selectedCategories and transfer name into gameData state to match api
+     */
     const formatCategoriesForApi = () => {
         let categoriesForAPI = [];
         selectedCategories.map((c) => categoriesForAPI.push(c.name));
@@ -302,7 +305,8 @@ function CreateGame() {
                         <input
                             type="text"
                             placeholder="Your image url"
-                            className="input input-bordered w-full bg-neutral"
+                            className={`input input-bordered w-full bg-neutral`}
+                            disabled={gameData.picture !== ''}
                             value={imageUrl}
                             onChange={(e) => setImageUrl(e.target.value)}
                         />

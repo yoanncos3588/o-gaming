@@ -5,6 +5,7 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import Tag from '../Tag';
 import Loading from '../Loading';
+import { ReactComponent as IconTools } from '../../assets/icons/tools.svg';
 
 const Issue = () => {
     const [issue, setIssue] = useState(null);
@@ -50,8 +51,11 @@ const Issue = () => {
                     >
                         Return to game page
                     </Link>
-                    <div className="mb-8">
-                        <h1 className=" text-2xl font-black mb-4">
+                    <div className="mb-8 pl-8">
+                        <h1 className="text-2xl font-bold mb-2 flex items-start relative">
+                            <span className="mr-4 absolute -left-8 top-2">
+                                <IconTools className="w-5 h-5" />
+                            </span>
                             {issue.title}
                         </h1>
                         <span className=" opacity-50 italic text-sm">
@@ -66,7 +70,7 @@ const Issue = () => {
                         </span>
                     </div>
                     <div className="divider"></div>
-                    <div className="">
+                    <div className="text-sm">
                         <div className="mb-2">
                             <span className="font-bold">Visibility : </span>
                             {issue.is_public ? 'Public' : 'Private'}
@@ -89,6 +93,9 @@ const Issue = () => {
                         </ul>
                     </div>
                     <div className="divider"></div>
+                    <div>
+                        <h2 className="font-bold text-xl">Description</h2>
+                    </div>
                 </section>
             )}
         </ContentContainer>

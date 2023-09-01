@@ -100,14 +100,14 @@ function Games() {
                                 <GameItem
                                     id={g.id}
                                     name={g.name}
-                                    image={g.image}
+                                    image={g.picture}
                                     publisher={g.author}
                                     publisherId={g.user_id}
                                     realeaseDate={g.release_date}
                                     description={g.description}
                                     categories={g.categories}
-                                    totalIssues={102}
-                                    totalSuggestions={44}
+                                    totalIssues={g.issue_count}
+                                    totalSuggestions={g.suggestion_count}
                                 />
                             </li>
                         ))
@@ -122,14 +122,14 @@ function Games() {
                             <GameItem
                                 id={g.id}
                                 name={g.name}
-                                image={g.image}
+                                image={g.picture}
                                 publisher={g.author}
                                 publisherId={g.user_id}
                                 realeaseDate={g.release_date}
                                 description={g.description}
                                 categories={g.categories}
-                                totalIssues={102}
-                                totalSuggestions={44}
+                                totalIssues={g.issue_count}
+                                totalSuggestions={g.suggestion_count}
                             />
                         </li>
                     ))

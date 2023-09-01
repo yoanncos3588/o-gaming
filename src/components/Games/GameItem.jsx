@@ -2,6 +2,8 @@ import { Link } from 'react-router-dom';
 import Category from '../Category';
 import PropTypes from 'prop-types';
 import placeholder from '/placeholder.jpg';
+import { useEffect, useState } from 'react';
+import { isImageValid } from '../../utils/imageValidator';
 
 export const GameItem = ({
     id,
@@ -15,6 +17,18 @@ export const GameItem = ({
     totalIssues,
     totalSuggestions,
 }) => {
+    const [showPlaceholder, setshowPlaceholder] = useState(true);
+
+    useEffect(() => {
+        const showCover = async () => {
+            const validImage = await isImageValid(image);
+            if (validImage) {
+                setshowPlaceholder(false);
+            }
+        };
+        showCover();
+    }, [image]);
+
     /**
      * Format string to date yyyy-mm-dd
      * @param {string} date
@@ -30,7 +44,7 @@ export const GameItem = ({
             <div className="">
                 <Link to={`/games/${id}`}>
                     <img
-                        src={image ? image : placeholder}
+                        src={!showPlaceholder ? image : placeholder}
                         alt={`image cover of ${name.toLowerCase()}`}
                         className="w-full"
                     />

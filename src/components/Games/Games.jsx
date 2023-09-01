@@ -13,76 +13,20 @@ function Games() {
     const [categoryFilter, setCategoryFilter] = useState('all');
     const [dateFilter, setDateFilter] = useState('all');
 
-    // to delete
-    const addfakecategorie = (games) => {
-        games.forEach((g) => {
-            g.categories = [
-                {
-                    id: 1,
-                    name: 'Sport',
-                    color: 'red',
-                },
-            ];
-            if (g.id === 2) {
-                g.categories = [
-                    {
-                        id: 1,
-                        name: 'RPG',
-                        color: 'red',
-                    },
-                ];
-            }
-            if (g.id === 1) {
-                g.categories = [
-                    {
-                        id: 1,
-                        name: 'Action',
-                        color: 'red',
-                    },
-                    {
-                        id: 1,
-                        name: 'RPG',
-                        color: 'red',
-                    },
-                ];
-            }
-            if (g.id === 3) {
-                g.categories = [
-                    {
-                        id: 1,
-                        name: 'Action',
-                        color: 'red',
-                    },
-                ];
-            }
-        });
-        return games;
-    };
-
     /** fetch games */
     useEffect(() => {
         const fetchGames = async () => {
             try {
                 const res = await axios.get('http://localhost:3000/games');
-                console.log(res);
                 if (res.status !== 200) {
-                    if (
-                        Object.prototype.hasOwnProperty.call(res.data, 'error')
-                    ) {
-                        toast.error(
-                            'An unexpected error has occured, try to refresh',
-                            {
-                                theme: 'colored',
-                            }
-                        );
-                    }
+                    throw Error();
                 }
-
                 setGames(res.data.games);
-                // setGames(addfakecategorie(res.data.games));
                 return res.data.games;
             } catch (error) {
-                console.log(error);
+                toast.error('An unexpected error has occured', {
+                    theme: 'colored',
+                });
             }
         };
         fetchGames();

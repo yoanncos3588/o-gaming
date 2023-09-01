@@ -116,6 +116,6 @@ GameItem.propTypes = {
     realeaseDate: PropTypes.string,
     description: PropTypes.string,
     categories: PropTypes.array,
-    totalIssues: PropTypes.number,
-    totalSuggestions: PropTypes.number,
+    totalIssues: PropTypes.string,
+    totalSuggestions: PropTypes.string,
 };

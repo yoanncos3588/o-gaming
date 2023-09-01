@@ -12,6 +12,7 @@ function CreateGame() {
     const [categories, setCategories] = useState([]);
     const [selectedCategories, setSelectedCategories] = useState([]);
     const [tags, setTags] = useState([]);
+    const [selectedTags, setSelectedTags] = useState([]);
     const [imageUrl, setImageUrl] = useState('');
 
     const [gameData, setGameData] = useState({
@@ -106,9 +107,7 @@ function CreateGame() {
      * @param {Array} options array of tags from react-select component
      */
     const onOptionChangeForTags = (options) => {
-        setGameData((prev) => {
-            return { ...prev, tags: options };
-        });
+        setSelectedTags(options);
     };
 
     /**
@@ -125,9 +124,9 @@ function CreateGame() {
      * @param {string} inputValue
      */
     const handleCreateTag = (inputValue) => {
-        const newOption = createTag(inputValue);
-        setGameData((prev) => {
-            return { ...prev, tags: [...prev.tags, newOption] };
+        const newTag = createTag(inputValue);
+        setSelectedTags((prev) => {
+            return [...prev, newTag];
         });
     };
 
@@ -166,16 +165,35 @@ function CreateGame() {
         fetchCategories();
     }, []);
 
-    /**
-     * Get categories from state selectedCategories and transfer name into gameData state to match api
-     */
-    const formatCategoriesForApi = () => {
-        let categoriesForAPI = [];
-        selectedCategories.map((c) => categoriesForAPI.push(c.name));
-        setGameData((prev) => {
-            return { ...prev, categories: categoriesForAPI };
-        });
-    };
+    // format categories for api
+    useEffect(() => {
+        /**
+         * Get categories from state selectedCategories and transfer name into gameData state to match api
+         */
+        const formatCategoriesForApi = () => {
+            let categoriesForAPI = [];
+            selectedCategories.map((c) => categoriesForAPI.push(c.name));
+            setGameData((prev) => {
+                return { ...prev, categories: categoriesForAPI };
+            });
+        };
+        formatCategoriesForApi();
+    }, [selectedCategories]);
+
+    // format tags for api
+    useEffect(() => {
+        /**
+         * Get categories from state selectedCategories and transfer name into gameData state to match api
+         */
+        const formatTagsForApi = () => {
+            let tagsForAPI = [];
+            selectedTags.map((t) => tagsForAPI.push(t.title));
+            setGameData((prev) => {
+                return { ...prev, tags: tagsForAPI };
+            });
+        };
+        formatTagsForApi();
+    }, [selectedTags]);
 
     /**
      * Handle form submit and create game with api
@@ -183,7 +201,7 @@ function CreateGame() {
      */
     const handleSubmit = async (e) => {
         e.preventDefault();
-        formatCategoriesForApi();
+
         try {
             const res = await axiosInstance.post(
                 'http://localhost:3000/games/game',
@@ -346,7 +364,7 @@ function CreateGame() {
                             classNamePrefix="select"
                             closeMenuOnSelect={false}
                             onChange={onOptionChangeForTags}
-                            value={gameData.tags}
+                            value={selectedTags}
                             getOptionLabel={(option) => `${option.title}`}
                             getOptionValue={(option) => option.title}
                             onCreateOption={handleCreateTag}

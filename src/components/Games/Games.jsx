@@ -5,11 +5,12 @@ import { SidebarGames } from './SidebarGames';
 import { toast } from 'react-toastify';
 
 import axios from 'axios';
+import Loading from '../Loading';
 
 function Games() {
     const [games, setGames] = useState([]);
     const [filteredGames, setFilteredGames] = useState([]);
-
+    const [isLoading, setIsLoading] = useState(true);
     const [categoryFilter, setCategoryFilter] = useState('all');
     const [dateFilter, setDateFilter] = useState('all');
 
@@ -22,7 +23,9 @@ function Games() {
                     throw Error();
                 }
                 setGames(res.data.games);
-                return res.data.games;
+                setTimeout(() => {
+                    setIsLoading(false);
+                }, 500);
             } catch (error) {
                 toast.error('An unexpected error has occured', {
                     theme: 'colored',
@@ -72,70 +75,78 @@ function Games() {
     }, [categoryFilter, games, dateFilter]);
 
     return (
-        <ContentContainer
-            SidebarLeft={
-                <SidebarGames
-                    setCategoryFilter={setCategoryFilter}
-                    setDateFilter={setDateFilter}
-                    categoryFilter={categoryFilter}
-                />
-            }
-        >
-            <h1 className="text-3xl font-bold mb-6">
-                {categoryFilter !== 'all'
-                    ? `${categoryFilter} games ${
-                          dateFilter !== 'all' ? `in ${dateFilter}` : ''
-                      }`
-                    : `Games trending ${
-                          dateFilter === 'all'
-                              ? 'right now'
-                              : `in ${dateFilter}`
-                      }`}
-            </h1>
-            <ul>
-                {categoryFilter !== 'all' || dateFilter !== 'all' ? (
-                    filteredGames.length > 0 ? (
-                        filteredGames.map((g) => (
-                            <li className="mb-6" key={g.id}>
-                                <GameItem
-                                    id={g.id}
-                                    name={g.name}
-                                    image={g.picture}
-                                    publisher={g.author}
-                                    publisherId={g.user_id}
-                                    realeaseDate={g.release_date}
-                                    description={g.description}
-                                    categories={g.categories}
-                                    totalIssues={g.issue_count}
-                                    totalSuggestions={g.suggestion_count}
-                                />
-                            </li>
-                        ))
-                    ) : (
-                        <p className=" text-xl font-bold opacity-40">
-                            No result found
-                        </p>
-                    )
-                ) : (
-                    games.map((g) => (
-                        <li className="mb-6" key={g.id}>
-                            <GameItem
-                                id={g.id}
-                                name={g.name}
-                                image={g.picture}
-                                publisher={g.author}
-                                publisherId={g.user_id}
-                                realeaseDate={g.release_date}
-                                description={g.description}
-                                categories={g.categories}
-                                totalIssues={g.issue_count}
-                                totalSuggestions={g.suggestion_count}
-                            />
-                        </li>
-                    ))
-                )}
-            </ul>
-        </ContentContainer>
+        <>
+            {isLoading ? (
+                <Loading />
+            ) : (
+                <ContentContainer
+                    SidebarLeft={
+                        <SidebarGames
+                            setCategoryFilter={setCategoryFilter}
+                            setDateFilter={setDateFilter}
+                            categoryFilter={categoryFilter}
+                        />
+                    }
+                >
+                    <h1 className="text-3xl font-bold mb-6">
+                        {categoryFilter !== 'all'
+                            ? `${categoryFilter} games ${
+                                  dateFilter !== 'all' ? `in ${dateFilter}` : ''
+                              }`
+                            : `Games trending ${
+                                  dateFilter === 'all'
+                                      ? 'right now'
+                                      : `in ${dateFilter}`
+                              }`}
+                    </h1>
+                    <ul>
+                        {categoryFilter !== 'all' || dateFilter !== 'all' ? (
+                            filteredGames.length > 0 ? (
+                                filteredGames.map((g) => (
+                                    <li className="mb-6" key={g.id}>
+                                        <GameItem
+                                            id={g.id}
+                                            name={g.name}
+                                            image={g.picture}
+                                            publisher={g.author}
+                                            publisherId={g.user_id}
+                                            realeaseDate={g.release_date}
+                                            description={g.description}
+                                            categories={g.categories}
+                                            totalIssues={g.issue_count}
+                                            totalSuggestions={
+                                                g.suggestion_count
+                                            }
+                                        />
+                                    </li>
+                                ))
+                            ) : (
+                                <p className=" text-xl font-bold opacity-40">
+                                    No result found
+                                </p>
+                            )
+                        ) : (
+                            games.map((g) => (
+                                <li className="mb-6" key={g.id}>
+                                    <GameItem
+                                        id={g.id}
+                                        name={g.name}
+                                        image={g.picture}
+                                        publisher={g.author}
+                                        publisherId={g.user_id}
+                                        realeaseDate={g.release_date}
+                                        description={g.description}
+                                        categories={g.categories}
+                                        totalIssues={g.issue_count}
+                                        totalSuggestions={g.suggestion_count}
+                                    />
+                                </li>
+                            ))
+                        )}
+                    </ul>
+                </ContentContainer>
+            )}
+        </>
     );
 }
 

@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import ContentContainer from '../ContentContainer';
 import Category from '../../Category';
 import { IssuesListItem } from './IssuesListItem';
@@ -7,7 +7,10 @@ import axios from 'axios';
 
 const Game = () => {
     const [game, setGame] = useState({});
-    const [gameId, setGameId] = useState();
+    // const [gameId, setGameId] = useState();
+    const navigate = useNavigate();
+
+    const gameId = 1;
 
     useEffect(() => {
         const fetchGame = async () => {
@@ -15,7 +18,11 @@ const Game = () => {
                 const res = await axios.get(
                     `http://localhost:3000/games/game/${gameId}`
                 );
-                console.log(setGame);
+                console.log(res.data.game.length);
+                // verifier si il y a un bien un game res.status === 200
+                if (res.data.game.length === 0) {
+                    navigate('/404');
+                }
 
                 setGame(res.data.game[0]);
             } catch (error) {

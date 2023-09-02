@@ -3,12 +3,15 @@ import SearchBar from './SearchBar';
 import Menu from './Menu';
 import { ReactComponent as IconBurger } from '../../assets/icons/burger.svg';
 import { MenuAuth } from './MenuAuth';
+import { Link } from 'react-router-dom';
 
 const Header = () => {
     return (
         <header className="w-full navbar border-b-2 border-base-200">
             <div className="mx-2 text-2xl">
-                <Logo shortForMobile />
+                <Link to="/">
+                    <Logo shortForMobile />
+                </Link>
             </div>
             <div className="flex-1 px-2 mx-2">
                 <SearchBar />

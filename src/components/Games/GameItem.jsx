@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import Category from '../../Category';
+import Category from '../Category';
 import PropTypes from 'prop-types';
 import placeholder from '/placeholder.jpg';
 import { useEffect, useState } from 'react';

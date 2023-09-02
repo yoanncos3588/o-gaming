@@ -1,6 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom';
 import ContentContainer from '../ContentContainer';
-import Category from '../../Category';
+import Category from '../Category';
 import { IssuesListItem } from './IssuesListItem';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
@@ -30,7 +30,7 @@ const Game = () => {
             }
         };
         fetchGame();
-    }, []);
+    });
 
     // const categories = ['FPS', 'Action'];
     useEffect(() => {

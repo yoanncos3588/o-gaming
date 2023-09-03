@@ -1,6 +1,16 @@
 import { ReactComponent as IconSearch } from '../../assets/icons/search.svg';
+import PropTypes from 'prop-types';
+import { useState } from 'react';
 
-const SearchBar = () => {
+const SearchBar = ({ setSearch }) => {
+    const [inputValue, setInputValue] = useState('');
+
+    const handleKeyDown = (e) => {
+        if (e.code === 'Enter' && inputValue.length > 3) {
+            setSearch(inputValue);
+            console.log(inputValue);
+        }
+    };
     return (
         <form method="GET" className="w-full lg:w-96">
             <div className="relative focus-within:text-secondary-content">
@@ -13,6 +23,9 @@ const SearchBar = () => {
                     </button>
                 </span>
                 <input
+                    value={inputValue}
+                    onChange={(e) => setInputValue(e.target.value)}
+                    onKeyDown={handleKeyDown}
                     type="search"
                     name="q"
                     className="text-sm text-white focus:outline-none focus:bg-white focus:text-secondary-content input input-bordered input-sm w-full  pr-10 bg-neutral"
@@ -22,5 +35,7 @@ const SearchBar = () => {
         </form>
     );
 };
-
+SearchBar.propTypes = {
+    setSearch: PropTypes.func,
+};
 export default SearchBar;

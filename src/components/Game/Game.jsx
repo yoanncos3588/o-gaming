@@ -1,13 +1,40 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import ContentContainer from '../ContentContainer';
-import Category from '../../Category';
+import Category from '../Category';
 import { IssuesListItem } from './IssuesListItem';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 
 const Game = () => {
     const [game, setGame] = useState({});
-    const [gameId, setGameId] = useState();
+    const [issue, setIssue] = useState([]);
+    // const [gameId, setGameId] = useState();
+    const navigate = useNavigate();
+
+    const gameId = useParams();
+    const issueId = useParams();
+    useEffect(() => {
+        const fetchIssue = async () => {
+            try {
+                const res = await axios.get(
+                    `http://localhost:3000/games/game/${gameId}/issue`
+                );
+                console.log(res.data);
+                // verifier si il y a un bien un game res.status === 200
+                if (res.status !== 200) {
+                    navigate('/404');
+                }
+                if (res.data.game.length === 0) {
+                    navigate('/404');
+                }
+
+                setIssue(res.data);
+            } catch (error) {
+                console.log(error);
+            }
+        };
+        fetchIssue();
+    });
 
     useEffect(() => {
         const fetchGame = async () => {
@@ -15,20 +42,25 @@ const Game = () => {
                 const res = await axios.get(
                     `http://localhost:3000/games/game/${gameId}`
                 );
-                console.log(setGame);
+                // console.log(res.data.game.length);
+                // verifier si il y a un bien un game res.status === 200
+                if (res.status !== 200) {
+                    navigate('/404');
+                }
+                if (res.data.game.length === 0) {
+                    navigate('/404');
+                }
 
-                setGame(res.data.game[0]);
+                setIssue(res.data.game[0]);
             } catch (error) {
                 console.log(error);
             }
         };
         fetchGame();
-    }, []);
+    });
 
     // const categories = ['FPS', 'Action'];
-    useEffect(() => {
-        console.log('state', game);
-    });
+
     return (
         <ContentContainer>
             <div className="grid grid-cols-12 lg:gap-16 gap-0">

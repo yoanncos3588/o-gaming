@@ -1,4 +1,5 @@
 import { Link, useNavigate, useParams } from 'react-router-dom';
+
 import ContentContainer from '../ContentContainer';
 import Category from '../Category';
 import { IssuesListItem } from './IssuesListItem';
@@ -35,6 +36,7 @@ const Game = () => {
         };
         fetchIssue();
     });
+    // const [gameId, setGameId] = useState();
 
     useEffect(() => {
         const fetchGame = async () => {

@@ -26,12 +26,11 @@ function App() {
                     <Route path="/signup" element={<SignUp />} />
                 </Route>
                 <Route element={<ProtectedRoute role="logged" />}>
+                    {/* {routes for connected user only here} */}
                     <Route
                         path="games/:idGame/create-issue"
                         element={<CreateIssue />}
                     />
-
-                    {/* {routes for connected user only here} */}
                 </Route>
                 <Route element={<ProtectedRoute role="developer" />}>
                     {/* {routes for dev only here} */}

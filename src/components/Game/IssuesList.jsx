@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { IssuesListItem } from './IssuesListItem';
+import { IssueSuggestionListItem } from './IssueSuggestionListItem';
+import propTypes from 'prop-types';
 
 import axios from 'axios';
 
@@ -75,21 +76,19 @@ const IssuesList = ({ gameId }) => {
 
         // filter by tag
         if (selectedSearchTag !== 'all') {
-            console.log('1');
             result = issues.filter((issue) => {
                 return issue.tags.some(
                     (tag) =>
                         tag.toLowerCase() === selectedSearchTag.toLowerCase()
                 );
             });
+        } else {
+            result = [...IssuesList];
         }
 
         // filter by title
         if (textToSearch !== '') {
-            console.log(2);
-            result = issues.filter((issue) => {
-                console.log(issue.title);
-                console.log(textToSearch);
+            result = result.filter((issue) => {
                 return issue.title
                     .toLowerCase()
                     .includes(textToSearch.toLowerCase());
@@ -156,7 +155,7 @@ const IssuesList = ({ gameId }) => {
                         filteredList.length ? (
                             filteredList.map((i) => (
                                 <li className="mb-4" key={i.id}>
-                                    <IssuesListItem
+                                    <IssueSuggestionListItem
                                         id={i.id}
                                         title={i.title}
                                         author={i.author}
@@ -185,7 +184,7 @@ const IssuesList = ({ gameId }) => {
                     ) : issues.length ? (
                         issues.map((i) => (
                             <li className="mb-4" key={i.id}>
-                                <IssuesListItem
+                                <IssueSuggestionListItem
                                     id={i.id}
                                     title={i.title}
                                     author={i.author}
@@ -205,6 +204,10 @@ const IssuesList = ({ gameId }) => {
             )}
         </>
     );
+};
+
+IssuesList.propTypes = {
+    gameId: propTypes.string,
 };
 
 export default IssuesList;

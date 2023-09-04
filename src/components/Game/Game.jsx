@@ -9,11 +9,14 @@ import imagePlaceHolder from '/placeholder.jpg';
 import { formatDate } from '../../utils/date';
 import Loading from '../Loading';
 import IssuesList from './IssuesList';
+import SuggestionsList from './SuggestionsList';
 
 const Game = () => {
     const { gameId } = useParams();
     const [game, setGame] = useState({});
     const [isLoadingGame, setIsLoadingGame] = useState(true);
+
+    const [showSuggestion, setShowSuggestion] = useState(false);
 
     const navigate = useNavigate();
 
@@ -122,12 +125,34 @@ const Game = () => {
                             ))}
                     </ul>
                     <div className="tabs tabs-boxed mt-8">
-                        <a className="tab tab-active text-lg font-bold">
+                        <button
+                            className={`tab ${
+                                !showSuggestion && 'tab-active'
+                            } text-lg font-bold`}
+                            onClick={(e) => {
+                                e.preventDefault();
+                                setShowSuggestion(false);
+                            }}
+                        >
                             Issues
-                        </a>
-                        <a className="tab text-lg font-bold">Suggestions</a>
+                        </button>
+                        <button
+                            className={`tab ${
+                                showSuggestion && 'tab-active'
+                            } text-lg font-bold`}
+                            onClick={(e) => {
+                                e.preventDefault();
+                                setShowSuggestion(true);
+                            }}
+                        >
+                            Suggestions
+                        </button>
                     </div>
-                    <IssuesList gameId={gameId} />
+                    {showSuggestion ? (
+                        <SuggestionsList gameId={gameId} />
+                    ) : (
+                        <IssuesList gameId={gameId} />
+                    )}
                 </>
             )}
         </ContentContainer>

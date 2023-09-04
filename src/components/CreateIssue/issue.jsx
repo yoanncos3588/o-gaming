@@ -7,8 +7,10 @@ import { axiosInstance } from '../../utils/axios';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
 
-function CreateIssue({ description, imageUrl }) {
+function CreateIssue() {
     const [isLoading, setIsLoading] = useState(false);
+    const [tags, settags] = useState([]);
+    const [platforms, setPlatform] = useState([]);
 
     const [issueInfos, setIssueInfos] = useState({
         title: '',
@@ -23,60 +25,70 @@ function CreateIssue({ description, imageUrl }) {
         replication: '',
         tags: [],
     });
-    const [platforms, setPlatform] = useState([]);
 
     const userId = useSelector((state) => state.user.userData.userId);
     const publishedAt = new Date();
-
     const navigate = useNavigate();
-
     const { idGame } = useParams();
 
+    // fetch platforms
     useEffect(() => {
         const fetchdata = async () => {
             try {
                 const resPlateform = await axios.get(
-                    'http://localhost:3000/platform'
+                    'http://localhost:3000/platforms'
                 );
-                console.log(resPlateform);
                 if (resPlateform.status !== 200) {
-                    toast.error('Unable to fetch category, retry later', {
-                        theme: 'colored',
-                        toastId: 'errorLogin',
-                    });
-                    navigate('/');
+                    throw Error;
                 }
                 setPlatform(resPlateform.data.platforms);
             } catch (error) {
-                console.log(error);
+                toast.error(
+                    'Unable to get informations from API, retry later',
+                    {
+                        theme: 'colored',
+                        toastId: 'errorLogin',
+                    }
+                );
+                navigate('/');
             }
         };
         fetchdata();
-    }, []);
+    }, [navigate]);
 
-    const [tags, settags] = useState([]);
+    //fetch tags
     useEffect(() => {
         const fetchdata = async () => {
             try {
                 const resTags = await axios.get(
                     `http://localhost:3000/games/game/${idGame}/tags`
                 );
+                if (resTags.status !== 200) {
+                    throw Error;
+                }
                 settags(resTags.data.tags);
             } catch (error) {
-                console.log(error);
+                toast.error(
+                    'Unable to get informations from API, retry later',
+                    {
+                        theme: 'colored',
+                        toastId: 'errorLogin',
+                    }
+                );
+                navigate('/');
             }
         };
         fetchdata();
-    }, []);
+    }, [idGame, navigate]);
 
+    // redirect user on success
     useEffect(() => {
-        // redirect user on success
         toast.onChange((payload) => {
             if (payload.status === 'removed' && payload.id === 'succesToast') {
                 navigate(`/games/game/${idGame}`);
             }
         });
-    }, [navigate]);
+    }, [navigate, idGame]);
 
     /** Handle change on form inputs */
     const handleChange = (e) => {
@@ -123,6 +135,7 @@ function CreateIssue({ description, imageUrl }) {
         }
     };
 
+    // submit form
     const handleSubmit = async (e) => {
         e.preventDefault();
         issueInfos.user_id = userId;
@@ -186,116 +199,122 @@ function CreateIssue({ description, imageUrl }) {
                 </h2>
                 <form className="w-full" onSubmit={handleSubmit}>
                     <div className="w-full">
-                        <div className="mb-4">
-                            <label
-                                htmlFor="name"
-                                className="block text-white text-md font-bold mb-2 "
-                            >
-                                title
+                        <div className="form-control  mb-8">
+                            <label className="label">
+                                <span className="label-text">Title</span>
                             </label>
                             <input
                                 type="text"
                                 id="name"
                                 name="title"
-                                className=" w-full px-3 py-2 rounded-md bg-gray-700 text-white focus:outline-none focus:ring focus:border-blue-300"
-                                placeholder="add a title"
+                                className=" input input-bordered w-full bg-neutral"
+                                placeholder="Add a title"
                                 onChange={handleChange}
                                 value={issueInfos.title}
                             />
                         </div>
+                        <div className="flex mb-8">
+                            <div className="form-control">
+                                <label className="label">
+                                    <span className="label-text">
+                                        Visibility
+                                    </span>
+                                </label>
+                                <p className=" text-base-content mb-3 text-sm opacity-50">
+                                    <i>
+                                        Private issue can only be seen by
+                                        developpers, use it if you feel your
+                                        issue can break the game for other
+                                        players
+                                        <strong>
+                                            (ex: bug abuse in multiplayers game)
+                                        </strong>
+                                    </i>
+                                </p>
+                                <div className="join w-full flex-wrap">
+                                    <input
+                                        className={`join-item btn btn-primary ${
+                                            !issueInfos.is_public &&
+                                            'btn-outline'
+                                        } lg:!w-1/2 !w-full`}
+                                        type="radio"
+                                        name="is_public"
+                                        aria-label="Public"
+                                        value={true}
+                                        onChange={handleChange}
+                                        checked={issueInfos.is_public}
+                                    />
+                                    <input
+                                        className={`join-item btn btn-primary ${
+                                            issueInfos.is_public &&
+                                            'btn-outline'
+                                        } lg:!w-1/2 !w-full`}
+                                        type="radio"
+                                        name="is_public"
+                                        aria-label="Private"
+                                        value={false}
+                                        onChange={handleChange}
+                                        checked={!issueInfos.is_public}
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                        <div className="flex flex-wrap place-content-around mb-8">
+                            <div className=" w-1/2">
+                                <div className="form-control">
+                                    <label className="label">
+                                        <span className="label-text">
+                                            Plateform
+                                        </span>
+                                    </label>
+                                    <select
+                                        className="select select-bordered w-full bg-neutral"
+                                        onChange={handleChange}
+                                        name="platform_id"
+                                        defaultValue={Number(
+                                            issueInfos.platform_id
+                                        )}
+                                    >
+                                        {platforms.map((Plateform) => (
+                                            <option
+                                                key={Plateform.id}
+                                                value={Plateform.id}
+                                            >
+                                                {Plateform.name}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+                            </div>
 
-                        <h2>
-                            <strong>visibility</strong>
-                        </h2>
-                        <p className=" text-base-content mb-3">
-                            <i>
-                                Private issue can only be seen by developpers,
-                                use it if you feel your issue can break the game
-                                for other players
-                                <strong>
-                                    (ex: bug abuse in multiplayers game)
-                                </strong>
-                            </i>
-                        </p>
-                        <div className=" flex ">
-                            <div className="join w-full flex-wrap">
-                                <input
-                                    className={`join-item btn btn-primary ${
-                                        !issueInfos.is_public && 'btn-outline'
-                                    } lg:!w-1/2 !w-full`}
-                                    type="radio"
-                                    name="is_public"
-                                    aria-label="is visible"
-                                    value={true}
-                                    onChange={handleChange}
-                                    checked={issueInfos.is_public}
-                                />
-                                <input
-                                    className={`join-item btn btn-primary ${
-                                        issueInfos.is_public && 'btn-outline'
-                                    } lg:!w-1/2 !w-full`}
-                                    type="radio"
-                                    name="is_public"
-                                    aria-label="is not visible"
-                                    value={false}
-                                    onChange={handleChange}
-                                    checked={!issueInfos.is_public}
-                                />
+                            <div className="w-1/2">
+                                <div className="form-control">
+                                    <label className="label">
+                                        <span className="label-text">
+                                            Context
+                                        </span>
+                                    </label>
+                                    <select
+                                        className="select select-bordered w-full bg-neutral"
+                                        onChange={handleChange}
+                                        name="is_online"
+                                        defaultValue={true}
+                                    >
+                                        <option value={true}>Online</option>
+                                        <option value={false}>Offline</option>
+                                    </select>
+                                </div>
                             </div>
                         </div>
-                        <div className="flex flex-wrap place-content-around m-4">
-                            <p className="w-1/3 m-1  flex align-middle font-bold">
-                                Plateform
-                            </p>
-                            <p className="w-1/3 m-1  flex align-middle font-bold">
-                                Context
-                            </p>
-                        </div>
-                        <div className="flex flex-wrap place-content-around m-4">
-                            <div className=" w-1/3 flex align-middle cursor-pointer">
-                                <select
-                                    className="select select-bordered w-full max-w-xs"
-                                    onChange={handleChange}
-                                    name="platform_id"
-                                    defaultValue={Number(
-                                        issueInfos.platform_id
-                                    )}
-                                >
-                                    {platforms.map((Plateform) => (
-                                        <option
-                                            key={Plateform.id}
-                                            value={Plateform.id}
-                                        >
-                                            {Plateform.name}
-                                        </option>
-                                    ))}
-                                </select>
-                            </div>
-
-                            <div className=" w-1/3  flex align-middle ">
-                                <select
-                                    className="select select-bordered w-full max-w-xs"
-                                    onChange={handleChange}
-                                    name="is_online"
-                                    defaultValue={true}
-                                >
-                                    <option value={true}>Online</option>
-                                    <option value={false}>Offline</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div>
-                            <label
-                                htmlFor="message"
-                                className="block text-white text-sm font-medium mb-2"
-                            >
-                                Description
+                        <div className="form-control mb-8">
+                            <label className="label">
+                                <span className="label-text">Description</span>
                             </label>
                             <textarea
                                 id="text"
                                 name="description"
                                 rows="4"
-                                className="w-full px-3 py-2 rounded-md bg-gray-700 text-white focus:outline-none focus:ring focus:border-blue-300"
+                                className="textarea textarea-bordered w-full bg-neutral"
                                 placeholder="add an description"
                                 onChange={handleChange}
                                 value={issueInfos.description}
@@ -324,37 +343,32 @@ function CreateIssue({ description, imageUrl }) {
                                 </div>
                             ))}
                         </section>
-                        <div className="flex flex-wrap place-content-around m-4">
-                            <p className=" m-1 font-bold">frequency</p>
-                        </div>
-                        <div className="flex flex-wrap place-content-around m-4">
-                            <div className=" w-1/2 flex align-middle justify-center">
-                                <select
-                                    className="select select-bordered w-full max-w-xs"
-                                    onChange={handleChange}
-                                    name="frequency"
-                                    defaultValue={issueInfos.frequency}
-                                >
-                                    <option value={'Regular'}>Regular</option>
-                                    <option value={'Sometimes'}>
-                                        Sometimes
-                                    </option>
-                                    <option value={'Once'}>Once</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div>
-                            <label
-                                htmlFor="message"
-                                className="block text-white text-sm font-medium mb-2"
+                        <div className="form-control mb-8">
+                            <label className="label">
+                                <span className="label-text">frequency</span>
+                            </label>
+                            <select
+                                className="select select-bordered w-full lg:max-w-xs bg-neutral"
+                                onChange={handleChange}
+                                name="frequency"
+                                defaultValue={issueInfos.frequency}
                             >
-                                How to replicate
+                                <option value={'Regular'}>Regular</option>
+                                <option value={'Sometimes'}>Sometimes</option>
+                                <option value={'Once'}>Once</option>
+                            </select>
+                        </div>
+                        <div className="form-control">
+                            <label className="label">
+                                <span className="label-text">
+                                    How to replicate
+                                </span>
                             </label>
                             <textarea
                                 id="replicate"
                                 name="replication"
                                 rows="4"
-                                className="w-full px-3 py-2 rounded-md bg-gray-700 text-white focus:outline-none focus:ring focus:border-blue-300"
+                                className="textarea textarea-bordered w-full bg-neutral"
                                 placeholder="Describe how to reproduce your issue"
                                 onChange={handleChange}
                                 value={issueInfos.replication}

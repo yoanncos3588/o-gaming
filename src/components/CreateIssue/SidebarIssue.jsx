@@ -1,28 +1,71 @@
 import { Link } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
+import { toast } from 'react-toastify';
+import { isImageValid } from '../../utils/imageValidator';
+import placeholder from '/placeholder.jpg';
+import PropTypes from 'prop-types';
 
 const SidebarIssue = ({ idGame }) => {
+    const [game, setGame] = useState([]);
+    const [showPlaceholder, setShowPlaceholder] = useState(true);
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        const showCover = async () => {
+            const validImage = await isImageValid(game.picture);
+            if (validImage) {
+                setShowPlaceholder(false);
+            }
+        };
+        showCover();
+    }, [game]);
+
+    /** fetch game */
+    useEffect(() => {
+        const fetchGame = async () => {
+            try {
+                const res = await axios.get(
+                    `http://localhost:3000/games/game/${idGame}`
+                );
+                if (res.status !== 200) {
+                    throw Error();
+                }
+                setGame(res.data.game[0]);
+                setIsLoading(false);
+            } catch (error) {
+                toast.error('An unexpected error has occured', {
+                    theme: 'colored',
+                });
+            }
+        };
+        fetchGame();
+    }, [idGame]);
     return (
         <div>
             <Link
-                className="text-md font-medium text-blue-800"
+                className="text-md underline mb-4 inline-block hover:text-accent"
                 to={`/games/game/:${idGame}`}
             >
-                ⬅️ ​Return to game page
+                Return to game page
             </Link>
-            <img
-                className="my-3"
-                src="https://img.redbull.com/images/c_crop,w_1920,h_960,x_0,y_103,f_auto,q_auto/c_scale,w_1200/redbullcom/2020/6/5/ctsejxmdtw9inp8zqqqd/red-bull-campus-clutch-valorant-agents"
-                alt="jeu"
-            />
-            <h2 className=" font-bold underline mb-2">Game description</h2>
-            <p>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Facere
-                voluptates veniam ab tempora repellendus ducimus, animi,
-                necessitatibus delectus aperiam quas deserunt repudiandae nulla
-                nesciunt dolor, ea sed et laborum quod?
-            </p>
+            {!isLoading && (
+                <>
+                    <img
+                        className="my-3"
+                        src={!showPlaceholder ? game.picture : placeholder}
+                        alt={`image cover of ${name.toLowerCase()}`}
+                    />
+                    <h2 className=" font-bold mb-2">{game.name}</h2>
+                    <p className=" opacity-50">{game.description}</p>
+                </>
+            )}
         </div>
     );
+};
+
+SidebarIssue.propTypes = {
+    idGame: PropTypes.string,
 };
 
 export default SidebarIssue;

@@ -22,7 +22,7 @@ const Game = () => {
                 const res = await axios.get(
                     `http://localhost:3000/games/game/${gameId}/issues`
                 );
-                console.log(res.data.issues);
+
                 // verifier si il y a un bien un game res.status === 200
 
                 setIssues(res.data.issues);
@@ -67,9 +67,9 @@ const Game = () => {
     }, [game.picture]);
 
     // const categories = ['FPS', 'Action'];
-    useEffect(() => {
-        console.log('isimagevalid', showImagePlaceholder);
-    });
+    // useEffect(() => {
+    //     console.log('isimagevalid', showImagePlaceholder);
+    // });
 
     return (
         <ContentContainer>

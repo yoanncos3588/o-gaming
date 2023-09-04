@@ -11,7 +11,7 @@ export const IssuesListItem = ({ title, status, author, tags }) => {
                     <span className="mr-4 absolute -left-8 top-2">
                         <IconTools className="w-5 h-5" />
                     </span>
-                    <Link to={'#'} className="hover:underline ">
+                    <Link to={'issue/:id-issue'} className="hover:underline ">
                         {title}
                     </Link>
                 </h2>

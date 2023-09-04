@@ -28,7 +28,6 @@ const Issue = () => {
                 if (res.status !== 200) {
                     throw Error;
                 }
-                console.log(res);
                 setIssue(res.data.issue);
                 setTimeout(() => {
                     setIsLoadingIssue(false);
@@ -84,7 +83,43 @@ const Issue = () => {
                     theme: 'colored',
                     toastId: 'successDeleteIssue',
                 });
-                navigate(`/game/${idGame}`);
+                navigate(`/games/game/${idGame}`);
+            }
+        } catch (error) {
+            toast.error('You are not allowed to do that', {
+                theme: 'colored',
+                toastId: 'errorDeleteIssue',
+            });
+        }
+    };
+
+    const handleUpdateIssue = async (e) => {
+        e.preventDefault();
+        try {
+            const res = await axiosInstance.patch(
+                `http://localhost:3000/issue/${idIssue}`,
+                {
+                    title: issue.title,
+                    description: issue.description,
+                    status: issue.status,
+                    is_minor: issue.is_minor,
+                    assign_to: issue.assign_to,
+                    is_public: issue.is_public,
+                    is_online: issue.is_online,
+                    frequency: issue.frequency,
+                    replication: issue.replication,
+                    published_at: issue.published_at,
+                    //TODO manque le platform id
+                    platform_id: 1,
+                }
+            );
+            if (res.status !== 200) {
+                throw Error;
+            } else {
+                toast.success('Issue updated', {
+                    theme: 'colored',
+                    toastId: 'successUpdateIssue',
+                });
             }
         } catch (error) {
             toast.error('You are not allowed to do that', {
@@ -102,10 +137,11 @@ const Issue = () => {
                 <ContentContainer
                     SidebarRight={
                         <IssueSidebar
-                            authorId={issue.user_id}
-                            status={issue.status}
                             devId={game.user_id}
                             handleDeleteIssue={handleDeleteIssue}
+                            handleUpdateIssue={handleUpdateIssue}
+                            issue={issue}
+                            setIssue={setIssue}
                         />
                     }
                 >
@@ -151,19 +187,23 @@ const Issue = () => {
                                 <span className="font-bold">Context : </span>
                                 {issue.is_online ? 'Online' : 'Offline'}
                             </div>
-                            <span className="font-bold inline-block">
-                                Tags :{' '}
-                            </span>
-                            <ul className="-mx-2">
-                                {issue.tags.map((t, index) => (
-                                    <li
-                                        className="m-2 inline-block"
-                                        key={index}
-                                    >
-                                        <Tag name={t} />
-                                    </li>
-                                ))}
-                            </ul>
+                            {issue.tags.length && (
+                                <>
+                                    <span className="font-bold inline-block">
+                                        Tags :{' '}
+                                    </span>
+                                    <ul className="-mx-2">
+                                        {issue.tags.map((t, index) => (
+                                            <li
+                                                className="m-2 inline-block"
+                                                key={index}
+                                            >
+                                                <Tag name={t} />
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </>
+                            )}
                         </div>
                         <div className="divider"></div>
                         <div className="mb-8">

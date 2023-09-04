@@ -51,7 +51,7 @@ export const GameItem = ({
                 </Link>
                 <h2 className=" text-xl font-black my-4">
                     <Link
-                        to={`/games/${id}`}
+                        to={`/games/game/${id}`}
                         className="hover:underline uppercase"
                     >
                         {name}

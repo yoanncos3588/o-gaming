@@ -2,10 +2,11 @@
 import { useEffect, useState } from 'react';
 import ContentContainer from '../ContentContainer';
 import { toast } from 'react-toastify';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { axiosInstance } from '../../utils/axios';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
+import SidebarIssue from './SidebarIssue';
 
 function CreateIssue() {
     const [isLoading, setIsLoading] = useState(false);
@@ -166,34 +167,8 @@ function CreateIssue() {
     };
 
     return (
-        <ContentContainer
-            SidebarRight={
-                <div>
-                    <Link
-                        className="text-md font-medium text-blue-800"
-                        to={`/games/game/:${idGame}`}
-                    >
-                        ⬅️ ​Return to game page
-                    </Link>
-                    <img
-                        className="my-3"
-                        src="https://img.redbull.com/images/c_crop,w_1920,h_960,x_0,y_103,f_auto,q_auto/c_scale,w_1200/redbullcom/2020/6/5/ctsejxmdtw9inp8zqqqd/red-bull-campus-clutch-valorant-agents"
-                        alt="jeu"
-                    />
-                    <h2 className=" font-bold underline mb-2">
-                        Game description
-                    </h2>
-                    <p>
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                        Facere voluptates veniam ab tempora repellendus ducimus,
-                        animi, necessitatibus delectus aperiam quas deserunt
-                        repudiandae nulla nesciunt dolor, ea sed et laborum
-                        quod?
-                    </p>
-                </div>
-            }
-        >
-            <main className=" flex flex-wrap justify-center">
+        <ContentContainer SidebarRight={<SidebarIssue idGame={idGame} />}>
+            <div className=" flex flex-wrap ">
                 <h2 className="text-2xl font-semibold text-white mb-4">
                     Create a Issue
                 </h2>
@@ -320,14 +295,19 @@ function CreateIssue() {
                                 value={issueInfos.description}
                             ></textarea>
                         </div>
-                        <section className="mb-4 flex flex-wrap ">
+                        <label className="label">
+                            <span className="label-text">
+                                Select tags for your issue
+                            </span>
+                        </label>
+                        <div className="flex flex-wrap mb-8 -mx-3">
                             {tags.map((tag) => (
                                 <div
-                                    className="form-control w-1/4 mr-3"
+                                    className="form-control lg:w-1/4 w-full m-3 lg:mr-3"
                                     key={tag.id}
                                 >
-                                    <label className="cursor-pointer label ">
-                                        <span className="label-text">
+                                    <label className="cursor-pointer label bg-neutral p-4">
+                                        <span className="label-text uppercase">
                                             {tag.title}
                                         </span>
                                         <input
@@ -342,7 +322,7 @@ function CreateIssue() {
                                     </label>
                                 </div>
                             ))}
-                        </section>
+                        </div>
                         <div className="form-control mb-8">
                             <label className="label">
                                 <span className="label-text">frequency</span>
@@ -358,7 +338,7 @@ function CreateIssue() {
                                 <option value={'Once'}>Once</option>
                             </select>
                         </div>
-                        <div className="form-control">
+                        <div className="form-control mb-8">
                             <label className="label">
                                 <span className="label-text">
                                     How to replicate
@@ -391,7 +371,7 @@ function CreateIssue() {
                         </div>
                     </div>
                 </form>
-            </main>
+            </div>
         </ContentContainer>
     );
 }

@@ -4,7 +4,7 @@ import SignUp from './components/SignUp/SignUp';
 import { Route, Routes } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
-import Issue from './components/CreateIssue/issue';
+import CreateIssue from './components/CreateIssue/CreateIssue';
 
 import CreateGame from './components/CreateGame/CreateGame';
 import ProtectedRoute from './components/ProtectedRoute';
@@ -28,7 +28,7 @@ function App() {
                 <Route element={<ProtectedRoute role="logged" />}>
                     <Route
                         path="games/:idGame/create-issue"
-                        element={<Issue />}
+                        element={<CreateIssue />}
                     />
 
                     {/* {routes for connected user only here} */}

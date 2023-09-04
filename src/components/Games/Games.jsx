@@ -22,6 +22,7 @@ function Games() {
                 if (res.status !== 200) {
                     throw Error();
                 }
+                console.log(res);
                 setGames(res.data.games);
                 setTimeout(() => {
                     setIsLoading(false);
@@ -54,6 +55,7 @@ function Games() {
             });
             return list;
         };
+
         /**
          * Filter games by release date
          * @@param {array} games an array of games object containing release_date prop

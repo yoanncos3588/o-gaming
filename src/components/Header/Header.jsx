@@ -4,8 +4,52 @@ import Menu from './Menu';
 import { ReactComponent as IconBurger } from '../../assets/icons/burger.svg';
 import { MenuAuth } from './MenuAuth';
 import { Link } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 
 const Header = () => {
+    // const [page, setPage] = useState(1);
+    // const [per_page, setPerPage] = useState(10);
+    const [search, setSearch] = useState('');
+    const [games, setgames] = useState([]);
+
+    useEffect(() => {
+        const fetchdata = async () => {
+            try {
+                const res = await axios.get(
+                    `http://localhost:3000/search?search=${search}`
+                );
+                console.log(res);
+                setgames(res.data.games);
+            } catch (err) {
+                console.log(err);
+            }
+        };
+
+        if (search !== '') {
+            fetchdata();
+        }
+    }, [search]);
+    useEffect(() => {
+        const fetchdata = async () => {
+            try {
+                const res = await axios.get(
+                    `http://localhost:3000/search?search=${search}`
+                );
+                // SELECT * FROM repos WHERE name = search LIMIT per_page OFFSET per_page * page -1
+                console.log(res);
+                console.log(setgames);
+                setgames([...games, ...res.data.games]);
+            } catch (err) {
+                console.log(err);
+            }
+        };
+
+        if (search !== '') {
+            fetchdata();
+        }
+    }, []);
+
     return (
         <header className="w-full navbar border-b-2 border-base-200">
             <div className="mx-2 text-2xl">
@@ -14,7 +58,7 @@ const Header = () => {
                 </Link>
             </div>
             <div className="flex-1 px-2 mx-2">
-                <SearchBar />
+                <SearchBar setSearch={setSearch} />
                 <div className="hidden lg:block mx-4">
                     <ul className="menu menu-horizontal">
                         <Menu />

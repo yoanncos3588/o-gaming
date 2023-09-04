@@ -13,15 +13,27 @@ import Loading from '../Loading';
 const Game = () => {
     const [game, setGame] = useState({});
     const [issues, setIssues] = useState([]);
+    const [tags, setTags] = useState([]);
+
     const [isLoadingGame, setIsLoadingGame] = useState(true);
     const [isLoadingIssue, setIsLoadingIssue] = useState(true);
+    const [isLoadingTag, setIsLoadingTag] = useState(true);
+
     const navigate = useNavigate();
+
     const { gameId } = useParams();
+
     const [showImagePlaceholder, setShowImagePlaceholder] = useState(true);
 
-    // fetch issue
+    const [selectedSearchTag, setSelectedSearchTag] = useState('all');
+    const [textToSearch, setTextToSearch] = useState('');
+    const [filteredList, setFilteredList] = useState([]);
+
+    const [isSearchOn, setIsSearchOn] = useState(false);
+
+    // fetch issues
     useEffect(() => {
-        const fetchIssue = async () => {
+        const fetchIssues = async () => {
             try {
                 const res = await axios.get(
                     `http://localhost:3000/games/game/${gameId}/issues`
@@ -35,7 +47,7 @@ const Game = () => {
                 console.log(error);
             }
         };
-        fetchIssue();
+        fetchIssues();
     }, [gameId]);
 
     // fetch game
@@ -45,7 +57,6 @@ const Game = () => {
                 const res = await axios.get(
                     `http://localhost:3000/games/game/${gameId}`
                 );
-                // verifier si il y a un bien un game res.status === 200
                 if (res.status !== 200 || res.data.game.length === 0) {
                     navigate('/404');
                 }
@@ -53,10 +64,30 @@ const Game = () => {
                 setIsLoadingGame(false);
             } catch (error) {
                 console.log(error);
+                navigate('/404');
             }
         };
         fetchGame();
     }, [gameId, navigate, isLoadingGame]);
+
+    // fetch tags
+    useEffect(() => {
+        const fetchTags = async () => {
+            try {
+                const res = await axios.get(
+                    `http://localhost:3000/games/game/${gameId}/tags`
+                );
+                if (res.status !== 200) {
+                    throw Error('Unable to get tags from API');
+                }
+                setTags(res.data.tags);
+                setIsLoadingTag(false);
+            } catch (error) {
+                console.log(error);
+            }
+        };
+        fetchTags();
+    }, [gameId, navigate, isLoadingTag]);
 
     // valid image cover
     useEffect(() => {
@@ -68,6 +99,42 @@ const Game = () => {
         };
         showCover();
     }, [game.picture, showImagePlaceholder]);
+
+    const handleSubmitSearch = (e) => {
+        e.preventDefault();
+        let result = [];
+
+        // if no search infos show all
+        if (selectedSearchTag === 'all' && textToSearch === '') {
+            setIsSearchOn(false);
+            return;
+        }
+
+        // filter by tag
+        if (selectedSearchTag !== 'all') {
+            console.log('1');
+            result = issues.filter((issue) => {
+                return issue.tags.some(
+                    (tag) =>
+                        tag.toLowerCase() === selectedSearchTag.toLowerCase()
+                );
+            });
+        }
+
+        // filter by title
+        if (textToSearch !== '') {
+            console.log(2);
+            result = issues.filter((issue) => {
+                console.log(issue.title);
+                console.log(textToSearch);
+                return issue.title
+                    .toLowerCase()
+                    .includes(textToSearch.toLowerCase());
+            });
+        }
+        setIsSearchOn(true);
+        setFilteredList(result);
+    };
 
     return (
         <ContentContainer>
@@ -146,42 +213,107 @@ const Game = () => {
                         </a>
                         <a className="tab  text-lg font-bold">Suggestions</a>
                     </div>
-                    <form action="" className="w-full mt-4">
-                        <div className="join w-full flex lg:flex-row flex-col">
-                            <select
-                                className="select select-bordered lg:join-item bg-neutral"
-                                defaultValue={1}
-                            >
-                                <option disabled>Filter</option>
-                                <option value={1}>Weapons</option>
-                                <option value={2}>Main character</option>
-                            </select>
-                            <div className="flex-1">
-                                <div>
-                                    <input
-                                        className="input input-bordered lg:join-item w-full text-sm text-white focus:outline-none focus:bg-white focus:text-secondary-content bg-neutral"
-                                        placeholder="Search"
-                                    />
+                    {!isLoadingTag && (
+                        <form
+                            action=""
+                            className="w-full mt-4"
+                            onSubmit={handleSubmitSearch}
+                        >
+                            <div className="join w-full flex lg:flex-row flex-col">
+                                <select
+                                    className="select select-bordered lg:join-item bg-neutral"
+                                    defaultValue={'all'}
+                                    onChange={(e) =>
+                                        setSelectedSearchTag(
+                                            e.target.value.toLowerCase()
+                                        )
+                                    }
+                                    value={selectedSearchTag}
+                                >
+                                    <option value={'all'}>All tags</option>
+                                    {tags.map((t) => (
+                                        <option
+                                            key={t.id}
+                                            value={t.title.toLowerCase()}
+                                        >
+                                            {t.title}
+                                        </option>
+                                    ))}
+                                </select>
+                                <div className="flex-1">
+                                    <div>
+                                        <input
+                                            className="input input-bordered lg:join-item w-full text-sm text-white focus:outline-none focus:bg-white focus:text-secondary-content bg-neutral"
+                                            placeholder="Search"
+                                            onChange={(e) =>
+                                                setTextToSearch(
+                                                    e.target.value.toLowerCase()
+                                                )
+                                            }
+                                            value={textToSearch}
+                                        />
+                                    </div>
                                 </div>
+                                <button
+                                    className="btn-primary btn lg:join-item"
+                                    type="submit"
+                                >
+                                    Search
+                                </button>
                             </div>
-                            <button className="btn-primary btn lg:join-item">
-                                Search
-                            </button>
-                        </div>
-                    </form>
+                        </form>
+                    )}
                     {!isLoadingIssue && (
                         <ul className="mt-4">
-                            {issues.map((i) => (
-                                <li className="mb-4" key={i.id}>
-                                    <IssuesListItem
-                                        id={i.id}
-                                        title={i.title}
-                                        author={i.author}
-                                        tags={i.tags}
-                                        status={i.status}
-                                    />
+                            {isSearchOn ? (
+                                filteredList.length ? (
+                                    filteredList.map((i) => (
+                                        <li className="mb-4" key={i.id}>
+                                            <IssuesListItem
+                                                id={i.id}
+                                                title={i.title}
+                                                author={i.author}
+                                                tags={i.tags}
+                                                status={i.status}
+                                            />
+                                        </li>
+                                    ))
+                                ) : (
+                                    <li className=" flex items-center justify-center opacity-50 flex-col">
+                                        <p className="block text-2xl font-black mb-2">
+                                            No result
+                                        </p>
+                                        <button
+                                            className="underline"
+                                            onClick={() => {
+                                                setSelectedSearchTag('');
+                                                setTextToSearch('');
+                                                setIsSearchOn(false);
+                                            }}
+                                        >
+                                            Cancel my search
+                                        </button>
+                                    </li>
+                                )
+                            ) : issues.length ? (
+                                issues.map((i) => (
+                                    <li className="mb-4" key={i.id}>
+                                        <IssuesListItem
+                                            id={i.id}
+                                            title={i.title}
+                                            author={i.author}
+                                            tags={i.tags}
+                                            status={i.status}
+                                        />
+                                    </li>
+                                ))
+                            ) : (
+                                <li className=" flex items-center justify-center opacity-50 flex-col">
+                                    <p className="block text-2xl font-black mb-2">
+                                        No issue found for this game
+                                    </p>
                                 </li>
-                            ))}
+                            )}
                         </ul>
                     )}
                 </>

@@ -14,7 +14,10 @@ const Menu = () => {
             </li>
             {isDeveloper(userData) && (
                 <li>
-                    <Link to="/create-game" className="btn-primary font-bold">
+                    <Link
+                        to="/games/1/create-issue"
+                        className="btn-primary font-bold"
+                    >
                         Add Game
                     </Link>
                 </li>

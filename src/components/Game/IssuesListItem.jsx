@@ -18,7 +18,7 @@ export const IssuesListItem = ({ title, status, author, tags }) => {
 
                 <ul className="flex flex-wrap -mx-1">
                     {tags.map((e, index) => (
-                        <li className="m-1" key={index.id}>
+                        <li className="m-1" key={index}>
                             <Category name={e} />
                         </li>
                     ))}

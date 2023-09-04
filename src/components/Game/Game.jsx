@@ -14,6 +14,7 @@ const Game = () => {
     const [game, setGame] = useState({});
     const [issues, setIssues] = useState([]);
     const [isLoadingGame, setIsLoadingGame] = useState(true);
+    const [isLoadingIssue, setIsLoadingIssue] = useState(true);
     const navigate = useNavigate();
     const { gameId } = useParams();
     const [showImagePlaceholder, setShowImagePlaceholder] = useState(true);
@@ -29,6 +30,7 @@ const Game = () => {
                     throw Error;
                 }
                 setIssues(res.data.issues);
+                setIsLoadingIssue(false);
             } catch (error) {
                 console.log(error);
             }
@@ -47,8 +49,8 @@ const Game = () => {
                 if (res.status !== 200 || res.data.game.length === 0) {
                     navigate('/404');
                 }
-                setIsLoadingGame(false);
                 setGame(res.data.game[0]);
+                setIsLoadingGame(false);
             } catch (error) {
                 console.log(error);
             }
@@ -56,10 +58,10 @@ const Game = () => {
         fetchGame();
     }, [gameId, navigate, isLoadingGame]);
 
+    // valid image cover
     useEffect(() => {
         const showCover = async () => {
             const validImage = await isImageValid(game.picture);
-            console.log(validImage);
             if (validImage) {
                 setShowImagePlaceholder(false);
             }
@@ -167,18 +169,20 @@ const Game = () => {
                             </button>
                         </div>
                     </form>
-                    <ul className="mt-4">
-                        {issues.map((i) => (
-                            <li className="mb-4" key={i.id}>
-                                <IssuesListItem
-                                    title={i.title}
-                                    author={i.author}
-                                    tags={i.tags}
-                                    status={i.status}
-                                />
-                            </li>
-                        ))}
-                    </ul>
+                    {!isLoadingIssue && (
+                        <ul className="mt-4">
+                            {issues.map((i) => (
+                                <li className="mb-4" key={i.id}>
+                                    <IssuesListItem
+                                        title={i.title}
+                                        author={i.author}
+                                        tags={i.tags}
+                                        status={i.status}
+                                    />
+                                </li>
+                            ))}
+                        </ul>
+                    )}
                 </>
             )}
         </ContentContainer>

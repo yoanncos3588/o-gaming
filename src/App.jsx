@@ -18,12 +18,13 @@ function App() {
             <ToastContainer />
             <Routes>
                 {/* {routes for everybody} */}
-                <Route path="*" element={<Error />} />
+
                 <Route path="/" element={<Games />} />
                 <Route element={<ProtectedRoute role="guest" />}>
                     {/* {routes for guest only here} */}
                     <Route path="/login" element={<Login />} />
                     <Route path="/signup" element={<SignUp />} />
+                    <Route path="*" element={<Error />} />
                 </Route>
                 <Route element={<ProtectedRoute role="logged" />}>
                     {/* {routes for connected user only here} */}

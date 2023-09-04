@@ -15,7 +15,7 @@ const SearchBar = () => {
                 <input
                     type="search"
                     name="q"
-                    className="text-sm text-white focus:outline-none focus:bg-white focus:text-secondary-content input input-bordered input-sm w-full  pr-10 bg-neutral"
+                    className="text-sm text-white focus:outline-none focus:bg-white focus:text-secondary-content input input-bordered input-sm w-full pr-10 bg-neutral"
                     placeholder="Search..."
                 />
             </div>

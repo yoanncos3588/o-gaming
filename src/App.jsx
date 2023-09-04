@@ -9,6 +9,7 @@ import CreateIssue from './components/CreateIssue/CreateIssue';
 import CreateGame from './components/CreateGame/CreateGame';
 import ProtectedRoute from './components/ProtectedRoute';
 import Games from './components/Games/Games';
+import Game from './components/Game/Game';
 function App() {
     /** DaisyUI Theme */
     useEffect(() => {
@@ -18,6 +19,7 @@ function App() {
         <>
             <ToastContainer />
             <Routes>
+                <Route path="games/game/:gameId" element={<Game />} />
                 {/* {routes for everybody} */}
                 <Route path="/" element={<Games />} />
                 <Route element={<ProtectedRoute role="guest" />}>

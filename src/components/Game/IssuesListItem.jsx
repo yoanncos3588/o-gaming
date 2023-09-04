@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import Category from '../Category';
 import { ReactComponent as IconTools } from '../../assets/icons/tools.svg';
 
-export const IssuesListItem = () => {
+export const IssuesListItem = ({ name }) => {
     return (
         <div className="bg-base-300 shadow-xl border-l-2 border-warning">
             <div className="p-8 lg:pl-20 pl-12 lg:pt-12 relative">

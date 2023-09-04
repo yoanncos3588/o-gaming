@@ -5,46 +5,41 @@ import Category from '../Category';
 import { IssuesListItem } from './IssuesListItem';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import { isImageValid } from '../../utils/imageValidator';
+import imagePlaceHolder from '/placeholder.jpg';
 
 const Game = () => {
     const [game, setGame] = useState({});
-    const [issue, setIssue] = useState([]);
-    // const [gameId, setGameId] = useState();
+    const [issues, setIssues] = useState([]);
     const navigate = useNavigate();
+    const { gameId } = useParams();
+    const [showImagePlaceholder, setShowImagePlaceholder] = useState(true);
 
-    const gameId = useParams();
-    const issueId = useParams();
+    // fetch issue
     useEffect(() => {
         const fetchIssue = async () => {
             try {
                 const res = await axios.get(
-                    `http://localhost:3000/games/game/${gameId}/issue`
+                    `http://localhost:3000/games/game/${gameId}/issues`
                 );
-                console.log(res.data);
+                console.log(res.data.issues);
                 // verifier si il y a un bien un game res.status === 200
-                if (res.status !== 200) {
-                    navigate('/404');
-                }
-                if (res.data.game.length === 0) {
-                    navigate('/404');
-                }
 
-                setIssue(res.data);
+                setIssues(res.data.issues);
             } catch (error) {
                 console.log(error);
             }
         };
         fetchIssue();
-    });
-    // const [gameId, setGameId] = useState();
+    }, []);
 
+    // fetch game
     useEffect(() => {
         const fetchGame = async () => {
             try {
                 const res = await axios.get(
                     `http://localhost:3000/games/game/${gameId}`
                 );
-                // console.log(res.data.game.length);
                 // verifier si il y a un bien un game res.status === 200
                 if (res.status !== 200) {
                     navigate('/404');
@@ -53,15 +48,28 @@ const Game = () => {
                     navigate('/404');
                 }
 
-                setIssue(res.data.game[0]);
+                setGame(res.data.game[0]);
             } catch (error) {
                 console.log(error);
             }
         };
         fetchGame();
-    });
+    }, []);
+
+    useEffect(() => {
+        const showCover = async () => {
+            const validImage = await isImageValid(game.picture);
+            if (validImage) {
+                setShowImagePlaceholder(false);
+            }
+        };
+        showCover();
+    }, [game.picture]);
 
     // const categories = ['FPS', 'Action'];
+    useEffect(() => {
+        console.log('isimagevalid', showImagePlaceholder);
+    });
 
     return (
         <ContentContainer>
@@ -69,8 +77,12 @@ const Game = () => {
                 <div className="lg:col-span-8 col-span-12">
                     <div className="flex flex-col">
                         <img
-                            src={game.picture}
-                            alt=""
+                            src={
+                                isImageValid(game.picture)
+                                    ? `${game.picture}`
+                                    : { imagePlaceHolder }
+                            }
+                            alt={`cover for ${game.name}`}
                             className="mb-8 order-2 lg:order-1"
                         />
                         <h1 className="text-4xl font-black mb-8 order-1 lg:order-2">
@@ -116,7 +128,6 @@ const Game = () => {
                         </li>
                     ))}
             </ul>
-
             <div className="tabs tabs-boxed mt-8">
                 <a className="tab tab-active text-lg font-bold">Issues</a>
                 <a className="tab  text-lg font-bold">Suggestions</a>
@@ -147,7 +158,7 @@ const Game = () => {
 
             <ul className="mt-4">
                 <li className="mb-4">
-                    <IssuesListItem />
+                    <IssuesListItem name={issues.name} />
                 </li>
                 <li className="mb-4">
                     <IssuesListItem />

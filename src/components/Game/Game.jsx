@@ -14,7 +14,7 @@ const Game = () => {
     const navigate = useNavigate();
     const { gameId } = useParams();
     const [showImagePlaceholder, setShowImagePlaceholder] = useState(true);
-    console.log(issues);
+
     // fetch issue
     useEffect(() => {
         const fetchIssue = async () => {
@@ -22,16 +22,16 @@ const Game = () => {
                 const res = await axios.get(
                     `http://localhost:3000/games/game/${gameId}/issues`
                 );
-
-                // verifier si il y a un bien un game res.status === 200
-
+                if (res.status !== 200) {
+                    throw Error;
+                }
                 setIssues(res.data.issues);
             } catch (error) {
                 console.log(error);
             }
         };
         fetchIssue();
-    }, []);
+    }, [gameId]);
 
     // fetch game
     useEffect(() => {
@@ -41,35 +41,27 @@ const Game = () => {
                     `http://localhost:3000/games/game/${gameId}`
                 );
                 // verifier si il y a un bien un game res.status === 200
-                if (res.status !== 200) {
+                if (res.status !== 200 || res.data.game.length === 0) {
                     navigate('/404');
                 }
-                if (res.data.game.length === 0) {
-                    navigate('/404');
-                }
-
                 setGame(res.data.game[0]);
             } catch (error) {
                 console.log(error);
             }
         };
         fetchGame();
-    }, []);
+    }, [gameId, navigate]);
 
     useEffect(() => {
         const showCover = async () => {
             const validImage = await isImageValid(game.picture);
+            console.log(validImage);
             if (validImage) {
                 setShowImagePlaceholder(false);
             }
         };
         showCover();
-    }, [game.picture]);
-
-    // const categories = ['FPS', 'Action'];
-    // useEffect(() => {
-    //     console.log('isimagevalid', showImagePlaceholder);
-    // });
+    }, [game.picture, showImagePlaceholder]);
 
     return (
         <ContentContainer>
@@ -78,9 +70,9 @@ const Game = () => {
                     <div className="flex flex-col">
                         <img
                             src={
-                                isImageValid(game.picture)
-                                    ? `${game.picture}`
-                                    : { imagePlaceHolder }
+                                !showImagePlaceholder
+                                    ? game.picture
+                                    : imagePlaceHolder
                             }
                             alt={`cover for ${game.name}`}
                             className="mb-8 order-2 lg:order-1"

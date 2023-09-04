@@ -24,7 +24,7 @@ const IssueSidebar = ({ status, authorId, devId, handleDeleteIssue }) => {
             <div className="">
                 <span className="text-sm">Status :</span>
                 <span className="text-accent relative text-xs uppercase ml-2">
-                    • {status}
+                    • {status ? status : 'new'}
                 </span>
             </div>
             {canDeleteIssue() && (

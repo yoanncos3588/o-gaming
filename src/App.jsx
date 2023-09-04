@@ -24,7 +24,7 @@ function App() {
                 {/* {routes for everybody} */}
                 <Route path="/" element={<Games />} />
                 <Route
-                    path="/game/:idGame/issue/:idIssue"
+                    path="/games/game/:idGame/issue/:idIssue"
                     element={<Issue />}
                 />
                 <Route element={<ProtectedRoute role="guest" />}>

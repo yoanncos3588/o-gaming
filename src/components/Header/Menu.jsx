@@ -8,7 +8,7 @@ const Menu = () => {
     return (
         <>
             <li>
-                <Link to="/game/1/issue/1" className="btn-primary font-bold">
+                <Link to="/" className="btn-primary font-bold">
                     All Games
                 </Link>
             </li>

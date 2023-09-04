@@ -8,6 +8,7 @@ import Loading from '../Loading';
 import { ReactComponent as IconTools } from '../../assets/icons/tools.svg';
 import IssueSidebar from './IssueSidebar';
 import { axiosInstance } from '../../utils/axios';
+import { formatDate } from '../../utils/date';
 
 const Issue = () => {
     const [issue, setIssue] = useState(null);
@@ -22,11 +23,12 @@ const Issue = () => {
         const fetchIssue = async () => {
             try {
                 const res = await axios.get(
-                    `http://localhost:3000/games/game/${idGame}/issue/${idIssue}`
+                    `http://localhost:3000/issue/${idIssue}`
                 );
                 if (res.status !== 200) {
                     throw Error;
                 }
+                console.log(res);
                 setIssue(res.data.issue);
                 setTimeout(() => {
                     setIsLoadingIssue(false);
@@ -36,7 +38,7 @@ const Issue = () => {
                     theme: 'colored',
                     toastId: 'errorLogin',
                 });
-                navigate('/404');
+                // navigate('/404');
             }
         };
         fetchIssue();
@@ -61,7 +63,7 @@ const Issue = () => {
                     theme: 'colored',
                     toastId: 'errorLogin',
                 });
-                navigate('/404');
+                // navigate('/404');
             }
         };
         fetchGame();
@@ -73,15 +75,21 @@ const Issue = () => {
     const handleDeleteIssue = async () => {
         try {
             const res = await axiosInstance.delete(
-                `http://localhost:3000/games/game/${idGame}/issue/${idIssue}`
+                `http://localhost:3000/issue/${idIssue}`
             );
             if (res.status !== 200) {
                 throw Error;
+            } else {
+                toast.success('Issue deleted', {
+                    theme: 'colored',
+                    toastId: 'successDeleteIssue',
+                });
+                navigate(`/game/${idGame}`);
             }
         } catch (error) {
             toast.error('You are not allowed to do that', {
                 theme: 'colored',
-                toastId: 'errorLogin',
+                toastId: 'errorDeleteIssue',
             });
         }
     };
@@ -126,7 +134,7 @@ const Issue = () => {
                                 >
                                     {issue.author}
                                 </Link>{' '}
-                                the {issue.published_at}
+                                the {formatDate(issue.published_at)}
                             </span>
                         </div>
                         <div className="divider"></div>

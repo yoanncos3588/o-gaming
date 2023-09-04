@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import placeholder from '/placeholder.jpg';
 import { useEffect, useState } from 'react';
 import { isImageValid } from '../../utils/imageValidator';
+import { formatDate } from '../../utils/date';
 
 export const GameItem = ({
     id,
@@ -28,16 +29,6 @@ export const GameItem = ({
         };
         showCover();
     }, [image]);
-
-    /**
-     * Format string to date yyyy-mm-dd
-     * @param {string} date
-     * @returns {string} date with format yyyy-mm-dd
-     */
-    const formatDate = (date) => {
-        const newDate = new Date(date);
-        return newDate.toISOString().split('T')[0];
-    };
 
     return (
         <article className="grid gird-cols-1 lg:grid-cols-2 gap-6 bg-base-200 p-6">

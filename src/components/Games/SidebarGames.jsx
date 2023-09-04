@@ -1,21 +1,68 @@
-import { Link } from 'react-router-dom';
+import axios from 'axios';
+import { useEffect, useState } from 'react';
+import { Link, useSearchParams } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
-export const SidebarGames = () => {
-    const category = [
-        { id: 0, name: 'Action' },
-        { id: 1, name: 'RPG' },
-        { id: 2, name: 'Sports' },
-        { id: 3, name: 'Simulation' },
-    ];
+export const SidebarGames = ({
+    setCategoryFilter,
+    setDateFilter,
+    categoryFilter,
+}) => {
+    const [categories, setCategories] = useState([]);
+    const [searchParams, setSearchParams] = useSearchParams();
+
     const getYearsList = () => {
         const currentYear = new Date().getFullYear();
-        console.log(currentYear);
         let startingYear = 2000;
         const years = [];
         while (startingYear <= currentYear) {
-            years.push(startingYear++);
+            years.unshift(startingYear++);
         }
-        return years.reverse();
+        years.unshift('All');
+        return years;
+    };
+
+    // get categories from api
+    useEffect(() => {
+        const getCategories = async () => {
+            try {
+                const res = await axios.get('http://localhost:3000/categories');
+                if (
+                    res.status === 200 ||
+                    !Object.prototype.hasOwnProperty.call(res.data, 'error')
+                ) {
+                    setCategories(res.data.categories);
+                }
+            } catch (error) {
+                console.log(error);
+            }
+        };
+        getCategories();
+    }, []);
+
+    /**
+     * handle click on filter by category
+     * @param {string} categoryName
+     */
+    const handleChangeCategory = (e, categoryName) => {
+        e.preventDefault();
+        setCategoryFilter(categoryName);
+        // setSearchParams((prev) => {
+        //     prev.set('cat', categoryName.toLowerCase());
+        //     return prev;
+        // });
+    };
+
+    /**
+     * handle change on filter by year
+     * @param {Event} e
+     */
+    const handleSelectYear = (e) => {
+        setDateFilter(e.target.value.toLowerCase());
+        // setSearchParams((prev) => {
+        //     prev.set('year', e.target.value.toLowerCase());
+        //     return prev;
+        // });
     };
 
     return (
@@ -28,12 +75,45 @@ export const SidebarGames = () => {
                 </div>
                 <div className="collapse-content">
                     <span className="font-bold mb-4 uppercase text-sm inline-block text-secondary">
-                        Genres
+                        Categories
                     </span>
                     <ul className="mb-6">
-                        {category.map((c) => (
+                        <li className="lg:mb-2 mb-4">
+                            <Link
+                                onClick={(e) => handleChangeCategory(e, 'all')}
+                                // className={`hover:underline ${
+                                //     searchParams.get('cat') === 'all'
+                                //         ? 'text-accent'
+                                //         : ''
+                                // }`}
+                                className={`hover:underline ${
+                                    categoryFilter.toLowerCase() === 'all'
+                                        ? 'text-accent'
+                                        : ''
+                                }`}
+                            >
+                                All
+                            </Link>
+                        </li>
+                        {categories.map((c) => (
                             <li key={c.id} className="lg:mb-2 mb-4">
-                                <Link to={'#'} className="hover:underline">
+                                <Link
+                                    onClick={(e) =>
+                                        handleChangeCategory(e, c.name)
+                                    }
+                                    // className={`hover:underline ${
+                                    //     searchParams.get('cat') ===
+                                    //     c.name.toLowerCase()
+                                    //         ? 'text-accent'
+                                    //         : ''
+                                    // }`}
+                                    className={`hover:underline ${
+                                        categoryFilter.toLowerCase() ===
+                                        c.name.toLowerCase()
+                                            ? 'text-accent'
+                                            : ''
+                                    }`}
+                                >
                                     {c.name}
                                 </Link>
                             </li>
@@ -43,7 +123,10 @@ export const SidebarGames = () => {
                         Release date
                     </span>{' '}
                     <form action="">
-                        <select className="select select-bordered w-full">
+                        <select
+                            className="select select-bordered w-full"
+                            onChange={handleSelectYear}
+                        >
                             {getYearsList().map((y) => (
                                 <option key={y}>{y}</option>
                             ))}
@@ -53,4 +136,10 @@ export const SidebarGames = () => {
             </div>
         </>
     );
+};
+
+SidebarGames.propTypes = {
+    setCategoryFilter: PropTypes.func,
+    setDateFilter: PropTypes.func,
+    categoryFilter: PropTypes.string,
 };

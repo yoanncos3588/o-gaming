@@ -26,7 +26,10 @@ function App() {
                     <Route path="/signup" element={<SignUp />} />
                 </Route>
                 <Route element={<ProtectedRoute role="logged" />}>
-                    <Route path="/create-issue" element={<Issue />} />
+                    <Route
+                        path="games/:idGame/create-issue"
+                        element={<Issue />}
+                    />
 
                     {/* {routes for connected user only here} */}
                 </Route>

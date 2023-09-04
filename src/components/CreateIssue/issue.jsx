@@ -2,12 +2,14 @@
 import { useEffect, useState } from 'react';
 import ContentContainer from '../ContentContainer';
 import { toast } from 'react-toastify';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { axiosInstance } from '../../utils/axios';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
 
 function CreateIssue({ description, imageUrl }) {
+    const [isLoading, setIsLoading] = useState(false);
+
     const [issueInfos, setIssueInfos] = useState({
         title: '',
         is_public: true,
@@ -26,29 +28,24 @@ function CreateIssue({ description, imageUrl }) {
     const userId = useSelector((state) => state.user.userData.userId);
     const publishedAt = new Date();
 
-    // const systemeOptions = [
-    //     { id: 1, name: 'ps5' },
-    //     { id: 2, name: 'ps4' },
-    //     { id: 3, name: 'Xbox' },
-    //     { id: 4, name: 'PC' },
-    //     { id: 5, name: 'Switch' },
-    // ];
+    const navigate = useNavigate();
 
-    // const tags = [
-    //     { id: 1, title: 'Weapon' },
-    //     { id: 2, title: 'Lobby' },
-    //     { id: 3, title: 'Character' },
-    //     { id: 4, title: 'Spell' },
-    // ];
-
-    const idGame = 1;
+    const { idGame } = useParams();
 
     useEffect(() => {
         const fetchdata = async () => {
             try {
                 const resPlateform = await axios.get(
-                    'http://localhost:3000/platforms'
+                    'http://localhost:3000/platform'
                 );
+                console.log(resPlateform);
+                if (resPlateform.status !== 200) {
+                    toast.error('Unable to fetch category, retry later', {
+                        theme: 'colored',
+                        toastId: 'errorLogin',
+                    });
+                    navigate('/');
+                }
                 setPlatform(resPlateform.data.platforms);
             } catch (error) {
                 console.log(error);
@@ -65,16 +62,12 @@ function CreateIssue({ description, imageUrl }) {
                     `http://localhost:3000/games/game/${idGame}/tags`
                 );
                 settags(resTags.data.tags);
-                console.log(resTags.data);
             } catch (error) {
                 console.log(error);
             }
         };
         fetchdata();
     }, []);
-
-    const navigate = useNavigate();
-    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
         // redirect user on success

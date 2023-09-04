@@ -14,7 +14,7 @@ const Game = () => {
     const navigate = useNavigate();
     const { gameId } = useParams();
     const [showImagePlaceholder, setShowImagePlaceholder] = useState(true);
-
+    console.log(issues);
     // fetch issue
     useEffect(() => {
         const fetchIssue = async () => {
@@ -155,24 +155,18 @@ const Game = () => {
                     </button>
                 </div>
             </form>
-
-            <ul className="mt-4">
-                <li className="mb-4">
-                    <IssuesListItem name={issues.name} />
-                </li>
-                <li className="mb-4">
-                    <IssuesListItem />
-                </li>
-                <li className="mb-4">
-                    <IssuesListItem />
-                </li>
-                <li className="mb-4">
-                    <IssuesListItem />
-                </li>
-                <li className="mb-4">
-                    <IssuesListItem />
-                </li>
-            </ul>
+            {issues.map((i) => (
+                <ul className="mt-4" key={i.id}>
+                    <li className="mb-4">
+                        <IssuesListItem
+                            title={i.title}
+                            author={i.author}
+                            tags={i.tags}
+                            status={i.status}
+                        />
+                    </li>
+                </ul>
+            ))}
         </ContentContainer>
     );
 };

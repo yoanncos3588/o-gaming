@@ -2,7 +2,7 @@ import { ReactComponent as IconSearch } from '../../assets/icons/search.svg';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 
-const SearchBar = ({ setSearch }) => {
+const SearchBar => {
     const [inputValue, setInputValue] = useState('');
 
     const handleKeyDown = (e) => {

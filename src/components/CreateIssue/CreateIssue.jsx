@@ -7,20 +7,19 @@ import { axiosInstance } from '../../utils/axios';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
 import SidebarIssue from './SidebarIssue';
+import Select from 'react-select';
 
 function CreateIssue() {
     const [isLoading, setIsLoading] = useState(false);
     const [tags, settags] = useState([]);
     const [platforms, setPlatform] = useState([]);
-
+    const [selectedTags, setSelectedTags] = useState([]);
     const [issueInfos, setIssueInfos] = useState({
         title: '',
         is_public: true,
         platform_id: 1,
-
         is_online: true,
         description: '',
-        category: '',
         frequency: 'Regular',
         is_minor: true,
         replication: '',
@@ -111,21 +110,12 @@ function CreateIssue() {
         }
     };
 
-    /** Handle checkbox for tags */
-    const addTag = (e, tag) => {
-        if (e.target.checked) {
-            setIssueInfos((prev) => {
-                const newTags = [...prev.tags, tag];
-                return { ...prev, tags: newTags };
-            });
-        } else {
-            setIssueInfos((prev) => {
-                const newTags = prev.tags.filter(
-                    (oldTag) => oldTag.id !== tag.id
-                );
-                return { ...prev, tags: newTags };
-            });
-        }
+    /**
+     * Handle react-select for tags
+     * @param {Array} options array of tags from react-select component
+     */
+    const onOptionChangeForTags = (options) => {
+        setSelectedTags(options);
     };
 
     const convertValueToBoolean = (value) => {
@@ -153,24 +143,40 @@ function CreateIssue() {
                     toastId: 'succesToast',
                     theme: 'colored',
                 });
+            }
+        } catch (error) {
+            if (error.response.data.error) {
+                toast.error(error.response.data.error, {
+                    theme: 'colored',
+                });
             } else {
-                toast.error(res.data.error, {
+                toast.error('An unexpected error has occured', {
                     theme: 'colored',
                 });
             }
-        } catch (error) {
-            console.log(error);
-            toast.error('An unexpected error occured', {
-                theme: 'colored',
-            });
         }
     };
+
+    // format tags for api
+    useEffect(() => {
+        /**
+         * Get categories from state selectedCategories and transfer name into gameData state to match api
+         */
+        const formatTagsForApi = () => {
+            let tagsForAPI = [];
+            selectedTags.map((t) => tagsForAPI.push(t.title));
+            setIssueInfos((prev) => {
+                return { ...prev, tags: tagsForAPI };
+            });
+        };
+        formatTagsForApi();
+    }, [selectedTags]);
 
     return (
         <ContentContainer SidebarRight={<SidebarIssue idGame={idGame} />}>
             <div className=" flex flex-wrap ">
                 <h2 className="text-2xl font-semibold text-white mb-4">
-                    Create a Issue
+                    Create an Issue
                 </h2>
                 <form className="w-full" onSubmit={handleSubmit}>
                     <div className="w-full">
@@ -300,28 +306,19 @@ function CreateIssue() {
                                 Select tags for your issue
                             </span>
                         </label>
-                        <div className="flex flex-wrap mb-8 -mx-3">
-                            {tags.map((tag) => (
-                                <div
-                                    className="form-control lg:w-1/4 w-full m-3 lg:mr-3"
-                                    key={tag.id}
-                                >
-                                    <label className="cursor-pointer label bg-neutral p-4">
-                                        <span className="label-text uppercase">
-                                            {tag.title}
-                                        </span>
-                                        <input
-                                            type="checkbox"
-                                            className="checkbox checkbox-info"
-                                            checked={issueInfos.tags.some(
-                                                (stateTag) =>
-                                                    tag.id === stateTag.id
-                                            )}
-                                            onChange={(e) => addTag(e, tag)}
-                                        />
-                                    </label>
-                                </div>
-                            ))}
+                        <div className="flex flex-wrap mb-8">
+                            <Select
+                                name="categories"
+                                options={tags}
+                                className="basic-multi-select w-full"
+                                classNamePrefix="select"
+                                closeMenuOnSelect={false}
+                                onChange={onOptionChangeForTags}
+                                value={selectedTags}
+                                getOptionLabel={(option) => `${option.title}`}
+                                getOptionValue={(option) => option.title}
+                                isMulti
+                            />
                         </div>
                         <div className="form-control mb-8">
                             <label className="label">

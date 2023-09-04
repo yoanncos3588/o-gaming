@@ -174,6 +174,7 @@ const Game = () => {
                             {issues.map((i) => (
                                 <li className="mb-4" key={i.id}>
                                     <IssuesListItem
+                                        id={i.id}
                                         title={i.title}
                                         author={i.author}
                                         tags={i.tags}

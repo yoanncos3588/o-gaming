@@ -3,7 +3,7 @@ import Category from '../Category';
 import { ReactComponent as IconTools } from '../../assets/icons/tools.svg';
 import propTypes from 'prop-types';
 
-export const IssuesListItem = ({ title, status, author, tags }) => {
+export const IssuesListItem = ({ id, title, status, author, tags }) => {
     return (
         <div className="bg-base-300 shadow-xl border-l-2 border-warning">
             <div className="p-8 lg:pl-20 pl-12 lg:pt-12 relative">
@@ -11,7 +11,7 @@ export const IssuesListItem = ({ title, status, author, tags }) => {
                     <span className="mr-4 absolute -left-8 top-2">
                         <IconTools className="w-5 h-5" />
                     </span>
-                    <Link to={'issue/:id-issue'} className="hover:underline ">
+                    <Link to={`issue/${id}`} className="hover:underline ">
                         {title}
                     </Link>
                 </h2>
@@ -28,7 +28,10 @@ export const IssuesListItem = ({ title, status, author, tags }) => {
                     <span>
                         posted by :{' '}
                         <span className="">
-                            <Link className="hover:underline font-bold">
+                            <Link
+                                className="hover:underline font-bold"
+                                to={`/user/${author}`}
+                            >
                                 {author}
                             </Link>{' '}
                             the 21/09/2022
@@ -36,13 +39,14 @@ export const IssuesListItem = ({ title, status, author, tags }) => {
                     </span>
                 </div>
                 <span className="lg:absolute lg:top-4 mt-2 lg:mt-0 lg:right-4 text-accent relative text-xs uppercase block text-right">
-                    {status}
+                    {status ? status : 'new'}
                 </span>
             </div>
         </div>
     );
 };
 IssuesListItem.propTypes = {
+    id: propTypes.number,
     title: propTypes.string,
     author: propTypes.string,
     tags: propTypes.array,

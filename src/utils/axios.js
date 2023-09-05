@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { isTokenExpired } from '../utils/token';
+import { useAuth } from '../hook/useAuth';
 
 /** instance of axios to access data with token */
 export const axiosInstance = axios.create({

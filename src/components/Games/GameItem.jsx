@@ -33,7 +33,7 @@ export const GameItem = ({
     return (
         <article className="grid gird-cols-1 lg:grid-cols-2 gap-6 bg-base-200 p-6">
             <div className="">
-                <Link to={`/games/${id}`}>
+                <Link to={`/game/${id}`}>
                     <img
                         src={!showPlaceholder ? image : placeholder}
                         alt={`image cover of ${name.toLowerCase()}`}
@@ -42,7 +42,7 @@ export const GameItem = ({
                 </Link>
                 <h2 className=" text-xl font-black my-4">
                     <Link
-                        to={`/games/game/${id}`}
+                        to={`/game/${id}`}
                         className="hover:underline uppercase"
                     >
                         {name}
@@ -67,7 +67,7 @@ export const GameItem = ({
                         <span className="font-bold">{totalIssues}</span> issues
                     </span>
                     <Link
-                        to={`/games/${id}/create-issue`}
+                        to={`/game/${id}/create-issue`}
                         className="btn btn-warning btn-xs"
                     >
                         Add
@@ -79,7 +79,7 @@ export const GameItem = ({
                         suggestions
                     </span>
                     <Link
-                        to={`/games/${id}/create-suggestion`}
+                        to={`/game/${id}/create-suggestion`}
                         className="btn btn-info btn-xs"
                     >
                         Add

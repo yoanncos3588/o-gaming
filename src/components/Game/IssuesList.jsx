@@ -4,8 +4,10 @@ import { IssueSuggestionListItem } from './IssueSuggestionListItem';
 import propTypes from 'prop-types';
 
 import axios from 'axios';
+import { useSelector } from 'react-redux';
+import { filterPrivateIssues } from '../../utils/userStatus';
 
-const IssuesList = ({ gameId }) => {
+const IssuesList = ({ idGame, idDev }) => {
     const [issues, setIssues] = useState([]);
     const [tags, setTags] = useState([]);
 
@@ -19,33 +21,37 @@ const IssuesList = ({ gameId }) => {
 
     const [isSearchOn, setIsSearchOn] = useState(false);
 
+    const userData = useSelector((state) => state.user.userData);
+
     const navigate = useNavigate();
 
-    // fetch issues
+    // fetch issues and filter results
     useEffect(() => {
         const fetchIssues = async () => {
             try {
                 const res = await axios.get(
-                    `http://localhost:3000/games/game/${gameId}/issues`
+                    `http://localhost:3000/games/game/${idGame}/issues`
                 );
                 if (res.status !== 200) {
                     throw Error;
                 }
-                setIssues(res.data.issues);
+                setIssues(
+                    filterPrivateIssues(res.data.issues, userData, idDev)
+                );
                 setIsLoadingIssue(false);
             } catch (error) {
                 console.log(error);
             }
         };
         fetchIssues();
-    }, [gameId]);
+    }, [idGame, userData, idDev]);
 
     // fetch tags
     useEffect(() => {
         const fetchTags = async () => {
             try {
                 const res = await axios.get(
-                    `http://localhost:3000/games/game/${gameId}/tags`
+                    `http://localhost:3000/games/game/${idGame}/tags`
                 );
                 if (res.status !== 200) {
                     throw Error('Unable to get tags from API');
@@ -57,7 +63,7 @@ const IssuesList = ({ gameId }) => {
             }
         };
         fetchTags();
-    }, [gameId, navigate, isLoadingTag]);
+    }, [idGame, navigate, isLoadingTag]);
 
     /**
      * Handle when user press search on form above list issues
@@ -83,7 +89,7 @@ const IssuesList = ({ gameId }) => {
                 );
             });
         } else {
-            result = [...IssuesList];
+            result = [...issues];
         }
 
         // filter by title
@@ -161,6 +167,7 @@ const IssuesList = ({ gameId }) => {
                                         author={i.author}
                                         tags={i.tags}
                                         status={i.status}
+                                        idGame={idGame}
                                     />
                                 </li>
                             ))
@@ -190,6 +197,7 @@ const IssuesList = ({ gameId }) => {
                                     author={i.author}
                                     tags={i.tags}
                                     status={i.status}
+                                    idGame={idGame}
                                 />
                             </li>
                         ))
@@ -207,7 +215,8 @@ const IssuesList = ({ gameId }) => {
 };
 
 IssuesList.propTypes = {
-    gameId: propTypes.string,
+    idGame: propTypes.string,
+    idDev: propTypes.number,
 };
 
 export default IssuesList;

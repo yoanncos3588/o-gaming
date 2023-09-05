@@ -10,9 +10,12 @@ import { formatDate } from '../../utils/date';
 import Loading from '../Loading';
 import IssuesList from './IssuesList';
 import SuggestionsList from './SuggestionsList';
+import { ReactComponent as IconSuggestion } from '../../assets/icons/suggestion.svg';
+import { ReactComponent as IconTools } from '../../assets/icons/tools.svg';
+import isUrl from 'is-url';
 
 const Game = () => {
-    const { gameId } = useParams();
+    const { idGame } = useParams();
     const [game, setGame] = useState({});
     const [isLoadingGame, setIsLoadingGame] = useState(true);
 
@@ -27,7 +30,7 @@ const Game = () => {
         const fetchGame = async () => {
             try {
                 const res = await axios.get(
-                    `http://localhost:3000/games/game/${gameId}`
+                    `http://localhost:3000/games/game/${idGame}`
                 );
                 if (res.status !== 200 || res.data.game.length === 0) {
                     navigate('/404');
@@ -40,7 +43,7 @@ const Game = () => {
             }
         };
         fetchGame();
-    }, [gameId, navigate, isLoadingGame]);
+    }, [idGame, navigate, isLoadingGame]);
 
     // valid image cover
     useEffect(() => {
@@ -78,24 +81,27 @@ const Game = () => {
                         </div>
                         <div className="lg:col-span-4 col-span-12">
                             <div className="flex justify-center flex-col items-center ">
+                                {isUrl(game.external_link) && (
+                                    <Link
+                                        to={game.external_link}
+                                        className="btn w-full mb-4"
+                                        target="_blank"
+                                    >
+                                        Official website
+                                    </Link>
+                                )}
                                 <Link
-                                    to={game.external_link}
-                                    className="btn w-full mb-4"
-                                    target="_blank"
-                                >
-                                    Official website
-                                </Link>
-                                <Link
-                                    to={`/games/${gameId}/create-issue`}
+                                    to={`/game/${idGame}/create-issue`}
                                     className="btn btn-warning w-full mb-4"
                                 >
+                                    <IconTools />
                                     Report an issue
                                 </Link>
                                 <Link
-                                    to={'#'}
+                                    to={`/game/${idGame}/create-suggestion`}
                                     className="btn btn-info w-full mb-4"
                                 >
-                                    Send suggestion
+                                    <IconSuggestion /> Send suggestion
                                 </Link>
                             </div>
                         </div>
@@ -149,9 +155,9 @@ const Game = () => {
                         </button>
                     </div>
                     {showSuggestion ? (
-                        <SuggestionsList gameId={gameId} />
+                        <SuggestionsList idGame={idGame} idDev={game.user_id} />
                     ) : (
-                        <IssuesList gameId={gameId} />
+                        <IssuesList idGame={idGame} idDev={game.user_id} />
                     )}
                 </>
             )}

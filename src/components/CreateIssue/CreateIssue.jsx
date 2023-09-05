@@ -6,8 +6,9 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { axiosInstance } from '../../utils/axios';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
-import SidebarIssue from './SidebarIssue';
+import SidebarIssue from './SidebarGame';
 import Select from 'react-select';
+import { ReactComponent as IconTools } from '../../assets/icons/tools.svg';
 
 function CreateIssue() {
     const [isLoading, setIsLoading] = useState(false);
@@ -85,7 +86,7 @@ function CreateIssue() {
     useEffect(() => {
         toast.onChange((payload) => {
             if (payload.status === 'removed' && payload.id === 'succesToast') {
-                navigate(`/games/game/${idGame}`);
+                navigate(`/game/${idGame}`);
             }
         });
     }, [navigate, idGame]);
@@ -131,20 +132,22 @@ function CreateIssue() {
         e.preventDefault();
         issueInfos.user_id = userId;
         issueInfos.published_at = publishedAt;
+        setIsLoading(true);
         try {
             const res = await axiosInstance.post(
                 `http://localhost:3000/games/game/${idGame}/issues`,
                 issueInfos
             );
             if (res.status === 201) {
-                setIsLoading(false);
                 toast.success('Succes, you will be redirect…', {
                     autoClose: 2000,
                     toastId: 'succesToast',
                     theme: 'colored',
                 });
             }
+            setIsLoading(false);
         } catch (error) {
+            setIsLoading(false);
             if (error.response.data.error) {
                 toast.error(error.response.data.error, {
                     theme: 'colored',
@@ -175,9 +178,12 @@ function CreateIssue() {
     return (
         <ContentContainer SidebarRight={<SidebarIssue idGame={idGame} />}>
             <div className=" flex flex-wrap ">
-                <h2 className="text-2xl font-semibold text-white mb-4">
-                    Create an Issue
-                </h2>
+                <div className="flex items-center  mb-4">
+                    <IconTools />
+                    <h2 className="text-2xl font-semibold text-white ml-4">
+                        Create an Issue
+                    </h2>
+                </div>
                 <form className="w-full" onSubmit={handleSubmit}>
                     <div className="w-full">
                         <div className="form-control  mb-8">

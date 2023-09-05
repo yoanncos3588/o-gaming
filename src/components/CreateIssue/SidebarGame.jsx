@@ -6,7 +6,7 @@ import { isImageValid } from '../../utils/imageValidator';
 import placeholder from '/placeholder.jpg';
 import PropTypes from 'prop-types';
 
-const SidebarIssue = ({ idGame }) => {
+const SidebarGame = ({ idGame }) => {
     const [game, setGame] = useState([]);
     const [showPlaceholder, setShowPlaceholder] = useState(true);
     const [isLoading, setIsLoading] = useState(true);
@@ -45,7 +45,7 @@ const SidebarIssue = ({ idGame }) => {
         <div>
             <Link
                 className="text-md underline mb-4 inline-block hover:text-accent"
-                to={`/games/game/:${idGame}`}
+                to={`/game/${idGame}`}
             >
                 Return to game page
             </Link>
@@ -64,8 +64,8 @@ const SidebarIssue = ({ idGame }) => {
     );
 };
 
-SidebarIssue.propTypes = {
+SidebarGame.propTypes = {
     idGame: PropTypes.string,
 };
 
-export default SidebarIssue;
+export default SidebarGame;

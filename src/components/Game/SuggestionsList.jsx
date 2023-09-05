@@ -4,7 +4,7 @@ import propTypes from 'prop-types';
 
 import axios from 'axios';
 
-const SuggestionsList = ({ gameId }) => {
+const SuggestionsList = ({ idGame }) => {
     const [suggestions, setSuggestions] = useState([]);
 
     const [isLoadingSuggestions, setIsLoadingSuggestions] = useState(true);
@@ -19,7 +19,7 @@ const SuggestionsList = ({ gameId }) => {
         const fetchSuggestions = async () => {
             try {
                 const res = await axios.get(
-                    `http://localhost:3000/games/game/${gameId}/suggestions`
+                    `http://localhost:3000/games/game/${idGame}/suggestions`
                 );
                 if (res.status !== 200) {
                     throw Error;
@@ -31,7 +31,7 @@ const SuggestionsList = ({ gameId }) => {
             }
         };
         fetchSuggestions();
-    }, [gameId]);
+    }, [idGame]);
 
     /**
      * Handle when user press search on form above list issues
@@ -98,6 +98,7 @@ const SuggestionsList = ({ gameId }) => {
                                             id={i.id}
                                             title={i.title}
                                             author={i.author}
+                                            idGame={idGame}
                                             isSuggestions
                                         />
                                     </li>
@@ -125,6 +126,7 @@ const SuggestionsList = ({ gameId }) => {
                                         id={i.id}
                                         title={i.title}
                                         author={i.author}
+                                        idGame={idGame}
                                         isSuggestions
                                     />
                                 </li>
@@ -144,7 +146,7 @@ const SuggestionsList = ({ gameId }) => {
 };
 
 SuggestionsList.propTypes = {
-    gameId: propTypes.string,
+    idGame: propTypes.string,
 };
 
 export default SuggestionsList;

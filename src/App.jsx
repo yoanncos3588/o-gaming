@@ -9,7 +9,9 @@ import CreateIssue from './components/CreateIssue/CreateIssue';
 import CreateGame from './components/CreateGame/CreateGame';
 import ProtectedRoute from './components/ProtectedRoute';
 import Games from './components/Games/Games';
+import Error from './components/error/error';
 import Game from './components/Game/Game';
+
 function App() {
     /** DaisyUI Theme */
     useEffect(() => {
@@ -21,7 +23,9 @@ function App() {
             <Routes>
                 <Route path="games/game/:gameId" element={<Game />} />
                 {/* {routes for everybody} */}
+
                 <Route path="/" element={<Games />} />
+                
                 <Route element={<ProtectedRoute role="guest" />}>
                     {/* {routes for guest only here} */}
                     <Route path="/login" element={<Login />} />
@@ -39,6 +43,7 @@ function App() {
                     {/* {routes for dev only here} */}
                     <Route path="/create-game" element={<CreateGame />} />
                 </Route>
+                <Route path="*" element={<Error />} />
             </Routes>
         </>
     );

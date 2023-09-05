@@ -155,9 +155,9 @@ const Game = () => {
                         </button>
                     </div>
                     {showSuggestion ? (
-                        <SuggestionsList idGame={idGame} />
+                        <SuggestionsList idGame={idGame} idDev={game.user_id} />
                     ) : (
-                        <IssuesList idGame={idGame} />
+                        <IssuesList idGame={idGame} idDev={game.user_id} />
                     )}
                 </>
             )}

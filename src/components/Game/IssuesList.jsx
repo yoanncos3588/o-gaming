@@ -4,8 +4,10 @@ import { IssueSuggestionListItem } from './IssueSuggestionListItem';
 import propTypes from 'prop-types';
 
 import axios from 'axios';
+import { useSelector } from 'react-redux';
+import { isDeveloper } from '../../utils/userStatus';
 
-const IssuesList = ({ idGame }) => {
+const IssuesList = ({ idGame, idDev }) => {
     const [issues, setIssues] = useState([]);
     const [tags, setTags] = useState([]);
 
@@ -19,10 +21,38 @@ const IssuesList = ({ idGame }) => {
 
     const [isSearchOn, setIsSearchOn] = useState(false);
 
+    const userData = useSelector((state) => state.user.userData);
+
     const navigate = useNavigate();
 
-    // fetch issues
+    // fetch issues and filter results
     useEffect(() => {
+        /**
+         * Filter issues from api
+         * @param {Array} data array of issues from api
+         * @returns {Array} filtered issues for user
+         */
+        const filterPrivateIssue = (data) => {
+            const filteredIssues = data.filter((i) => {
+                // if issue is not public we do more check
+                if (!i.is_public) {
+                    // if connected user is creator of the issue its ok
+                    if (userData.userId === i.user_id) {
+                        return true;
+                    }
+                    // if connected user is a dev and is the game creator its ok
+                    if (isDeveloper(userData) && userData.userId === idDev) {
+                        return true;
+                    }
+                    // else we remove the private issue to hide it for user
+                    return false;
+                } else {
+                    // issue is not private
+                    return true;
+                }
+            });
+            return filteredIssues;
+        };
         const fetchIssues = async () => {
             try {
                 const res = await axios.get(
@@ -31,14 +61,14 @@ const IssuesList = ({ idGame }) => {
                 if (res.status !== 200) {
                     throw Error;
                 }
-                setIssues(res.data.issues);
+                setIssues(filterPrivateIssue(res.data.issues));
                 setIsLoadingIssue(false);
             } catch (error) {
                 console.log(error);
             }
         };
         fetchIssues();
-    }, [idGame]);
+    }, [idGame, userData, idDev]);
 
     // fetch tags
     useEffect(() => {

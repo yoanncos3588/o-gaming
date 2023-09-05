@@ -23,10 +23,9 @@ function App() {
         <>
             <ToastContainer />
             <Routes>
-                <Route path="/game/:idGame" element={<Game />} />
                 {/* {routes for everybody} */}
-
                 <Route path="/" element={<Games />} />
+                <Route path="/game/:idGame" element={<Game />} />
                 <Route
                     path="/game/:idGame/issue/:idIssue"
                     element={<Issue />}

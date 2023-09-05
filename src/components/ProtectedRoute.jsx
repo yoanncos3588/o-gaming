@@ -2,30 +2,26 @@ import { Outlet, Navigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { isDeveloper, isLoggedIn } from '../utils/userStatus';
 import PropTypes from 'prop-types';
-import { toast } from 'react-toastify';
 
 const ProtectedRoute = ({ role = '' }) => {
     const userData = useSelector((state) => state.user.userData);
 
     // only for visitor
     if (role === 'guest' && isLoggedIn()) {
-        return <Navigate to="/" />;
+        return <Navigate to="/?toast=loginOk" />;
     }
     // only if connected
     if (role === 'logged' && !isLoggedIn()) {
-        toast.error(
-            'You are not connected or your session has expired, please login',
-            {
-                autoClose: 2000,
-                theme: 'colored',
-                toastId: 'redirectLogin',
-            }
-        );
-        return <Navigate to="/login" />;
+        return <Navigate to="/login?toast=expired" />;
     }
     // only if dev
-    if (role === 'developer' && (!isLoggedIn() || !isDeveloper(userData))) {
-        return <Navigate to="/login" />;
+    if (role === 'developer') {
+        if (!isLoggedIn()) {
+            return <Navigate to="/login?toast=expired" />;
+        }
+        if (!isDeveloper(userData)) {
+            return <Navigate to="/?toast=unauthorized" />;
+        }
     }
 
     return <Outlet />;

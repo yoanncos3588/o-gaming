@@ -2,6 +2,7 @@ import Drawer from './Drawer/Drawer';
 import Footer from './Footer/Footer';
 import Header from './Header/Header';
 import PropTypes from 'prop-types';
+import { ToastInterceptor } from './ToastInterceptor';
 
 const TemplateDrawer = ({ children }) => {
     return (
@@ -10,6 +11,7 @@ const TemplateDrawer = ({ children }) => {
             <div className="drawer-content flex flex-col">
                 {/* Navbar */}
                 <Header />
+                <ToastInterceptor />
                 {/* Page content here */}
                 {children}
                 <Footer />

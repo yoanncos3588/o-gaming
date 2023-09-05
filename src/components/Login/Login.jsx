@@ -6,38 +6,38 @@ import {
     updateLoginErrorMessage,
 } from '../../store/reducers/user';
 import { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import ContentContainer from '../ContentContainer';
+import { useSearchParams } from 'react-router-dom';
 
 function Login() {
     const [isLoading, setIsLoading] = useState(false);
     const dispatch = useDispatch();
     const { email, password } = useSelector((state) => state.user.credentials);
-    const username = useSelector((state) => state.user.userData?.username);
     const loginErrorMessage = useSelector(
         (state) => state.user.loginErrorMessage
     );
-    const navigate = useNavigate();
+    let [searchParams] = useSearchParams();
 
-    /** useEffect for success on login */
+    const isSessionExpired = searchParams.get('session');
+    console.log(isSessionExpired);
+
     useEffect(() => {
-        if (username) {
-            setIsLoading(true);
-            toast.success(`Welcome back ${username}, you will be redirected…`, {
-                autoClose: 2000,
-                theme: 'colored',
-                toastId: 'successLogin',
-            });
+        if (isSessionExpired === 'expired') {
+            toast.error(
+                'You are not connected or your session has expired, please login',
+                {
+                    autoClose: 2000,
+                    theme: 'colored',
+                    toastId: 'redirectLogin',
+                }
+            );
         }
-        toast.onChange((payload) => {
-            if (payload.status === 'removed' && payload.id === 'successLogin') {
-                navigate('/');
-            }
-        });
-    }, [username, navigate]);
+    }, [isSessionExpired]);
 
     /** useEffect for error on login */
     useEffect(() => {
+        setIsLoading(false);
         if (loginErrorMessage !== '') {
             toast.error(loginErrorMessage, {
                 theme: 'colored',
@@ -71,6 +71,7 @@ function Login() {
      */
     const handleLogin = async (e) => {
         e.preventDefault();
+        setIsLoading(true);
         if (email === '' || password === '') {
             toast.error('Missing fields', {
                 theme: 'colored',

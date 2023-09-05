@@ -1,19 +1,19 @@
 import { useEffect } from 'react';
-import Login from './components/Login/Login';
-import SignUp from './components/SignUp/SignUp';
 import { Route, Routes } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
+import ProtectedRoute from './components/ProtectedRoute';
+import Login from './components/Login/Login';
+import SignUp from './components/SignUp/SignUp';
 import 'react-toastify/dist/ReactToastify.min.css';
 import CreateIssue from './components/CreateIssue/CreateIssue';
-
 import CreateGame from './components/CreateGame/CreateGame';
-import ProtectedRoute from './components/ProtectedRoute';
 import Issue from './components/Issue/Issue';
 import Games from './components/Games/Games';
-import Error from './components/error/error';
 import Game from './components/Game/Game';
 import CreateSuggestion from './components/CreateIssue/CreateSuggestion';
 import Suggestion from './components/Issue/Suggestion';
+import Error from './components/error/error';
+
 function App() {
     /** DaisyUI Theme */
     useEffect(() => {

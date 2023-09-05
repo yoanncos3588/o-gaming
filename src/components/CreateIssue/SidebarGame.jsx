@@ -6,7 +6,7 @@ import { isImageValid } from '../../utils/imageValidator';
 import placeholder from '/placeholder.jpg';
 import PropTypes from 'prop-types';
 
-const SidebarIssue = ({ idGame }) => {
+const SidebarGame = ({ idGame }) => {
     const [game, setGame] = useState([]);
     const [showPlaceholder, setShowPlaceholder] = useState(true);
     const [isLoading, setIsLoading] = useState(true);
@@ -64,8 +64,8 @@ const SidebarIssue = ({ idGame }) => {
     );
 };
 
-SidebarIssue.propTypes = {
+SidebarGame.propTypes = {
     idGame: PropTypes.string,
 };
 
-export default SidebarIssue;
+export default SidebarGame;

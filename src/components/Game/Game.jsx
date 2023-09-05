@@ -92,7 +92,7 @@ const Game = () => {
                                     Report an issue
                                 </Link>
                                 <Link
-                                    to={'#'}
+                                    to={`/game/${gameId}/create-suggestion`}
                                     className="btn btn-info w-full mb-4"
                                 >
                                     Send suggestion

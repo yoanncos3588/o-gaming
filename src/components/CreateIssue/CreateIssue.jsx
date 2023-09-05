@@ -6,7 +6,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { axiosInstance } from '../../utils/axios';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
-import SidebarIssue from './SidebarIssue';
+import SidebarIssue from './SidebarGame';
 import Select from 'react-select';
 
 function CreateIssue() {
@@ -85,7 +85,7 @@ function CreateIssue() {
     useEffect(() => {
         toast.onChange((payload) => {
             if (payload.status === 'removed' && payload.id === 'succesToast') {
-                navigate(`/games/game/${idGame}`);
+                navigate(`/game/${idGame}`);
             }
         });
     }, [navigate, idGame]);
@@ -131,20 +131,22 @@ function CreateIssue() {
         e.preventDefault();
         issueInfos.user_id = userId;
         issueInfos.published_at = publishedAt;
+        setIsLoading(true);
         try {
             const res = await axiosInstance.post(
                 `http://localhost:3000/games/game/${idGame}/issues`,
                 issueInfos
             );
             if (res.status === 201) {
-                setIsLoading(false);
                 toast.success('Succes, you will be redirect…', {
                     autoClose: 2000,
                     toastId: 'succesToast',
                     theme: 'colored',
                 });
             }
+            setIsLoading(false);
         } catch (error) {
+            setIsLoading(false);
             if (error.response.data.error) {
                 toast.error(error.response.data.error, {
                     theme: 'colored',

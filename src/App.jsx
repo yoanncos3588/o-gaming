@@ -11,6 +11,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import Issue from './components/Issue/Issue';
 import Games from './components/Games/Games';
 import Game from './components/Game/Game';
+import CreateSuggestion from './components/CreateIssue/CreateSuggestion';
 function App() {
     /** DaisyUI Theme */
     useEffect(() => {
@@ -36,6 +37,10 @@ function App() {
                     <Route
                         path="/game/:idGame/create-issue"
                         element={<CreateIssue />}
+                    />
+                    <Route
+                        path="/game/:idGame/create-suggestion"
+                        element={<CreateSuggestion />}
                     />
 
                     {/* {routes for connected user only here} */}

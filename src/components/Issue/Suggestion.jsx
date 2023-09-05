@@ -4,10 +4,10 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import Loading from '../Loading';
-import { ReactComponent as IconTools } from '../../assets/icons/tools.svg';
 import { axiosInstance } from '../../utils/axios';
 import { formatDate } from '../../utils/date';
 import DeleteItem from './DeleteItem';
+import { ReactComponent as IconSuggestion } from '../../assets/icons/suggestion.svg';
 
 const Suggestion = () => {
     const [suggestion, setSuggestion] = useState(null);
@@ -120,7 +120,7 @@ const Suggestion = () => {
                         <div className="mb-8 pl-8">
                             <h1 className="text-2xl font-bold mb-2 flex items-start relative">
                                 <span className="mr-4 absolute -left-8 top-2">
-                                    <IconTools className="w-5 h-5" />
+                                    <IconSuggestion className="w-5 h-5" />
                                 </span>
                                 {suggestion.title}
                             </h1>

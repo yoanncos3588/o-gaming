@@ -10,6 +10,9 @@ import { formatDate } from '../../utils/date';
 import Loading from '../Loading';
 import IssuesList from './IssuesList';
 import SuggestionsList from './SuggestionsList';
+import { ReactComponent as IconSuggestion } from '../../assets/icons/suggestion.svg';
+import { ReactComponent as IconTools } from '../../assets/icons/tools.svg';
+import isUrl from 'is-url';
 
 const Game = () => {
     const { idGame } = useParams();
@@ -78,24 +81,27 @@ const Game = () => {
                         </div>
                         <div className="lg:col-span-4 col-span-12">
                             <div className="flex justify-center flex-col items-center ">
-                                <Link
-                                    to={game.external_link}
-                                    className="btn w-full mb-4"
-                                    target="_blank"
-                                >
-                                    Official website
-                                </Link>
+                                {isUrl(game.external_link) && (
+                                    <Link
+                                        to={game.external_link}
+                                        className="btn w-full mb-4"
+                                        target="_blank"
+                                    >
+                                        Official website
+                                    </Link>
+                                )}
                                 <Link
                                     to={`/game/${idGame}/create-issue`}
                                     className="btn btn-warning w-full mb-4"
                                 >
+                                    <IconTools />
                                     Report an issue
                                 </Link>
                                 <Link
                                     to={`/game/${idGame}/create-suggestion`}
                                     className="btn btn-info w-full mb-4"
                                 >
-                                    Send suggestion
+                                    <IconSuggestion /> Send suggestion
                                 </Link>
                             </div>
                         </div>

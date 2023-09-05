@@ -6,6 +6,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { axiosInstance } from '../../utils/axios';
 import { useSelector } from 'react-redux';
 import SidebarGame from './SidebarGame';
+import { ReactComponent as IconSuggestion } from '../../assets/icons/suggestion.svg';
 
 function CreateSuggestion() {
     const [isLoading, setIsLoading] = useState(false);
@@ -72,9 +73,12 @@ function CreateSuggestion() {
     return (
         <ContentContainer SidebarRight={<SidebarGame idGame={idGame} />}>
             <div className=" flex flex-wrap ">
-                <h2 className="text-2xl font-semibold text-white mb-4">
-                    Send suggestion
-                </h2>
+                <div className="flex items-center  mb-4">
+                    <IconSuggestion />
+                    <h2 className="text-2xl font-semibold text-white ml-4">
+                        Send suggestion
+                    </h2>
+                </div>
                 <form className="w-full" onSubmit={handleSubmit}>
                     <div className="w-full">
                         <div className="form-control  mb-8">

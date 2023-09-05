@@ -8,6 +8,7 @@ import { useSelector } from 'react-redux';
 import axios from 'axios';
 import SidebarIssue from './SidebarGame';
 import Select from 'react-select';
+import { ReactComponent as IconTools } from '../../assets/icons/tools.svg';
 
 function CreateIssue() {
     const [isLoading, setIsLoading] = useState(false);
@@ -177,9 +178,12 @@ function CreateIssue() {
     return (
         <ContentContainer SidebarRight={<SidebarIssue idGame={idGame} />}>
             <div className=" flex flex-wrap ">
-                <h2 className="text-2xl font-semibold text-white mb-4">
-                    Create an Issue
-                </h2>
+                <div className="flex items-center  mb-4">
+                    <IconTools />
+                    <h2 className="text-2xl font-semibold text-white ml-4">
+                        Create an Issue
+                    </h2>
+                </div>
                 <form className="w-full" onSubmit={handleSubmit}>
                     <div className="w-full">
                         <div className="form-control  mb-8">

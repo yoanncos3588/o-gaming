@@ -36,7 +36,7 @@ const Header = () => {
                 );
                 // SELECT * FROM repos WHERE name = search LIMIT per_page OFFSET per_page * page -1
 
-                console.log(setgames);
+                console.log(res);
                 setgames([...search, ...res.data.games]);
             } catch (err) {
                 console.log(err);
@@ -46,11 +46,11 @@ const Header = () => {
         if (search !== '') {
             fetchdata();
         }
-    }, []);
+    });
     useEffect(() => {
         console.log(search);
         console.log(games);
-        console.log(setSearch);
+        console.log();
     });
 
     return (

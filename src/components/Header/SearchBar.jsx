@@ -21,7 +21,7 @@ export default function SearchBar({ setSearch }) {
                         type="submit"
                         className="p-2 focus:outline-none focus:shadow-outline bg-primary"
                     >
-                        <Link to={`search?search=${handleKeyDown}`} />
+                        {/* <Link to={`search?search=${handleKeyDown}`} /> */}
                         <IconSearch fill="white" className="h-4 w-4" />
                     </button>
                 </span>

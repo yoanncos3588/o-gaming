@@ -10,6 +10,8 @@ import IssueSidebar from './IssueSidebar';
 import { axiosInstance } from '../../utils/axios';
 import { formatDate } from '../../utils/date';
 import DeleteItem from './DeleteItem';
+import { canUserSeeIssue } from '../../utils/userStatus';
+import { useSelector } from 'react-redux';
 
 const Issue = () => {
     const [issue, setIssue] = useState(null);
@@ -18,31 +20,7 @@ const Issue = () => {
     const [isLoadingIssue, setIsLoadingIssue] = useState(true);
     const [isLoadingGame, setIsLoadingGame] = useState(true);
     const navigate = useNavigate();
-
-    /** fetch issue */
-    useEffect(() => {
-        const fetchIssue = async () => {
-            try {
-                const res = await axios.get(
-                    `http://localhost:3000/issue/${idIssue}`
-                );
-                if (res.status !== 200) {
-                    throw Error;
-                }
-                setIssue(res.data.issue);
-                setTimeout(() => {
-                    setIsLoadingIssue(false);
-                }, 1000);
-            } catch (error) {
-                toast.error('Can not find what your looking for', {
-                    theme: 'colored',
-                    toastId: 'errorLogin',
-                });
-                // navigate('/404');
-            }
-        };
-        fetchIssue();
-    }, [idGame, idIssue, navigate, setIsLoadingIssue]);
+    const userData = useSelector((state) => state.user.userData);
 
     /** fetch game */
     useEffect(() => {
@@ -68,6 +46,43 @@ const Issue = () => {
         };
         fetchGame();
     }, [idGame, idIssue, navigate, setIsLoadingGame]);
+
+    /** fetch issue */
+    useEffect(() => {
+        const fetchIssue = async () => {
+            try {
+                const res = await axios.get(
+                    `http://localhost:3000/issue/${idIssue}`
+                );
+                if (res.status !== 200) {
+                    throw Error('Can not find what your looking for');
+                }
+                setIssue(res.data.issue);
+                setTimeout(() => {
+                    setIsLoadingIssue(false);
+                }, 1000);
+            } catch (error) {
+                toast.error(error.message, {
+                    theme: 'colored',
+                    toastId: 'errorLogin',
+                });
+                // navigate('/404');
+            }
+        };
+        fetchIssue();
+    }, [idGame, idIssue, navigate, setIsLoadingIssue]);
+
+    useEffect(() => {
+        if (issue && game) {
+            if (!canUserSeeIssue(issue, userData, game.user_id)) {
+                toast.error('You dont have the right to see this issue', {
+                    theme: 'colored',
+                    toastId: 'errorLogin',
+                });
+                navigate(`/game/${game.id}`);
+            }
+        }
+    }, [issue, game, userData, navigate]);
 
     /**
      * Handle click on delete issue

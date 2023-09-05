@@ -70,7 +70,7 @@ const IssueSidebar = ({ issue, devId, setIssue, handleUpdateIssue }) => {
                                 <input
                                     type="checkbox"
                                     className="toggle toggle-accent"
-                                    value={!issue.is_public}
+                                    checked={!issue.is_public}
                                     onChange={() =>
                                         setIssue((prev) => {
                                             return {

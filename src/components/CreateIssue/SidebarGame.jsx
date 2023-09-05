@@ -45,7 +45,7 @@ const SidebarGame = ({ idGame }) => {
         <div>
             <Link
                 className="text-md underline mb-4 inline-block hover:text-accent"
-                to={`/games/game/:${idGame}`}
+                to={`/game/${idGame}`}
             >
                 Return to game page
             </Link>

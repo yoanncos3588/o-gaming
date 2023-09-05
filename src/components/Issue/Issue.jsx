@@ -111,8 +111,7 @@ const Issue = () => {
                     frequency: issue.frequency,
                     replication: issue.replication,
                     published_at: issue.published_at,
-                    //TODO manque le platform id
-                    platform_id: 1,
+                    platform_id: issue.platform_id,
                 }
             );
             if (res.status !== 200) {
@@ -197,7 +196,7 @@ const Issue = () => {
                                 <span className="font-bold">Context : </span>
                                 {issue.is_online ? 'Online' : 'Offline'}
                             </div>
-                            {issue.tags.length && (
+                            {issue.tags.length > 0 && (
                                 <>
                                     <span className="font-bold inline-block">
                                         Tags :{' '}

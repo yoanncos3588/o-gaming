@@ -20,11 +20,11 @@ function App() {
         <>
             <ToastContainer />
             <Routes>
-                <Route path="games/game/:gameId" element={<Game />} />
+                <Route path="/game/:gameId" element={<Game />} />
                 {/* {routes for everybody} */}
                 <Route path="/" element={<Games />} />
                 <Route
-                    path="/games/game/:idGame/issue/:idIssue"
+                    path="/game/:idGame/issue/:idIssue"
                     element={<Issue />}
                 />
                 <Route element={<ProtectedRoute role="guest" />}>
@@ -34,7 +34,7 @@ function App() {
                 </Route>
                 <Route element={<ProtectedRoute role="logged" />}>
                     <Route
-                        path="games/:idGame/create-issue"
+                        path="/game/:idGame/create-issue"
                         element={<CreateIssue />}
                     />
 

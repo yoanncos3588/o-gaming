@@ -86,7 +86,7 @@ const Game = () => {
                                     Official website
                                 </Link>
                                 <Link
-                                    to={`/games/${gameId}/create-issue`}
+                                    to={`/game/${gameId}/create-issue`}
                                     className="btn btn-warning w-full mb-4"
                                 >
                                     Report an issue

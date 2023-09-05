@@ -43,8 +43,13 @@ const IssueSidebar = ({
                             }
                         >
                             <option value={'New'}>New</option>
+                            <option value={'Read'}>Read</option>
                             <option value={'Accepted'}>Accepted</option>
+                            <option value={'Working on it'}>
+                                Working on it
+                            </option>
                             <option value={'Closed'}>Refused</option>
+                            <option value={'Finished'}>Finished</option>
                         </select>
                     </div>
                     <div className="form-control w-full ">
@@ -76,7 +81,6 @@ const IssueSidebar = ({
                             <input
                                 type="checkbox"
                                 className="toggle toggle-accent"
-                                // checked={!issue.is_public}
                                 value={!issue.is_public}
                                 onChange={() =>
                                     setIssue((prev) => {

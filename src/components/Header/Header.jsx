@@ -8,8 +8,6 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 
 const Header = () => {
-    // const [page, setPage] = useState(1);
-    // const [per_page, setPerPage] = useState(10);
     const [search, setSearch] = useState('');
     const [games, setgames] = useState([]);
 
@@ -37,9 +35,9 @@ const Header = () => {
                     `http://localhost:3000/search?search=${search}`
                 );
                 // SELECT * FROM repos WHERE name = search LIMIT per_page OFFSET per_page * page -1
-                console.log(res);
+
                 console.log(setgames);
-                setgames([...games, ...res.data.games]);
+                setgames([...search, ...res.data.games]);
             } catch (err) {
                 console.log(err);
             }
@@ -49,6 +47,11 @@ const Header = () => {
             fetchdata();
         }
     }, []);
+    useEffect(() => {
+        console.log(search);
+        console.log(games);
+        console.log(setSearch);
+    });
 
     return (
         <header className="w-full navbar border-b-2 border-base-200">

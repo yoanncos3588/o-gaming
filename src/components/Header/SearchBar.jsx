@@ -1,15 +1,18 @@
 import { ReactComponent as IconSearch } from '../../assets/icons/search.svg';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
-const SearchBar = (setSearch) => {
+import { Link } from 'react-router-dom';
+export default function SearchBar({ setSearch }) {
     const [inputValue, setInputValue] = useState('');
 
     const handleKeyDown = (e) => {
         if (e.code === 'Enter' && inputValue.length > 3) {
             // STATE qui va éxécute rle useeffect qui fera le fetch dans APP.jsx
             setSearch(inputValue);
+            console.log(setSearch);
         }
     };
+
     return (
         <form method="GET" className="w-full lg:w-96">
             <div className="relative focus-within:text-secondary-content">
@@ -18,6 +21,7 @@ const SearchBar = (setSearch) => {
                         type="submit"
                         className="p-2 focus:outline-none focus:shadow-outline bg-primary"
                     >
+                        <Link to={`search?search=${handleKeyDown}`} />
                         <IconSearch fill="white" className="h-4 w-4" />
                     </button>
                 </span>
@@ -33,9 +37,7 @@ const SearchBar = (setSearch) => {
             </div>
         </form>
     );
-};
+}
 SearchBar.propTypes = {
     setSearch: PropTypes.func,
 };
-
-export default SearchBar;

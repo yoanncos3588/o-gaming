@@ -1,7 +1,6 @@
 import Drawer from './Drawer/Drawer';
 import Footer from './Footer/Footer';
 import Header from './Header/Header';
-import SearchBar from './Header/SearchBar';
 import PropTypes from 'prop-types';
 
 const TemplateDrawer = ({ children }) => {

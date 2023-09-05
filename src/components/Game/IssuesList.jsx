@@ -5,7 +5,7 @@ import propTypes from 'prop-types';
 
 import axios from 'axios';
 import { useSelector } from 'react-redux';
-import { isDeveloper } from '../../utils/userStatus';
+import { filterPrivateIssues } from '../../utils/userStatus';
 
 const IssuesList = ({ idGame, idDev }) => {
     const [issues, setIssues] = useState([]);
@@ -27,32 +27,6 @@ const IssuesList = ({ idGame, idDev }) => {
 
     // fetch issues and filter results
     useEffect(() => {
-        /**
-         * Filter issues from api
-         * @param {Array} data array of issues from api
-         * @returns {Array} filtered issues for user
-         */
-        const filterPrivateIssue = (data) => {
-            const filteredIssues = data.filter((i) => {
-                // if issue is not public we do more check
-                if (!i.is_public) {
-                    // if connected user is creator of the issue its ok
-                    if (userData.userId === i.user_id) {
-                        return true;
-                    }
-                    // if connected user is a dev and is the game creator its ok
-                    if (isDeveloper(userData) && userData.userId === idDev) {
-                        return true;
-                    }
-                    // else we remove the private issue to hide it for user
-                    return false;
-                } else {
-                    // issue is not private
-                    return true;
-                }
-            });
-            return filteredIssues;
-        };
         const fetchIssues = async () => {
             try {
                 const res = await axios.get(
@@ -61,7 +35,9 @@ const IssuesList = ({ idGame, idDev }) => {
                 if (res.status !== 200) {
                     throw Error;
                 }
-                setIssues(filterPrivateIssue(res.data.issues));
+                setIssues(
+                    filterPrivateIssues(res.data.issues, userData, idDev)
+                );
                 setIsLoadingIssue(false);
             } catch (error) {
                 console.log(error);
@@ -240,6 +216,7 @@ const IssuesList = ({ idGame, idDev }) => {
 
 IssuesList.propTypes = {
     idGame: propTypes.string,
+    idDev: propTypes.number,
 };
 
 export default IssuesList;

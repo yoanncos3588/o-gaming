@@ -83,7 +83,7 @@ const IssuesList = ({ idGame }) => {
                 );
             });
         } else {
-            result = [...IssuesList];
+            result = [...issues];
         }
 
         // filter by title

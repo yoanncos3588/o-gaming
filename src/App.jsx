@@ -10,6 +10,7 @@ import CreateGame from './components/CreateGame/CreateGame';
 import ProtectedRoute from './components/ProtectedRoute';
 import Issue from './components/Issue/Issue';
 import Games from './components/Games/Games';
+import Error from './components/error/error';
 import Game from './components/Game/Game';
 import CreateSuggestion from './components/CreateIssue/CreateSuggestion';
 import Suggestion from './components/Issue/Suggestion';
@@ -24,6 +25,7 @@ function App() {
             <Routes>
                 <Route path="/game/:idGame" element={<Game />} />
                 {/* {routes for everybody} */}
+
                 <Route path="/" element={<Games />} />
                 <Route
                     path="/game/:idGame/issue/:idIssue"
@@ -54,6 +56,7 @@ function App() {
                     {/* {routes for dev only here} */}
                     <Route path="/create-game" element={<CreateGame />} />
                 </Route>
+                <Route path="*" element={<Error />} />
             </Routes>
         </>
     );

@@ -12,7 +12,7 @@ import IssuesList from './IssuesList';
 import SuggestionsList from './SuggestionsList';
 
 const Game = () => {
-    const { gameId } = useParams();
+    const { idGame } = useParams();
     const [game, setGame] = useState({});
     const [isLoadingGame, setIsLoadingGame] = useState(true);
 
@@ -27,7 +27,7 @@ const Game = () => {
         const fetchGame = async () => {
             try {
                 const res = await axios.get(
-                    `http://localhost:3000/games/game/${gameId}`
+                    `http://localhost:3000/games/game/${idGame}`
                 );
                 if (res.status !== 200 || res.data.game.length === 0) {
                     navigate('/404');
@@ -40,7 +40,7 @@ const Game = () => {
             }
         };
         fetchGame();
-    }, [gameId, navigate, isLoadingGame]);
+    }, [idGame, navigate, isLoadingGame]);
 
     // valid image cover
     useEffect(() => {
@@ -86,13 +86,13 @@ const Game = () => {
                                     Official website
                                 </Link>
                                 <Link
-                                    to={`/game/${gameId}/create-issue`}
+                                    to={`/game/${idGame}/create-issue`}
                                     className="btn btn-warning w-full mb-4"
                                 >
                                     Report an issue
                                 </Link>
                                 <Link
-                                    to={`/game/${gameId}/create-suggestion`}
+                                    to={`/game/${idGame}/create-suggestion`}
                                     className="btn btn-info w-full mb-4"
                                 >
                                     Send suggestion
@@ -149,9 +149,9 @@ const Game = () => {
                         </button>
                     </div>
                     {showSuggestion ? (
-                        <SuggestionsList gameId={gameId} />
+                        <SuggestionsList idGame={idGame} />
                     ) : (
-                        <IssuesList gameId={gameId} />
+                        <IssuesList idGame={idGame} />
                     )}
                 </>
             )}

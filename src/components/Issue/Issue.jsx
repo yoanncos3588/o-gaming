@@ -9,6 +9,7 @@ import { ReactComponent as IconTools } from '../../assets/icons/tools.svg';
 import IssueSidebar from './IssueSidebar';
 import { axiosInstance } from '../../utils/axios';
 import { formatDate } from '../../utils/date';
+import DeleteItem from './DeleteItem';
 
 const Issue = () => {
     const [issue, setIssue] = useState(null);
@@ -72,6 +73,7 @@ const Issue = () => {
      * Handle click on delete issue
      */
     const handleDeleteIssue = async () => {
+        console.log('delete');
         try {
             const res = await axiosInstance.delete(
                 `http://localhost:3000/issue/${idIssue}`
@@ -83,7 +85,7 @@ const Issue = () => {
                     theme: 'colored',
                     toastId: 'successDeleteIssue',
                 });
-                navigate(`/games/game/${idGame}`);
+                navigate(`/game/${idGame}`);
             }
         } catch (error) {
             toast.error('You are not allowed to do that', {
@@ -136,13 +138,21 @@ const Issue = () => {
             ) : (
                 <ContentContainer
                     SidebarRight={
-                        <IssueSidebar
-                            devId={game.user_id}
-                            handleDeleteIssue={handleDeleteIssue}
-                            handleUpdateIssue={handleUpdateIssue}
-                            issue={issue}
-                            setIssue={setIssue}
-                        />
+                        <>
+                            <IssueSidebar
+                                devId={game.user_id}
+                                handleDelete={handleDeleteIssue}
+                                handleUpdateIssue={handleUpdateIssue}
+                                issue={issue}
+                                setIssue={setIssue}
+                            />
+                            <DeleteItem
+                                className={'mt-4'}
+                                authorId={issue.user_id}
+                                handleDelete={handleDeleteIssue}
+                                devId={game.user_id}
+                            />
+                        </>
                     }
                 >
                     <section>

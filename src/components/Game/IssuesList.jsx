@@ -5,7 +5,7 @@ import propTypes from 'prop-types';
 
 import axios from 'axios';
 
-const IssuesList = ({ gameId }) => {
+const IssuesList = ({ idGame }) => {
     const [issues, setIssues] = useState([]);
     const [tags, setTags] = useState([]);
 
@@ -26,7 +26,7 @@ const IssuesList = ({ gameId }) => {
         const fetchIssues = async () => {
             try {
                 const res = await axios.get(
-                    `http://localhost:3000/games/game/${gameId}/issues`
+                    `http://localhost:3000/games/game/${idGame}/issues`
                 );
                 if (res.status !== 200) {
                     throw Error;
@@ -38,14 +38,14 @@ const IssuesList = ({ gameId }) => {
             }
         };
         fetchIssues();
-    }, [gameId]);
+    }, [idGame]);
 
     // fetch tags
     useEffect(() => {
         const fetchTags = async () => {
             try {
                 const res = await axios.get(
-                    `http://localhost:3000/games/game/${gameId}/tags`
+                    `http://localhost:3000/games/game/${idGame}/tags`
                 );
                 if (res.status !== 200) {
                     throw Error('Unable to get tags from API');
@@ -57,7 +57,7 @@ const IssuesList = ({ gameId }) => {
             }
         };
         fetchTags();
-    }, [gameId, navigate, isLoadingTag]);
+    }, [idGame, navigate, isLoadingTag]);
 
     /**
      * Handle when user press search on form above list issues
@@ -161,6 +161,7 @@ const IssuesList = ({ gameId }) => {
                                         author={i.author}
                                         tags={i.tags}
                                         status={i.status}
+                                        idGame={idGame}
                                     />
                                 </li>
                             ))
@@ -190,6 +191,7 @@ const IssuesList = ({ gameId }) => {
                                     author={i.author}
                                     tags={i.tags}
                                     status={i.status}
+                                    idGame={idGame}
                                 />
                             </li>
                         ))
@@ -207,7 +209,7 @@ const IssuesList = ({ gameId }) => {
 };
 
 IssuesList.propTypes = {
-    gameId: propTypes.string,
+    idGame: propTypes.string,
 };
 
 export default IssuesList;

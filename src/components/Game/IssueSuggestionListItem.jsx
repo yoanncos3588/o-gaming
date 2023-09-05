@@ -12,6 +12,7 @@ export const IssueSuggestionListItem = ({
     tags = null,
     isSuggestions = false,
     date,
+    idGame,
 }) => {
     return (
         <div
@@ -29,7 +30,9 @@ export const IssueSuggestionListItem = ({
                         )}
                     </span>
                     <Link
-                        to={`${isSuggestions ? 'suggestions' : 'issue'}/${id}`}
+                        to={`/game/${idGame}/${
+                            isSuggestions ? 'suggestion' : 'issue'
+                        }/${id}`}
                         className="hover:underline "
                     >
                         {title}
@@ -77,4 +80,5 @@ IssueSuggestionListItem.propTypes = {
     status: propTypes.string,
     isSuggestions: propTypes.bool,
     date: propTypes.string,
+    idGame: propTypes.string,
 };

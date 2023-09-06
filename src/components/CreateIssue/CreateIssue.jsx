@@ -48,6 +48,7 @@ function CreateIssue() {
     useEffect(() => {
         getPlatforms(`${import.meta.env.VITE_API_URL}/platforms`);
         getTags(`${import.meta.env.VITE_API_URL}/games/game/${idGame}/tags`);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
@@ -65,7 +66,14 @@ function CreateIssue() {
         if (errorTags) {
             toast.error('Can\t find tags', { toastId: 'errorGetTags' });
         }
-    }, [dataPlatforms, errorPlatforms, dataTags, errorTags]);
+    }, [
+        dataPlatforms,
+        errorPlatforms,
+        dataTags,
+        errorTags,
+        platforms.length,
+        tags.length,
+    ]);
 
     /** Handle change on form inputs */
     const handleChange = (e) => {

@@ -42,6 +42,7 @@ function CreateGame() {
     useEffect(() => {
         getCat(`${import.meta.env.VITE_API_URL}/categories`);
         getTags(`${import.meta.env.VITE_API_URL}/tags`);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
@@ -57,7 +58,14 @@ function CreateGame() {
         if (errorTags) {
             toast.error('Can\t find tags', { toastId: 'errorGetTags' });
         }
-    }, [dataCat, errorCat, dataTags, errorTags]);
+    }, [
+        dataCat,
+        errorCat,
+        dataTags,
+        errorTags,
+        categories.length,
+        tags.length,
+    ]);
 
     /**
      * Handle when user click on add image cover

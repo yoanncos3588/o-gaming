@@ -1,44 +1,36 @@
 import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import axios from 'axios';
-import { toast } from 'react-toastify';
 import { isImageValid } from '../../utils/imageValidator';
 import placeholder from '/placeholder.jpg';
 import PropTypes from 'prop-types';
+import useApi from '../../hook/useApi';
+import { toast } from 'react-toastify';
 
 const SidebarGame = ({ idGame }) => {
-    const [game, setGame] = useState([]);
     const [showPlaceholder, setShowPlaceholder] = useState(true);
-    const [isLoading, setIsLoading] = useState(true);
+
+    const { get: getGame, error: errorGame, data } = useApi();
 
     useEffect(() => {
         const showCover = async () => {
-            const validImage = await isImageValid(game.picture);
+            const validImage = await isImageValid(data?.game[0]?.picture);
             if (validImage) {
                 setShowPlaceholder(false);
             }
         };
         showCover();
-    }, [game]);
+    }, [data?.game]);
 
     /** fetch game */
     useEffect(() => {
-        const fetchGame = async () => {
-            try {
-                const res = await axios.get(
-                    `http://localhost:3000/games/game/${idGame}`
-                );
-                if (res.status !== 200) {
-                    throw Error();
-                }
-                setGame(res.data.game[0]);
-                setIsLoading(false);
-            } catch (error) {
-                toast.error('An unexpected error has occured');
-            }
-        };
-        fetchGame();
-    }, [idGame]);
+        getGame(`http://localhost:3000/games/game/${idGame}`);
+        console.log(data);
+    }, []);
+
+    useEffect(() => {
+        toast.error(errorGame, { toastId: 'toastErrorGame' });
+    }, [errorGame]);
+
     return (
         <div>
             <Link
@@ -47,15 +39,19 @@ const SidebarGame = ({ idGame }) => {
             >
                 Return to game page
             </Link>
-            {!isLoading && (
+            {data?.game && (
                 <>
                     <img
                         className="my-3"
-                        src={!showPlaceholder ? game.picture : placeholder}
-                        alt={`image cover of ${name.toLowerCase()}`}
+                        src={
+                            !showPlaceholder
+                                ? data.game[0].picture
+                                : placeholder
+                        }
+                        alt={`image cover of ${data.game[0].name.toLowerCase()}`}
                     />
-                    <h2 className=" font-bold mb-2">{game.name}</h2>
-                    <p className=" opacity-50">{game.description}</p>
+                    <h2 className=" font-bold mb-2">{data.game[0].name}</h2>
+                    <p className=" opacity-50">{data.game[0].description}</p>
                 </>
             )}
         </div>

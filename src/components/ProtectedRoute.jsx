@@ -3,9 +3,25 @@ import { useSelector } from 'react-redux';
 import { isDeveloper, isLoggedIn } from '../utils/userStatus';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
+import { useDispatch } from 'react-redux';
+import { useEffect, useState } from 'react';
+import { isTokenExpired } from '../utils/token';
+import { logout } from '../store/reducers/user';
 
 const ProtectedRoute = ({ role = '' }) => {
     const userData = useSelector((state) => state.user.userData);
+    const [isTokenValid, setIsTokenValid] = useState(false);
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        setIsTokenValid(isTokenExpired());
+    }, [isTokenValid]);
+
+    useEffect(() => {
+        if (isTokenExpired()) {
+            dispatch(logout());
+        }
+    }, [dispatch]);
 
     // only for visitor
     if (role === 'guest' && isLoggedIn()) {
@@ -13,14 +29,6 @@ const ProtectedRoute = ({ role = '' }) => {
     }
     // only if connected
     if (role === 'logged' && !isLoggedIn()) {
-        toast.error(
-            'You are not connected or your session has expired, please login',
-            {
-                autoClose: 2000,
-                theme: 'colored',
-                toastId: 'redirectLogin',
-            }
-        );
         return <Navigate to="/login" />;
     }
     // only if dev

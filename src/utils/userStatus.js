@@ -9,8 +9,6 @@ export const isLoggedIn = () => {
     // if token exist user is logged
     if (localStorage.getItem('token')) {
         if (isTokenExpired()) {
-            // if token is expired we disconnect user
-            store.dispatch(logout());
             return false;
         } else {
             return true;

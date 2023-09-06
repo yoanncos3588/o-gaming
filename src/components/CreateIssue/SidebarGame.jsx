@@ -9,22 +9,23 @@ import { toast } from 'react-toastify';
 const SidebarGame = ({ idGame }) => {
     const [showPlaceholder, setShowPlaceholder] = useState(true);
 
-    const { get: getGame, error: errorGame, data } = useApi();
+    const { get: getGame, error: errorGame, data: dataGame } = useApi();
 
     useEffect(() => {
         const showCover = async () => {
-            const validImage = await isImageValid(data?.game[0]?.picture);
-            if (validImage) {
-                setShowPlaceholder(false);
+            if (dataGame) {
+                const validImage = await isImageValid(dataGame[0]?.picture);
+                if (validImage) {
+                    setShowPlaceholder(false);
+                }
             }
         };
         showCover();
-    }, [data?.game]);
+    }, [dataGame]);
 
     /** fetch game */
     useEffect(() => {
-        getGame(`http://localhost:3000/games/game/${idGame}`);
-        console.log(data);
+        getGame(`http://localhost:3000/games/game/${idGame}`, 'game');
     }, []);
 
     useEffect(() => {
@@ -39,19 +40,17 @@ const SidebarGame = ({ idGame }) => {
             >
                 Return to game page
             </Link>
-            {data?.game && (
+            {dataGame && (
                 <>
                     <img
                         className="my-3"
                         src={
-                            !showPlaceholder
-                                ? data.game[0].picture
-                                : placeholder
+                            !showPlaceholder ? dataGame[0].picture : placeholder
                         }
-                        alt={`image cover of ${data.game[0].name.toLowerCase()}`}
+                        alt={`image cover of ${dataGame[0].name.toLowerCase()}`}
                     />
-                    <h2 className=" font-bold mb-2">{data.game[0].name}</h2>
-                    <p className=" opacity-50">{data.game[0].description}</p>
+                    <h2 className=" font-bold mb-2">{dataGame[0].name}</h2>
+                    <p className=" opacity-50">{dataGame[0].description}</p>
                 </>
             )}
         </div>

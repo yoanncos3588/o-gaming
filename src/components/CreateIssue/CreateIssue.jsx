@@ -9,10 +9,9 @@ import Select from 'react-select';
 import { ReactComponent as IconTools } from '../../assets/icons/tools.svg';
 import useApi from '../../hook/useApi';
 import { ButtonLoading } from '../ButtonLoading';
+import Loading from '../Loading';
 
 function CreateIssue() {
-    const [tags, setTags] = useState([]);
-    const [platforms, setPlatforms] = useState([]);
     const [selectedTags, setSelectedTags] = useState([]);
     const [issueInfos, setIssueInfos] = useState({
         title: '',
@@ -46,34 +45,24 @@ function CreateIssue() {
 
     /** fetch platforms and tags */
     useEffect(() => {
-        getPlatforms(`${import.meta.env.VITE_API_URL}/platforms`);
-        getTags(`${import.meta.env.VITE_API_URL}/games/game/${idGame}/tags`);
+        getPlatforms(`${import.meta.env.VITE_API_URL}/platforms`, 'platforms');
+        getTags(
+            `${import.meta.env.VITE_API_URL}/games/game/${idGame}/tags`,
+            'tags'
+        );
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
-        if (dataPlatforms && !platforms.length) {
-            setPlatforms(dataPlatforms.platforms);
-        }
         if (errorPlatforms) {
             toast.error('Can\t find platforms', {
                 toastId: 'errorGetPlatforms',
             });
         }
-        if (dataTags && !tags.length) {
-            setTags(dataTags.tags);
-        }
         if (errorTags) {
             toast.error('Can\t find tags', { toastId: 'errorGetTags' });
         }
-    }, [
-        dataPlatforms,
-        errorPlatforms,
-        dataTags,
-        errorTags,
-        platforms.length,
-        tags.length,
-    ]);
+    }, [errorTags, errorPlatforms]);
 
     /** Handle change on form inputs */
     const handleChange = (e) => {
@@ -114,6 +103,7 @@ function CreateIssue() {
     // submit form
     const handleSubmit = async (e) => {
         e.preventDefault();
+        // add missing infos
         issueInfos.user_id = userId;
         issueInfos.published_at = publishedAt;
         e.preventDefault();
@@ -126,9 +116,9 @@ function CreateIssue() {
     // success while posting game
     useEffect(() => {
         if (isCompleteIssue) {
-            navigate(`/?toast=issueCreated`);
+            navigate(`/game/${idGame}?toast=issueCreated`);
         }
-    }, [isCompleteIssue, navigate]);
+    }, [isCompleteIssue, navigate, idGame]);
 
     // error while posting game
     useEffect(() => {
@@ -154,201 +144,222 @@ function CreateIssue() {
 
     return (
         <ContentContainer SidebarRight={<SidebarIssue idGame={idGame} />}>
-            <div className=" flex flex-wrap ">
-                <div className="flex items-center  mb-4">
-                    <IconTools />
-                    <h2 className="text-2xl font-semibold text-white ml-4">
-                        Create an Issue
-                    </h2>
-                </div>
-                <form className="w-full" onSubmit={handleSubmit}>
-                    <div className="w-full">
-                        <div className="form-control  mb-8">
-                            <label className="label">
-                                <span className="label-text">Title</span>
-                            </label>
-                            <input
-                                type="text"
-                                id="name"
-                                name="title"
-                                className=" input input-bordered w-full bg-neutral"
-                                placeholder="Add a title"
-                                onChange={handleChange}
-                                value={issueInfos.title}
-                            />
-                        </div>
-                        <div className="flex mb-8">
-                            <div className="form-control">
+            {dataPlatforms && dataTags ? (
+                <div className=" flex flex-wrap ">
+                    <div className="flex items-center  mb-4">
+                        <IconTools />
+                        <h2 className="text-2xl font-semibold text-white ml-4">
+                            Create an Issue
+                        </h2>
+                    </div>
+                    <form className="w-full" onSubmit={handleSubmit}>
+                        <div className="w-full">
+                            <div className="form-control  mb-8">
+                                <label className="label">
+                                    <span className="label-text">Title</span>
+                                </label>
+                                <input
+                                    type="text"
+                                    id="name"
+                                    name="title"
+                                    className=" input input-bordered w-full bg-neutral"
+                                    placeholder="Add a title"
+                                    onChange={handleChange}
+                                    value={issueInfos.title}
+                                />
+                            </div>
+                            <div className="flex mb-8">
+                                <div className="form-control">
+                                    <label className="label">
+                                        <span className="label-text">
+                                            Visibility
+                                        </span>
+                                    </label>
+                                    <p className=" text-base-content mb-3 text-sm opacity-50">
+                                        <i>
+                                            Private issue can only be seen by
+                                            developpers, use it if you feel your
+                                            issue can break the game for other
+                                            players
+                                            <strong>
+                                                (ex: bug abuse in multiplayers
+                                                game)
+                                            </strong>
+                                        </i>
+                                    </p>
+                                    <div className="join w-full flex-wrap">
+                                        <input
+                                            className={`join-item btn btn-primary ${
+                                                !issueInfos.is_public &&
+                                                'btn-outline'
+                                            } lg:!w-1/2 !w-full`}
+                                            type="radio"
+                                            name="is_public"
+                                            aria-label="Public"
+                                            value={true}
+                                            onChange={handleChange}
+                                            checked={issueInfos.is_public}
+                                        />
+                                        <input
+                                            className={`join-item btn btn-primary ${
+                                                issueInfos.is_public &&
+                                                'btn-outline'
+                                            } lg:!w-1/2 !w-full`}
+                                            type="radio"
+                                            name="is_public"
+                                            aria-label="Private"
+                                            value={false}
+                                            onChange={handleChange}
+                                            checked={!issueInfos.is_public}
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="flex flex-wrap place-content-around mb-8">
+                                <div className=" w-1/2">
+                                    <div className="form-control">
+                                        <label className="label">
+                                            <span className="label-text">
+                                                Plateform
+                                            </span>
+                                        </label>
+                                        <select
+                                            className="select select-bordered w-full bg-neutral"
+                                            onChange={handleChange}
+                                            name="platform_id"
+                                            defaultValue={Number(
+                                                issueInfos.platform_id
+                                            )}
+                                        >
+                                            {dataPlatforms.map((Plateform) => (
+                                                <option
+                                                    key={Plateform.id}
+                                                    value={Plateform.id}
+                                                >
+                                                    {Plateform.name}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div className="w-1/2">
+                                    <div className="form-control">
+                                        <label className="label">
+                                            <span className="label-text">
+                                                Context
+                                            </span>
+                                        </label>
+                                        <select
+                                            className="select select-bordered w-full bg-neutral"
+                                            onChange={handleChange}
+                                            name="is_online"
+                                            defaultValue={true}
+                                        >
+                                            <option value={true}>Online</option>
+                                            <option value={false}>
+                                                Offline
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="form-control mb-8">
                                 <label className="label">
                                     <span className="label-text">
-                                        Visibility
+                                        Description
                                     </span>
                                 </label>
-                                <p className=" text-base-content mb-3 text-sm opacity-50">
-                                    <i>
-                                        Private issue can only be seen by
-                                        developpers, use it if you feel your
-                                        issue can break the game for other
-                                        players
-                                        <strong>
-                                            (ex: bug abuse in multiplayers game)
-                                        </strong>
-                                    </i>
-                                </p>
-                                <div className="join w-full flex-wrap">
-                                    <input
-                                        className={`join-item btn btn-primary ${
-                                            !issueInfos.is_public &&
-                                            'btn-outline'
-                                        } lg:!w-1/2 !w-full`}
-                                        type="radio"
-                                        name="is_public"
-                                        aria-label="Public"
-                                        value={true}
-                                        onChange={handleChange}
-                                        checked={issueInfos.is_public}
-                                    />
-                                    <input
-                                        className={`join-item btn btn-primary ${
-                                            issueInfos.is_public &&
-                                            'btn-outline'
-                                        } lg:!w-1/2 !w-full`}
-                                        type="radio"
-                                        name="is_public"
-                                        aria-label="Private"
-                                        value={false}
-                                        onChange={handleChange}
-                                        checked={!issueInfos.is_public}
-                                    />
-                                </div>
+                                <textarea
+                                    id="text"
+                                    name="description"
+                                    rows="4"
+                                    className="textarea textarea-bordered w-full bg-neutral"
+                                    placeholder="add an description"
+                                    onChange={handleChange}
+                                    value={issueInfos.description}
+                                ></textarea>
                             </div>
-                        </div>
-                        <div className="flex flex-wrap place-content-around mb-8">
-                            <div className=" w-1/2">
-                                <div className="form-control">
+                            {dataTags.length && (
+                                <>
                                     <label className="label">
                                         <span className="label-text">
-                                            Plateform
+                                            Select tags for your issue
                                         </span>
                                     </label>
-                                    <select
-                                        className="select select-bordered w-full bg-neutral"
-                                        onChange={handleChange}
-                                        name="platform_id"
-                                        defaultValue={Number(
-                                            issueInfos.platform_id
-                                        )}
-                                    >
-                                        {platforms.map((Plateform) => (
-                                            <option
-                                                key={Plateform.id}
-                                                value={Plateform.id}
-                                            >
-                                                {Plateform.name}
-                                            </option>
-                                        ))}
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div className="w-1/2">
-                                <div className="form-control">
-                                    <label className="label">
-                                        <span className="label-text">
-                                            Context
-                                        </span>
-                                    </label>
-                                    <select
-                                        className="select select-bordered w-full bg-neutral"
-                                        onChange={handleChange}
-                                        name="is_online"
-                                        defaultValue={true}
-                                    >
-                                        <option value={true}>Online</option>
-                                        <option value={false}>Offline</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="form-control mb-8">
-                            <label className="label">
-                                <span className="label-text">Description</span>
-                            </label>
-                            <textarea
-                                id="text"
-                                name="description"
-                                rows="4"
-                                className="textarea textarea-bordered w-full bg-neutral"
-                                placeholder="add an description"
-                                onChange={handleChange}
-                                value={issueInfos.description}
-                            ></textarea>
-                        </div>
-                        <label className="label">
-                            <span className="label-text">
-                                Select tags for your issue
-                            </span>
-                        </label>
-                        <div className="flex flex-wrap mb-8">
-                            <Select
-                                name="categories"
-                                options={tags}
-                                className="basic-multi-select w-full"
-                                classNamePrefix="select"
-                                closeMenuOnSelect={false}
-                                onChange={onOptionChangeForTags}
-                                value={selectedTags}
-                                getOptionLabel={(option) => `${option.title}`}
-                                getOptionValue={(option) => option.title}
-                                isMulti
-                            />
-                        </div>
-                        <div className="form-control mb-8">
-                            <label className="label">
-                                <span className="label-text">frequency</span>
-                            </label>
-                            <select
-                                className="select select-bordered w-full lg:max-w-xs bg-neutral"
-                                onChange={handleChange}
-                                name="frequency"
-                                defaultValue={issueInfos.frequency}
-                            >
-                                <option value={'Regular'}>Regular</option>
-                                <option value={'Sometimes'}>Sometimes</option>
-                                <option value={'Once'}>Once</option>
-                            </select>
-                        </div>
-                        <div className="form-control mb-8">
-                            <label className="label">
-                                <span className="label-text">
-                                    How to replicate
-                                </span>
-                            </label>
-                            <textarea
-                                id="replicate"
-                                name="replication"
-                                rows="4"
-                                className="textarea textarea-bordered w-full bg-neutral"
-                                placeholder="Describe how to reproduce your issue"
-                                onChange={handleChange}
-                                value={issueInfos.replication}
-                            ></textarea>
-                        </div>
-                        <div className="text-center pt-1 mb-5 pb-1">
-                            {loadingIssue ? (
-                                <ButtonLoading />
-                            ) : (
-                                <button
-                                    className="btn btn-primary mt-4 w-full mb-3"
-                                    type="submit"
-                                >
-                                    create issue
-                                </button>
+                                    <div className="flex flex-wrap mb-8">
+                                        <Select
+                                            name="categories"
+                                            options={dataTags}
+                                            className="basic-multi-select w-full"
+                                            classNamePrefix="select"
+                                            closeMenuOnSelect={false}
+                                            onChange={onOptionChangeForTags}
+                                            value={selectedTags}
+                                            getOptionLabel={(option) =>
+                                                `${option.title}`
+                                            }
+                                            getOptionValue={(option) =>
+                                                option.title
+                                            }
+                                            isMulti
+                                        />
+                                    </div>
+                                </>
                             )}
+                            <div className="form-control mb-8">
+                                <label className="label">
+                                    <span className="label-text">
+                                        frequency
+                                    </span>
+                                </label>
+                                <select
+                                    className="select select-bordered w-full lg:max-w-xs bg-neutral"
+                                    onChange={handleChange}
+                                    name="frequency"
+                                    defaultValue={issueInfos.frequency}
+                                >
+                                    <option value={'Regular'}>Regular</option>
+                                    <option value={'Sometimes'}>
+                                        Sometimes
+                                    </option>
+                                    <option value={'Once'}>Once</option>
+                                </select>
+                            </div>
+                            <div className="form-control mb-8">
+                                <label className="label">
+                                    <span className="label-text">
+                                        How to replicate
+                                    </span>
+                                </label>
+                                <textarea
+                                    id="replicate"
+                                    name="replication"
+                                    rows="4"
+                                    className="textarea textarea-bordered w-full bg-neutral"
+                                    placeholder="Describe how to reproduce your issue"
+                                    onChange={handleChange}
+                                    value={issueInfos.replication}
+                                ></textarea>
+                            </div>
+                            <div className="text-center pt-1 mb-5 pb-1">
+                                {loadingIssue ? (
+                                    <ButtonLoading />
+                                ) : (
+                                    <button
+                                        className="btn btn-primary mt-4 w-full mb-3"
+                                        type="submit"
+                                    >
+                                        create issue
+                                    </button>
+                                )}
+                            </div>
                         </div>
-                    </div>
-                </form>
-            </div>
+                    </form>
+                </div>
+            ) : (
+                <Loading />
+            )}
         </ContentContainer>
     );
 }

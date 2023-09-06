@@ -7,7 +7,7 @@ const useApi = () => {
     const [error, setError] = useState(null);
     const [isComplete, setIsComplete] = useState(false);
 
-    const callApi = async (url, method, body = null) => {
+    const callApi = async (url, method, body = null, objectKey = null) => {
         setError(null);
         setLoading(true);
         try {
@@ -17,13 +17,17 @@ const useApi = () => {
                 data: body,
             };
             const res = await axiosInstance(config);
-            console.log(res);
+            // console.log(res);
             if (res.status === 200 || res.status === 201) {
                 // api can send error with status 200
                 if (Object.prototype.hasOwnProperty.call(res.data, 'error')) {
                     throw Error(res.data.error);
                 }
-                setData(res.data);
+                if (objectKey) {
+                    setData(res.data[objectKey]);
+                } else {
+                    setData(res.data);
+                }
                 setError(null);
                 setIsComplete(true);
             } else {
@@ -42,7 +46,7 @@ const useApi = () => {
         }
     };
 
-    const get = (url) => callApi(url, 'get');
+    const get = (url, objectKey) => callApi(url, 'get', null, objectKey);
     const post = (url, body) => callApi(url, 'post', body);
     const patch = (url, body) => callApi(url, 'patch', body);
     const del = (url) => callApi(url, 'delete');

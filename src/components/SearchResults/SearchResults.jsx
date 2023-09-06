@@ -37,15 +37,22 @@ function SearchResults() {
         fetchdata();
     }, []);
     return (
-        <ContentContainer>
-            <div className="mb-5 font-bold">SearchResults</div>
+        <ContentContainer
+            SidebarRight={<div className="w-fit">Result for User :</div>}
+        >
+            <div className="w-fit">Result for games :</div>
+
             {searchUsers.length > 0 ? (
                 <ContentContainer
-                    SidebarLeft={
+                    SidebarRight={
                         searchUsers &&
                         searchUsers.map((g) => (
                             <li className="mb-6 list-none" key={g.id}>
-                                <UsersItem name={g.name} avatar={g.avatar} />
+                                <UsersItem
+                                    name={g.username}
+                                    avatar={g.avatar}
+                                    email={g.email}
+                                />
                             </li>
                         ))
                     }
@@ -57,22 +64,24 @@ function SearchResults() {
                 searchGames &&
                 searchGames.map((g) => (
                     <li className="mb-6 list-none" key={g.id}>
-                        <GameItem
-                            id={g.id}
-                            name={g.name}
-                            image={g.picture}
-                            publisher={g.author}
-                            publisherId={g.user_id}
-                            realeaseDate={g.release_date}
-                            description={g.description}
-                            categories={g.categories}
-                            totalIssues={g.issue_count}
-                            totalSuggestions={g.suggestion_count}
-                        />
+                        <ContentContainer>
+                            <GameItem
+                                id={g.id}
+                                name={g.name}
+                                image={g.picture}
+                                publisher={g.author}
+                                publisherId={g.user_id}
+                                realeaseDate={g.release_date}
+                                description={g.description}
+                                categories={g.categories}
+                                totalIssues={g.issue_count}
+                                totalSuggestions={g.suggestion_count}
+                            />
+                        </ContentContainer>
                     </li>
                 ))
             ) : (
-                <li>il ya pas des resultats </li>
+                <span></span>
             )}
         </ContentContainer>
     );

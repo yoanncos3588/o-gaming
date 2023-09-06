@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import { isImageValid } from '../../utils/imageValidator';
 import { useEffect, useState } from 'react';
 
-function UsersItem({ id, name, avatar }) {
+function UsersItem({ id, name, avatar, email }) {
     const [showPlaceholder, setshowPlaceholder] = useState(true);
 
     useEffect(() => {
@@ -19,23 +19,32 @@ function UsersItem({ id, name, avatar }) {
     }, [avatar]);
     return (
         <ContentContainer>
-            <div>
-                <div className="avatar">
-                    <div className="w-24 rounded-full">
-                        <img
-                            src={!showPlaceholder ? avatar : placeholder}
-                            alt={`image cover of ${name.toLowerCase()}`}
-                        />
+            <div className="flex flex-wrap bg-base-200 p-6 align-middle rounded-lg w-fit">
+                <div className=" justify-end">
+                    <div className="avatar w-fit align-middle mr-3">
+                        <div className="w-14 rounded-full">
+                            <img
+                                src={!showPlaceholder ? avatar : placeholder}
+                                alt={`image cover of ${name}`}
+                            />
+                        </div>
+                    </div>
+                    <div>
+                        <h2 className=" text-xl font-black h-fit w-full">
+                            <Link
+                                to={`/profil/${id}`}
+                                className="hover:underline uppercase"
+                            >
+                                {name}
+                            </Link>
+                        </h2>
+
+                        <div className="text-sm my-2">
+                            <span className="">email : </span>
+                            <span>{email}</span>
+                        </div>
                     </div>
                 </div>
-                <h2 className=" text-xl font-black my-4">
-                    <Link
-                        to={`/profil/${id}`}
-                        className="hover:underline uppercase"
-                    >
-                        {name}
-                    </Link>
-                </h2>
             </div>
         </ContentContainer>
     );
@@ -44,6 +53,7 @@ UsersItem.propTypes = {
     id: PropTypes.number,
     name: PropTypes.string,
     avatar: PropTypes.string,
+    email: PropTypes.string,
 };
 
 export default UsersItem;

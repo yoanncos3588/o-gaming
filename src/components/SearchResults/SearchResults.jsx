@@ -16,7 +16,7 @@ function SearchResults() {
     const searchValues = searchParams.get('search');
 
     useEffect(() => {
-        // call api
+        // call api with hook useApi
         getSearchResult(`http://localhost:3000/search?search=${searchValues}`);
         //search values can changed if user make a search from search result page
     }, [searchValues]);

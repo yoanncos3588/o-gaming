@@ -48,14 +48,20 @@ export const GameItem = ({
                         {name}
                     </Link>
                 </h2>
-                <div className="text-sm my-2">
-                    <span className="">Publisher : </span>
-                    <span>
-                        <Link to={`/user/${publisherId}`} className="underline">
-                            {publisher}
-                        </Link>
-                    </span>
-                </div>
+                {publisher && (
+                    <div className="text-sm my-2">
+                        <span className="">Publisher : </span>
+                        <span>
+                            <Link
+                                to={`/user/${publisherId}`}
+                                className="underline"
+                            >
+                                {publisher}
+                            </Link>
+                        </span>
+                    </div>
+                )}
+
                 <div className="text-sm my-2">
                     <span>Released : </span>
                     <span>{formatDate(realeaseDate)}</span>
@@ -87,11 +93,12 @@ export const GameItem = ({
                 </div>
                 <p className="text-sm">{description}</p>
                 <ul className="mt-4 -mx-1">
-                    {categories.map((c, index) => (
-                        <li className="mx-1 inline-block" key={index}>
-                            <Category name={c} />
-                        </li>
-                    ))}
+                    {categories &&
+                        categories.map((c, index) => (
+                            <li className="mx-1 inline-block" key={index}>
+                                <Category name={c} />
+                            </li>
+                        ))}
                 </ul>
             </div>
         </article>

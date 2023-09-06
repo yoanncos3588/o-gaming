@@ -1,8 +1,21 @@
 import { ReactComponent as IconSearch } from '../../assets/icons/search.svg';
+import PropTypes from 'prop-types';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+export default function SearchBar() {
+    const [inputValue, setInputValue] = useState('');
+    const navigate = useNavigate();
 
-const SearchBar = () => {
+    const handleOnSubmit = (e) => {
+        console.log('submit');
+        e.preventDefault();
+        if (inputValue !== '') {
+            navigate(`search?search=${inputValue}`);
+        }
+    };
+
     return (
-        <form method="GET" className="w-full lg:w-96">
+        <form method="GET" className="w-full lg:w-96" onSubmit={handleOnSubmit}>
             <div className="relative focus-within:text-secondary-content">
                 <span className="absolute inset-y-0 right-0 flex items-center pl-2 ">
                     <button
@@ -13,6 +26,8 @@ const SearchBar = () => {
                     </button>
                 </span>
                 <input
+                    value={inputValue}
+                    onChange={(e) => setInputValue(e.target.value)}
                     type="search"
                     name="q"
                     className="text-sm text-white focus:outline-none focus:bg-white focus:text-secondary-content input input-bordered input-sm w-full pr-10 bg-neutral"
@@ -21,6 +36,7 @@ const SearchBar = () => {
             </div>
         </form>
     );
+}
+SearchBar.propTypes = {
+    setSearch: PropTypes.func,
 };
-
-export default SearchBar;

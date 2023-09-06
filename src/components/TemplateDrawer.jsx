@@ -9,6 +9,7 @@ const TemplateDrawer = ({ children }) => {
             <input id="my-drawer-3" type="checkbox" className="drawer-toggle" />
             <div className="drawer-content flex flex-col">
                 {/* Navbar */}
+
                 <Header />
                 {/* Page content here */}
                 {children}

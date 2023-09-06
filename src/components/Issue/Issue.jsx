@@ -1,83 +1,53 @@
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import ContentContainer from '../ContentContainer';
-import { useEffect, useState } from 'react';
-import axios from 'axios';
+import { useEffect } from 'react';
 import { toast } from 'react-toastify';
 import Tag from '../Tag';
 import Loading from '../Loading';
 import { ReactComponent as IconTools } from '../../assets/icons/tools.svg';
 import IssueSidebar from './IssueSidebar';
-import { axiosInstance } from '../../utils/axios';
 import { formatDate } from '../../utils/date';
 import DeleteItem from './DeleteItem';
 import { canUserSeeIssue } from '../../utils/userStatus';
 import { useSelector } from 'react-redux';
+import useApi from '../../hook/useApi';
 
 const Issue = () => {
-    const [issue, setIssue] = useState(null);
-    const [game, setGame] = useState(null);
     const { idGame, idIssue } = useParams();
-    const [isLoadingIssue, setIsLoadingIssue] = useState(true);
-    const [isLoadingGame, setIsLoadingGame] = useState(true);
+
+    const { get: getGame, data: game } = useApi();
+    const { get: getIssue, data: issue, setData: setIssue } = useApi();
+    const {
+        del: delIssue,
+        isComplete: isCompleteDel,
+        error: errorDel,
+    } = useApi();
+    const {
+        patch: patchIssue,
+        isComplete: isCompletePatch,
+        error: errorPatch,
+    } = useApi();
+
     const navigate = useNavigate();
     const userData = useSelector((state) => state.user.userData);
 
-    /** fetch game */
+    // fetch game
     useEffect(() => {
-        const fetchGame = async () => {
-            try {
-                const res = await axios.get(
-                    `http://localhost:3000/games/game/${idGame}`
-                );
-                if (res.status !== 200) {
-                    throw Error;
-                }
-                setGame(res.data.game[0]);
-                setTimeout(() => {
-                    setIsLoadingGame(false);
-                }, 1000);
-            } catch (error) {
-                toast.error('Can not find what your looking for', {
-                    toastId: 'errorLogin',
-                });
-                // navigate('/404');
-            }
-        };
-        fetchGame();
-    }, [idGame, idIssue, navigate, setIsLoadingGame]);
+        getGame(`http://localhost:3000/games/game/${idGame}`, 'game');
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [idGame]);
 
-    /** fetch issue */
+    // fetch issue
     useEffect(() => {
-        const fetchIssue = async () => {
-            try {
-                const res = await axios.get(
-                    `http://localhost:3000/issue/${idIssue}`
-                );
-                if (res.status !== 200) {
-                    throw Error('Can not find what your looking for');
-                }
-                setIssue(res.data.issue);
-                setTimeout(() => {
-                    setIsLoadingIssue(false);
-                }, 1000);
-            } catch (error) {
-                toast.error(error.message, {
-                    theme: 'colored',
-                    toastId: 'errorLogin',
-                });
-                // navigate('/404');
-            }
-        };
-        fetchIssue();
-    }, [idGame, idIssue, navigate, setIsLoadingIssue]);
+        getIssue(`http://localhost:3000/issue/${idIssue}`, 'issue');
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [idGame]);
 
+    // if issue private, test if connected user can see it
     useEffect(() => {
         if (issue && game) {
-            if (!canUserSeeIssue(issue, userData, game.user_id)) {
-                toast.error('You dont have the right to see this issue', {
-                    toastId: 'errorLogin',
-                });
-                navigate(`/game/${game.id}`);
+            if (!canUserSeeIssue(issue, userData, game[0].user_id)) {
+                navigate(`/game/${game[0].id}?toast=unauthorized`);
             }
         }
     }, [issue, game, userData, navigate]);
@@ -86,69 +56,64 @@ const Issue = () => {
      * Handle click on delete issue
      */
     const handleDeleteIssue = async () => {
-        console.log('delete');
-        try {
-            const res = await axiosInstance.delete(
-                `http://localhost:3000/issue/${idIssue}`
-            );
-            if (res.status !== 200) {
-                throw Error;
-            } else {
-                toast.success('Issue deleted', {
-                    toastId: 'successDeleteIssue',
-                });
-                navigate(`/game/${idGame}`);
-            }
-        } catch (error) {
-            toast.error('You are not allowed to do that', {
-                toastId: 'errorDeleteIssue',
-            });
-        }
+        delIssue(`http://localhost:3000/issue/${idIssue}`);
     };
 
+    // check if issue request for delete is complete and redirect
+    useEffect(() => {
+        if (isCompleteDel) {
+            navigate(`/game/${idGame}?toast=issueDeleted`);
+        }
+    }, [isCompleteDel, idGame, navigate]);
+
+    /**
+     * Handle click on update issue
+     * @param {Event} e
+     */
     const handleUpdateIssue = async (e) => {
         e.preventDefault();
-        try {
-            const res = await axiosInstance.patch(
-                `http://localhost:3000/issue/${idIssue}`,
-                {
-                    title: issue.title,
-                    description: issue.description,
-                    status: issue.status,
-                    is_minor: issue.is_minor,
-                    assign_to: issue.assign_to,
-                    is_public: issue.is_public,
-                    is_online: issue.is_online,
-                    frequency: issue.frequency,
-                    replication: issue.replication,
-                    published_at: issue.published_at,
-                    platform_id: issue.platform_id,
-                }
-            );
-            if (res.status !== 200) {
-                throw Error;
-            } else {
-                toast.success('Issue updated', {
-                    toastId: 'successUpdateIssue',
-                });
-            }
-        } catch (error) {
-            toast.error('You are not allowed to do that', {
-                toastId: 'errorDeleteIssue',
-            });
-        }
+        patchIssue(`http://localhost:3000/issue/${idIssue}`, {
+            title: issue.title,
+            description: issue.description,
+            status: issue.status,
+            is_minor: issue.is_minor,
+            assign_to: issue.assign_to,
+            is_public: issue.is_public,
+            is_online: issue.is_online,
+            frequency: issue.frequency,
+            replication: issue.replication,
+            published_at: issue.published_at,
+            platform_id: issue.platform_id,
+        });
     };
+
+    // patch is done
+    useEffect(() => {
+        if (isCompletePatch) {
+            toast.success('Issue updated successfully');
+        }
+    }, [isCompletePatch]);
+
+    //show error if patch or delete failed
+    useEffect(() => {
+        if (errorDel) {
+            toast.error(errorDel);
+        }
+        if (errorPatch) {
+            toast.error(errorPatch);
+        }
+    }, [errorDel, errorPatch]);
 
     return (
         <>
-            {isLoadingIssue && isLoadingGame ? (
+            {!game || !issue ? (
                 <Loading />
             ) : (
                 <ContentContainer
                     SidebarRight={
                         <>
                             <IssueSidebar
-                                devId={game.user_id}
+                                devId={game[0].user_id}
                                 handleDelete={handleDeleteIssue}
                                 handleUpdateIssue={handleUpdateIssue}
                                 issue={issue}
@@ -158,7 +123,7 @@ const Issue = () => {
                                 className={'mt-4'}
                                 authorId={issue.user_id}
                                 handleDelete={handleDeleteIssue}
-                                devId={game.user_id}
+                                devId={game[0].user_id}
                             />
                         </>
                     }
@@ -171,7 +136,7 @@ const Issue = () => {
                             Return to game page
                         </Link>
                         <p className="font-bold text-sm mb-4 uppercase  text-secondary block">
-                            {game.name}
+                            {game[0].name}
                         </p>
                         <div className="mb-8 pl-8">
                             <h1 className="text-2xl font-bold mb-2 flex items-start relative">

@@ -50,6 +50,11 @@ const ToastInterceptor = () => {
                     toastId: 'toastMissingGame',
                 });
                 break;
+            case 'issueDeleted':
+                toast.success('Issue deleted successfully', {
+                    toastId: 'toastIssueDeleted',
+                });
+                break;
         }
     }, [searchParams]);
 

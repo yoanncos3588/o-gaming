@@ -58,6 +58,7 @@ const useApi = () => {
         loading,
         error,
         isComplete,
+        setData,
         get,
         post,
         patch,

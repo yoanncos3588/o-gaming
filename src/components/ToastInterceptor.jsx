@@ -46,7 +46,7 @@ const ToastInterceptor = () => {
                 });
                 break;
             case 'missingGame':
-                toast.error("Can\t find the game you'r looking for", {
+                toast.error("Can't find the game you'r looking for", {
                     toastId: 'toastMissingGame',
                 });
                 break;
@@ -58,6 +58,11 @@ const ToastInterceptor = () => {
             case 'suggestionDeleted':
                 toast.success('Suggestion deleted successfully', {
                     toastId: 'toastSuggestionDeleted',
+                });
+                break;
+            case 'searchError':
+                toast.error('Something wrong happened', {
+                    toastId: 'toastSearchError',
                 });
                 break;
         }

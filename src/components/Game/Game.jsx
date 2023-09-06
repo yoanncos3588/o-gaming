@@ -1,5 +1,4 @@
 import { Link, useNavigate, useParams } from 'react-router-dom';
-
 import ContentContainer from '../ContentContainer';
 import Category from '../Category';
 import { useState, useEffect } from 'react';

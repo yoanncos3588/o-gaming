@@ -1,38 +1,42 @@
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import axios from 'axios';
 import { useState, useEffect } from 'react';
 import ContentContainer from '../ContentContainer';
 import { GameItem } from '../Games/GameItem';
 import UsersItem from '../UsersItem/UsersItem';
+import useApi from '../../hook/useApi';
 
 function SearchResults() {
     let [searchParams] = useSearchParams();
+    const { get: getSearchResult, data: searchResult, error } = useApi();
     const [searchGames, setSearchGames] = useState([]);
     const [searchUsers, setSearchUsers] = useState([]);
     const navigate = useNavigate();
 
+    // get params in url after search (ex ?search=textToSearch)
     const searchValues = searchParams.get('search');
 
     useEffect(() => {
-        const fetchdata = async () => {
-            try {
-                const res = await axios.get(
-                    `http://localhost:3000/search?search=${searchValues}`
-                );
-                if (res.status !== 200) {
-                    navigate('/');
-                }
+        // call api
+        getSearchResult(`http://localhost:3000/search?search=${searchValues}`);
+        //search values can changed if user make a search from search result page
+    }, [searchValues]);
 
-                const { Games: games, Users: users } = res.data;
-                setSearchGames(games);
-                setSearchUsers(users);
-            } catch (err) {
-                console.log(err);
-            }
-        };
+    // when api request is over, we set the state with the results for games and users
+    useEffect(() => {
+        if (searchResult) {
+            // destructuring result from api
+            const { Games: games, Users: users } = searchResult;
+            setSearchGames(games);
+            setSearchUsers(users);
+        }
+    }, [searchResult]);
 
-        fetchdata();
-    }, [searchValues, navigate]);
+    // if there is an error whith the api request we redirect to homepage
+    useEffect(() => {
+        if (error) {
+            navigate('/?toast="searchError"');
+        }
+    }, [error, navigate]);
 
     return (
         <ContentContainer

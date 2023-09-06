@@ -29,7 +29,11 @@ const useApi = () => {
                 throw Error('An error has occured');
             }
         } catch (error) {
-            setError(error.message);
+            if (error.response.data.error) {
+                setError(error.response.data.error);
+            } else {
+                setError(error.message);
+            }
             setData(null);
             setIsComplete(false);
         } finally {

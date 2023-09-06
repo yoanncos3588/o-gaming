@@ -30,6 +30,11 @@ const ToastInterceptor = () => {
                     toastId: 'toastAccountOk',
                 });
                 break;
+            case 'gameCreated':
+                toast.success('Game created successfully', {
+                    toastId: 'toastGameOk',
+                });
+                break;
         }
     }, [searchParams]);
 

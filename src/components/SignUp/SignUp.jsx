@@ -1,4 +1,3 @@
-import axios from 'axios';
 import { useEffect, useState } from 'react';
 import ContentContainer from '../ContentContainer';
 import { toast } from 'react-toastify';
@@ -47,7 +46,7 @@ function SignIn() {
      */
     const handleSubmit = async (e) => {
         e.preventDefault();
-        post(`${import.meta.VITE_API_URL}/signup`, userInfos);
+        post(`${import.meta.env.VITE_API_URL}/signup`, userInfos);
     };
 
     return (

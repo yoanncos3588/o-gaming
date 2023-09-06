@@ -3,10 +3,10 @@ import { toast } from 'react-toastify';
 import Select from 'react-select';
 import CreatableSelect from 'react-select/creatable';
 import ContentContainer from '../ContentContainer';
-import axios from 'axios';
-import { axiosInstance } from '../../utils/axios';
 import { isImageValid } from '../../utils/imageValidator';
 import { useNavigate } from 'react-router-dom';
+import useApi from '../../hook/useApi';
+import { ButtonLoading } from '../ButtonLoading';
 
 function CreateGame() {
     // tag and categories from api
@@ -17,15 +17,47 @@ function CreateGame() {
     const [imageUrl, setImageUrl] = useState(''); //https://i.imgur.com/asAuCMn.jpg image valid for testing
     const navigate = useNavigate();
 
+    const { get: getCat, error: errorCat, data: dataCat } = useApi();
+
+    const { get: getTags, error: errorTags, data: dataTags } = useApi();
+
+    const {
+        post: postGame,
+        error: errorGame,
+        loading: loadingGame,
+        isComplete: isCompleteGame,
+    } = useApi();
+
     const [gameData, setGameData] = useState({
         name: '',
         description: '',
-        picture: '',
+        picture: 'https://i.imgur.com/asAuCMn.jpg',
         external_link: '',
         release_date: '',
         categories: [],
         tags: [],
     });
+
+    /** fetch categories */
+    useEffect(() => {
+        getCat(`${import.meta.env.VITE_API_URL}/categories`);
+        getTags(`${import.meta.env.VITE_API_URL}/tags`);
+    }, []);
+
+    useEffect(() => {
+        if (dataCat) {
+            setCategories(dataCat.categories);
+        }
+        if (errorCat) {
+            toast.error('Can\t find categories', { toastId: 'errorGetCat' });
+        }
+        if (dataTags) {
+            setTags(dataTags.tags);
+        }
+        if (errorTags) {
+            toast.error('Can\t find tags', { toastId: 'errorGetTags' });
+        }
+    }, [dataCat, errorCat, dataTags, errorTags]);
 
     /**
      * Handle when user click on add image cover
@@ -115,28 +147,6 @@ function CreateGame() {
         });
     };
 
-    /** fetch categories */
-    useEffect(() => {
-        const fetchCategories = async () => {
-            try {
-                const res = await axios.get('http://localhost:3000/categories');
-
-                if (res.status !== 200) {
-                    toast.error(res.data.error, {
-                        toastId: 'errorFetchCategories',
-                    });
-                    return;
-                }
-                setCategories(res.data.categories);
-            } catch (error) {
-                toast.error('An unexpected error has occurred', {
-                    toastId: 'errorFetchCategories',
-                });
-            }
-        };
-        fetchCategories();
-    }, []);
-
     // format categories for api
     useEffect(() => {
         /**
@@ -173,52 +183,22 @@ function CreateGame() {
      */
     const handleSubmit = async (e) => {
         e.preventDefault();
-
-        try {
-            const res = await axiosInstance.post(
-                'http://localhost:3000/games/game',
-                gameData
-            );
-            if (res.status === 200) {
-                toast.success('Your game was created', {
-                    toastId: 'successCreateGame',
-                });
-                navigate('/');
-                return;
-            }
-        } catch (error) {
-            console.log(error.response.data.error);
-            if (
-                error.response.data.error &&
-                error.response.data.error !== undefined
-            ) {
-                toast.error(error.response.data.error, {
-                    toastId: 'errorCreateGame',
-                });
-            }
-        }
+        postGame(`${import.meta.env.VITE_API_URL}/games/game`, gameData);
     };
 
-    /** fetch tags */
+    // success while posting game
     useEffect(() => {
-        const fetchTags = async () => {
-            try {
-                const res = await axios.get('http://localhost:3000/tags');
-                if (res.status !== 200) {
-                    toast.error(res.data.error, {
-                        toastId: 'errorFetchCategories',
-                    });
-                    return;
-                }
-                setTags(res.data.tags);
-            } catch (error) {
-                toast.error('An unexpected error has occurred', {
-                    toastId: 'errorFetchCategories',
-                });
-            }
-        };
-        fetchTags();
-    }, []);
+        if (isCompleteGame) {
+            navigate(`/?toast=gameCreated`);
+        }
+    }, [isCompleteGame, navigate]);
+
+    // error while posting game
+    useEffect(() => {
+        if (errorGame) {
+            toast.error(errorGame);
+        }
+    }, [errorGame]);
 
     return (
         <ContentContainer>
@@ -305,7 +285,7 @@ function CreateGame() {
                                 }`}
                                 onClick={(e) => handleDeleteImage(e)}
                             >
-                                Delete image
+                                Change image
                             </button>
                             <button
                                 className={`btn  w-1/2 ${
@@ -367,10 +347,16 @@ function CreateGame() {
                             onChange={handleChange}
                         />
                     </div>
-
-                    <button type="submit" className="btn btn-primary w-full">
-                        Envoyer
-                    </button>
+                    {loadingGame ? (
+                        <ButtonLoading />
+                    ) : (
+                        <button
+                            type="submit"
+                            className="btn btn-primary w-full"
+                        >
+                            Envoyer
+                        </button>
+                    )}
                 </form>
             </div>
         </ContentContainer>

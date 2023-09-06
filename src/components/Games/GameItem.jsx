@@ -96,11 +96,12 @@ export const GameItem = ({
                 </div>
                 <p className="text-sm">{description}</p>
                 <ul className="mt-4 -mx-1">
-                    {categories.map((c, index) => (
-                        <li className="mx-1 inline-block" key={index}>
-                            <Category name={c} />
-                        </li>
-                    ))}
+                    {categories &&
+                        categories.map((c, index) => (
+                            <li className="mx-1 inline-block" key={index}>
+                                <Category name={c} />
+                            </li>
+                        ))}
                 </ul>
             </div>
         </article>

@@ -1,7 +1,9 @@
-import { Navigate, useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import axios from 'axios';
 import { useState, useEffect } from 'react';
 import ContentContainer from '../ContentContainer';
+import { GameItem } from '../Games/GameItem';
+import UsersItem from '../UsersItem/UsersItem';
 
 function SearchResults() {
     let [searchParams, setSearchParams] = useSearchParams();
@@ -36,11 +38,41 @@ function SearchResults() {
     }, []);
     return (
         <ContentContainer>
-            <div>SearchResults</div>
-            {searchGames.length > 0 ? (
-                <div>il y'a des resultats </div>
+            <div className="mb-5 font-bold">SearchResults</div>
+            {searchUsers.length > 0 ? (
+                <ContentContainer
+                    SidebarLeft={
+                        searchUsers &&
+                        searchUsers.map((g) => (
+                            <li className="mb-6 list-none" key={g.id}>
+                                <UsersItem name={g.name} avatar={g.avatar} />
+                            </li>
+                        ))
+                    }
+                />
             ) : (
-                <div>il y'a pas des resultats </div>
+                <li className="my-5">il ya pas d'Users </li>
+            )}
+            {searchGames.length > 0 ? (
+                searchGames &&
+                searchGames.map((g) => (
+                    <li className="mb-6 list-none" key={g.id}>
+                        <GameItem
+                            id={g.id}
+                            name={g.name}
+                            image={g.picture}
+                            publisher={g.author}
+                            publisherId={g.user_id}
+                            realeaseDate={g.release_date}
+                            description={g.description}
+                            categories={g.categories}
+                            totalIssues={g.issue_count}
+                            totalSuggestions={g.suggestion_count}
+                        />
+                    </li>
+                ))
+            ) : (
+                <li>il ya pas des resultats </li>
             )}
         </ContentContainer>
     );

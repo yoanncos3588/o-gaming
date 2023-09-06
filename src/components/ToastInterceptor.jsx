@@ -37,7 +37,12 @@ const ToastInterceptor = () => {
                 break;
             case 'issueCreated':
                 toast.success('Issue created successfully', {
-                    toastId: 'toastGameOk',
+                    toastId: 'toastIssueOk',
+                });
+                break;
+            case 'suggestionCreated':
+                toast.success('Suggestion created successfully', {
+                    toastId: 'toastSuggestionOk',
                 });
                 break;
         }

@@ -1,6 +1,4 @@
 import { isTokenExpired } from './token';
-import store from '../store';
-import { logout } from '../store/reducers/user';
 
 /**
  * check if user is still connected by checking token expiration time and store for more security

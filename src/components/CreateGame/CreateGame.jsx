@@ -38,20 +38,20 @@ function CreateGame() {
         tags: [],
     });
 
-    /** fetch categories */
+    /** fetch categories and tags */
     useEffect(() => {
         getCat(`${import.meta.env.VITE_API_URL}/categories`);
         getTags(`${import.meta.env.VITE_API_URL}/tags`);
     }, []);
 
     useEffect(() => {
-        if (dataCat) {
+        if (dataCat && !categories.length) {
             setCategories(dataCat.categories);
         }
         if (errorCat) {
             toast.error('Can\t find categories', { toastId: 'errorGetCat' });
         }
-        if (dataTags) {
+        if (dataTags && !tags.length) {
             setTags(dataTags.tags);
         }
         if (errorTags) {

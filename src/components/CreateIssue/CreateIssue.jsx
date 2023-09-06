@@ -3,17 +3,16 @@ import { useEffect, useState } from 'react';
 import ContentContainer from '../ContentContainer';
 import { toast } from 'react-toastify';
 import { useNavigate, useParams } from 'react-router-dom';
-import { axiosInstance } from '../../utils/axios';
 import { useSelector } from 'react-redux';
-import axios from 'axios';
 import SidebarIssue from './SidebarGame';
 import Select from 'react-select';
 import { ReactComponent as IconTools } from '../../assets/icons/tools.svg';
+import useApi from '../../hook/useApi';
+import { ButtonLoading } from '../ButtonLoading';
 
 function CreateIssue() {
-    const [isLoading, setIsLoading] = useState(false);
-    const [tags, settags] = useState([]);
-    const [platforms, setPlatform] = useState([]);
+    const [tags, setTags] = useState([]);
+    const [platforms, setPlatforms] = useState([]);
     const [selectedTags, setSelectedTags] = useState([]);
     const [issueInfos, setIssueInfos] = useState({
         title: '',
@@ -32,62 +31,41 @@ function CreateIssue() {
     const navigate = useNavigate();
     const { idGame } = useParams();
 
-    // fetch platforms
-    useEffect(() => {
-        const fetchdata = async () => {
-            try {
-                const resPlateform = await axios.get(
-                    'http://localhost:3000/platforms'
-                );
-                if (resPlateform.status !== 200) {
-                    throw Error;
-                }
-                setPlatform(resPlateform.data.platforms);
-            } catch (error) {
-                toast.error(
-                    'Unable to get informations from API, retry later',
-                    {
-                        toastId: 'errorLogin',
-                    }
-                );
-                navigate('/');
-            }
-        };
-        fetchdata();
-    }, [navigate]);
+    const { get: getTags, error: errorTags, data: dataTags } = useApi();
+    const {
+        get: getPlatforms,
+        error: errorPlatforms,
+        data: dataPlatforms,
+    } = useApi();
+    const {
+        post: postIssue,
+        error: errorIssue,
+        loading: loadingIssue,
+        isComplete: isCompleteIssue,
+    } = useApi();
 
-    //fetch tags
+    /** fetch platforms and tags */
     useEffect(() => {
-        const fetchdata = async () => {
-            try {
-                const resTags = await axios.get(
-                    `http://localhost:3000/games/game/${idGame}/tags`
-                );
-                if (resTags.status !== 200) {
-                    throw Error;
-                }
-                settags(resTags.data.tags);
-            } catch (error) {
-                toast.error(
-                    'Unable to get informations from API, retry later',
-                    {
-                        toastId: 'errorLogin',
-                    }
-                );
-                navigate('/');
-            }
-        };
-        fetchdata();
-    }, [idGame, navigate]);
+        getPlatforms(`${import.meta.env.VITE_API_URL}/platforms`);
+        getTags(`${import.meta.env.VITE_API_URL}/games/game/${idGame}/tags`);
+    }, []);
 
-    // redirect user on success
     useEffect(() => {
-        toast.onChange((payload) => {
-            if (payload.status === 'removed' && payload.id === 'succesToast') {
-                navigate(`/game/${idGame}`);
-            }
-        });
-    }, [navigate, idGame]);
+        if (dataPlatforms && !platforms.length) {
+            setPlatforms(dataPlatforms.platforms);
+        }
+        if (errorPlatforms) {
+            toast.error('Can\t find platforms', {
+                toastId: 'errorGetPlatforms',
+            });
+        }
+        if (dataTags && !tags.length) {
+            setTags(dataTags.tags);
+        }
+        if (errorTags) {
+            toast.error('Can\t find tags', { toastId: 'errorGetTags' });
+        }
+    }, [dataPlatforms, errorPlatforms, dataTags, errorTags]);
 
     /** Handle change on form inputs */
     const handleChange = (e) => {
@@ -130,27 +108,26 @@ function CreateIssue() {
         e.preventDefault();
         issueInfos.user_id = userId;
         issueInfos.published_at = publishedAt;
-        setIsLoading(true);
-        try {
-            const res = await axiosInstance.post(
-                `http://localhost:3000/games/game/${idGame}/issues`,
-                issueInfos
-            );
-            if (res.status === 201) {
-                toast.success('Succes, you will be redirect…', {
-                    toastId: 'succesToast',
-                });
-            }
-            setIsLoading(false);
-        } catch (error) {
-            setIsLoading(false);
-            if (error.response.data.error) {
-                toast.error(error.response.data.error);
-            } else {
-                toast.error('An unexpected error has occured');
-            }
-        }
+        e.preventDefault();
+        postIssue(
+            `${import.meta.env.VITE_API_URL}/games/game/${idGame}/issues`,
+            issueInfos
+        );
     };
+
+    // success while posting game
+    useEffect(() => {
+        if (isCompleteIssue) {
+            navigate(`/?toast=issueCreated`);
+        }
+    }, [isCompleteIssue, navigate]);
+
+    // error while posting game
+    useEffect(() => {
+        if (errorIssue) {
+            toast.error(errorIssue);
+        }
+    }, [errorIssue]);
 
     // format tags for api
     useEffect(() => {
@@ -350,17 +327,14 @@ function CreateIssue() {
                             ></textarea>
                         </div>
                         <div className="text-center pt-1 mb-5 pb-1">
-                            {!isLoading ? (
+                            {loadingIssue ? (
+                                <ButtonLoading />
+                            ) : (
                                 <button
                                     className="btn btn-primary mt-4 w-full mb-3"
                                     type="submit"
                                 >
                                     create issue
-                                </button>
-                            ) : (
-                                <button className="btn btn-primary mt-4 w-full mb-3">
-                                    <span className="loading loading-spinner"></span>
-                                    loading
                                 </button>
                             )}
                         </div>

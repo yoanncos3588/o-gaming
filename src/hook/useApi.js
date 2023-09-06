@@ -8,6 +8,7 @@ const useApi = () => {
     const [isComplete, setIsComplete] = useState(false);
 
     const callApi = async (url, method, body = null) => {
+        setError(null);
         setLoading(true);
         try {
             const config = {

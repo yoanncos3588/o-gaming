@@ -7,7 +7,6 @@ export default function SearchBar() {
     const navigate = useNavigate();
 
     const handleOnSubmit = (e) => {
-        console.log('submit');
         e.preventDefault();
         if (inputValue !== '') {
             navigate(`search?search=${inputValue}`);

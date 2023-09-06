@@ -2,35 +2,19 @@ import { useEffect, useState } from 'react';
 import ContentContainer from '../ContentContainer';
 import { GameItem } from './GameItem';
 import { SidebarGames } from './SidebarGames';
-import { toast } from 'react-toastify';
-
-import axios from 'axios';
+import useApi from '../../hook/useApi';
 import Loading from '../Loading';
 
 function Games() {
-    const [games, setGames] = useState([]);
+    // const [games, setGames] = useState([]);
     const [filteredGames, setFilteredGames] = useState([]);
-    const [isLoading, setIsLoading] = useState(true);
     const [categoryFilter, setCategoryFilter] = useState('all');
     const [dateFilter, setDateFilter] = useState('all');
 
-    /** fetch games */
+    const { get: getGames, data: games } = useApi();
+
     useEffect(() => {
-        const fetchGames = async () => {
-            try {
-                const res = await axios.get('http://localhost:3000/games');
-                if (res.status !== 200) {
-                    throw Error();
-                }
-                setGames(res.data.games);
-                setTimeout(() => {
-                    setIsLoading(false);
-                }, 500);
-            } catch (error) {
-                toast.error('An unexpected error has occured');
-            }
-        };
-        fetchGames();
+        getGames(`${import.meta.env.VITE_API_URL}/games`, 'games');
     }, []);
 
     // filter games
@@ -75,7 +59,7 @@ function Games() {
 
     return (
         <>
-            {isLoading ? (
+            {!games ? (
                 <Loading />
             ) : (
                 <ContentContainer

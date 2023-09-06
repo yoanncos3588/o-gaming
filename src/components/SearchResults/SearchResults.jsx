@@ -6,13 +6,13 @@ import { GameItem } from '../Games/GameItem';
 import UsersItem from '../UsersItem/UsersItem';
 
 function SearchResults() {
-    let [searchParams, setSearchParams] = useSearchParams();
+    let [searchParams] = useSearchParams();
     const [searchGames, setSearchGames] = useState([]);
     const [searchUsers, setSearchUsers] = useState([]);
     const navigate = useNavigate();
 
     const searchValues = searchParams.get('search');
-    console.log(searchValues);
+
     useEffect(() => {
         const fetchdata = async () => {
             try {
@@ -26,16 +26,14 @@ function SearchResults() {
                 const { Games: games, Users: users } = res.data;
                 setSearchGames(games);
                 setSearchUsers(users);
-
-                console.log(games);
-                console.log(users);
             } catch (err) {
                 console.log(err);
             }
         };
 
         fetchdata();
-    }, []);
+    }, [searchValues, navigate]);
+
     return (
         <ContentContainer
             SidebarRight={

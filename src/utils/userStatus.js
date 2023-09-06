@@ -31,3 +31,45 @@ export const isDeveloper = (userData) => {
 export const isGamer = (userData) => {
     return userData?.role === 'gamer';
 };
+
+/**
+ * Filter issues from api
+ * @param {Array} data array of issues from api
+ * @returns {Array} filtered issues for user
+ */
+export const filterPrivateIssues = (issuesList, userData, idDev) => {
+    const filteredIssues = issuesList.filter((i) => {
+        return canUserSeeIssue(i, userData, idDev);
+    });
+    return filteredIssues;
+};
+
+/**
+ * Test if user can see an issue, depends on issue's status and user role
+ * @param {object} issue issue object to test
+ * @param {*} userData user data from store
+ * @param {*} idDev id of the game creator
+ * @returns {boolean}
+ */
+export const canUserSeeIssue = (issue, userData, idDev) => {
+    if (!issue.is_public) {
+        if (userData) {
+            // if connected user is creator of the issue its ok
+            if (issue.user_id === userData.userId) {
+                return true;
+            }
+            // if connected user is a dev and is the game creator its ok
+            if (isDeveloper(userData) && userData.userId === idDev) {
+                return true;
+            }
+            // not matching criteria
+            return false;
+        } else {
+            // no userData = user is not logged not ok
+            return false;
+        }
+    } else {
+        // issue is not private it's ok
+        return true;
+    }
+};

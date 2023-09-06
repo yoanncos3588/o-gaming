@@ -26,7 +26,8 @@ const SidebarGame = ({ idGame }) => {
     /** fetch game */
     useEffect(() => {
         getGame(`http://localhost:3000/games/game/${idGame}`, 'game');
-    }, []);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [idGame]);
 
     useEffect(() => {
         toast.error(errorGame, { toastId: 'toastErrorGame' });
@@ -40,7 +41,7 @@ const SidebarGame = ({ idGame }) => {
             >
                 Return to game page
             </Link>
-            {dataGame && (
+            {dataGame && dataGame?.length && (
                 <>
                     <img
                         className="my-3"

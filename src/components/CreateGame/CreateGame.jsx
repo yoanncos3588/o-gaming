@@ -7,18 +7,15 @@ import { isImageValid } from '../../utils/imageValidator';
 import { useNavigate } from 'react-router-dom';
 import useApi from '../../hook/useApi';
 import { ButtonLoading } from '../ButtonLoading';
+import Loading from '../Loading';
 
 function CreateGame() {
-    // tag and categories from api
-    const [categories, setCategories] = useState([]);
     const [selectedCategories, setSelectedCategories] = useState([]);
-    const [tags, setTags] = useState([]);
     const [selectedTags, setSelectedTags] = useState([]);
     const [imageUrl, setImageUrl] = useState(''); //https://i.imgur.com/asAuCMn.jpg image valid for testing
     const navigate = useNavigate();
 
     const { get: getCat, error: errorCat, data: dataCat } = useApi();
-
     const { get: getTags, error: errorTags, data: dataTags } = useApi();
 
     const {
@@ -40,32 +37,19 @@ function CreateGame() {
 
     /** fetch categories and tags */
     useEffect(() => {
-        getCat(`${import.meta.env.VITE_API_URL}/categories`);
-        getTags(`${import.meta.env.VITE_API_URL}/tags`);
+        getCat(`${import.meta.env.VITE_API_URL}/categories`, 'categories');
+        getTags(`${import.meta.env.VITE_API_URL}/tags`, 'tags');
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
-        if (dataCat && !categories.length) {
-            setCategories(dataCat.categories);
-        }
         if (errorCat) {
             toast.error('Can\t find categories', { toastId: 'errorGetCat' });
-        }
-        if (dataTags && !tags.length) {
-            setTags(dataTags.tags);
         }
         if (errorTags) {
             toast.error('Can\t find tags', { toastId: 'errorGetTags' });
         }
-    }, [
-        dataCat,
-        errorCat,
-        dataTags,
-        errorTags,
-        categories.length,
-        tags.length,
-    ]);
+    }, [errorTags, errorCat]);
 
     /**
      * Handle when user click on add image cover
@@ -210,163 +194,167 @@ function CreateGame() {
 
     return (
         <ContentContainer>
-            <div className=" w-full  xl:w-3/5 bg-base-200 p-8 rounded-lg shadow-lg mx-auto">
-                <h1 className="text-2xl font-black text-white mb-4">
-                    Create a game
-                </h1>
-                <form onSubmit={handleSubmit}>
-                    <div className="form-control w-full  mb-8">
-                        <label className="label">
-                            <span className="label-text">Title</span>
-                        </label>
-                        <input
-                            type="text"
-                            value={gameData.name}
-                            name="name"
-                            placeholder="Type here"
-                            className="input input-bordered w-full bg-neutral"
-                            onChange={handleChange}
-                        />
-                    </div>
-
-                    <div className="form-control w-full mb-8">
-                        <label className="label">
-                            <span className="label-text">Categories</span>
-                        </label>
-                        <Select
-                            name="categories"
-                            options={categories}
-                            className="basic-multi-select"
-                            classNamePrefix="select"
-                            closeMenuOnSelect={false}
-                            onChange={onOptionChangeForCategories}
-                            value={selectedCategories}
-                            getOptionLabel={(option) => `${option.name}`}
-                            getOptionValue={(option) => option.name}
-                            isMulti
-                        />
-                    </div>
-
-                    <div className="form-control mb-8">
-                        <label className="label">
-                            <span className="label-text">Description</span>
-                        </label>
-                        <textarea
-                            className="textarea textarea-bordered h-24 bg-neutral"
-                            name="description"
-                            placeholder="Your game description"
-                            value={gameData.description}
-                            onChange={handleChange}
-                        ></textarea>
-                    </div>
-
-                    <div className="form-control mb-8">
-                        {gameData.picture && (
-                            <img
-                                src={gameData.picture}
-                                alt="selected cover image"
-                                className="mb-4"
+            {dataCat && dataTags ? (
+                <div className=" w-full  xl:w-3/5 bg-base-200 p-8 rounded-lg shadow-lg mx-auto">
+                    <h1 className="text-2xl font-black text-white mb-4">
+                        Create a game
+                    </h1>
+                    <form onSubmit={handleSubmit}>
+                        <div className="form-control w-full  mb-8">
+                            <label className="label">
+                                <span className="label-text">Title</span>
+                            </label>
+                            <input
+                                type="text"
+                                value={gameData.name}
+                                name="name"
+                                placeholder="Type here"
+                                className="input input-bordered w-full bg-neutral"
+                                onChange={handleChange}
                             />
-                        )}
-                        <label className="label">
-                            <span className="label-text">
-                                Add an image cover from external URL{' '}
-                                <span className="text-sm opacity-50">
-                                    (1200x600px only, .jpg and .png only)
-                                </span>
-                            </span>
-                        </label>
-                        <input
-                            type="text"
-                            placeholder="Your image url"
-                            className={`input input-bordered w-full bg-neutral`}
-                            disabled={gameData.picture !== ''}
-                            value={imageUrl}
-                            onChange={(e) => setImageUrl(e.target.value)}
-                        />
-                        <div className="flex">
-                            <button
-                                className={`btn  w-1/2 ${
-                                    gameData.picture
-                                        ? 'btn-warning'
-                                        : 'btn-disabled'
-                                }`}
-                                onClick={(e) => handleDeleteImage(e)}
-                            >
-                                Change image
-                            </button>
-                            <button
-                                className={`btn  w-1/2 ${
-                                    imageUrl || gameData.picture === ''
-                                        ? 'btn-success'
-                                        : 'btn-disabled'
-                                }`}
-                                onClick={handleAddImage}
-                            >
-                                Add image
-                            </button>
                         </div>
-                    </div>
-                    <div className="form-control mb-8">
-                        <label className="label">
-                            <span className="label-text">
-                                Select or create tags
-                            </span>
-                        </label>
-                        <CreatableSelect
-                            name="tags"
-                            options={tags}
-                            className="basic-multi-select"
-                            classNamePrefix="select"
-                            closeMenuOnSelect={false}
-                            onChange={onOptionChangeForTags}
-                            value={selectedTags}
-                            getOptionLabel={(option) => `${option.title}`}
-                            getOptionValue={(option) => option.title}
-                            onCreateOption={handleCreateTag}
-                            isMulti
-                        />
-                    </div>
-                    <div className="form-control w-full mb-8">
-                        <label className="label">
-                            <span className="label-text">
-                                Official website or buy page
-                            </span>
-                        </label>
-                        <input
-                            type="text"
-                            placeholder="Your url"
-                            className="input input-bordered w-full bg-neutral"
-                            name="external_link"
-                            onChange={handleChange}
-                            value={gameData.external_link}
-                        />
-                    </div>
-                    <div className="form-control w-full mb-8">
-                        <label className="label">
-                            <span className="label-text">Release date</span>
-                        </label>
-                        <input
-                            type="date"
-                            name="release_date"
-                            placeholder="Type here"
-                            className="input input-bordered w-full bg-neutral"
-                            value={gameData.release_date}
-                            onChange={handleChange}
-                        />
-                    </div>
-                    {loadingGame ? (
-                        <ButtonLoading />
-                    ) : (
-                        <button
-                            type="submit"
-                            className="btn btn-primary w-full"
-                        >
-                            Envoyer
-                        </button>
-                    )}
-                </form>
-            </div>
+
+                        <div className="form-control w-full mb-8">
+                            <label className="label">
+                                <span className="label-text">Categories</span>
+                            </label>
+                            <Select
+                                name="categories"
+                                options={dataCat}
+                                className="basic-multi-select"
+                                classNamePrefix="select"
+                                closeMenuOnSelect={false}
+                                onChange={onOptionChangeForCategories}
+                                value={selectedCategories}
+                                getOptionLabel={(option) => `${option.name}`}
+                                getOptionValue={(option) => option.name}
+                                isMulti
+                            />
+                        </div>
+
+                        <div className="form-control mb-8">
+                            <label className="label">
+                                <span className="label-text">Description</span>
+                            </label>
+                            <textarea
+                                className="textarea textarea-bordered h-24 bg-neutral"
+                                name="description"
+                                placeholder="Your game description"
+                                value={gameData.description}
+                                onChange={handleChange}
+                            ></textarea>
+                        </div>
+
+                        <div className="form-control mb-8">
+                            {gameData.picture && (
+                                <img
+                                    src={gameData.picture}
+                                    alt="selected cover image"
+                                    className="mb-4"
+                                />
+                            )}
+                            <label className="label">
+                                <span className="label-text">
+                                    Add an image cover from external URL{' '}
+                                    <span className="text-sm opacity-50">
+                                        (1200x600px only, .jpg and .png only)
+                                    </span>
+                                </span>
+                            </label>
+                            <input
+                                type="text"
+                                placeholder="Your image url"
+                                className={`input input-bordered w-full bg-neutral`}
+                                disabled={gameData.picture !== ''}
+                                value={imageUrl}
+                                onChange={(e) => setImageUrl(e.target.value)}
+                            />
+                            <div className="flex">
+                                <button
+                                    className={`btn  w-1/2 ${
+                                        gameData.picture
+                                            ? 'btn-warning'
+                                            : 'btn-disabled'
+                                    }`}
+                                    onClick={(e) => handleDeleteImage(e)}
+                                >
+                                    Change image
+                                </button>
+                                <button
+                                    className={`btn  w-1/2 ${
+                                        imageUrl || gameData.picture === ''
+                                            ? 'btn-success'
+                                            : 'btn-disabled'
+                                    }`}
+                                    onClick={handleAddImage}
+                                >
+                                    Add image
+                                </button>
+                            </div>
+                        </div>
+                        <div className="form-control mb-8">
+                            <label className="label">
+                                <span className="label-text">
+                                    Select or create tags
+                                </span>
+                            </label>
+                            <CreatableSelect
+                                name="tags"
+                                options={dataTags}
+                                className="basic-multi-select"
+                                classNamePrefix="select"
+                                closeMenuOnSelect={false}
+                                onChange={onOptionChangeForTags}
+                                value={selectedTags}
+                                getOptionLabel={(option) => `${option.title}`}
+                                getOptionValue={(option) => option.title}
+                                onCreateOption={handleCreateTag}
+                                isMulti
+                            />
+                        </div>
+                        <div className="form-control w-full mb-8">
+                            <label className="label">
+                                <span className="label-text">
+                                    Official website or buy page
+                                </span>
+                            </label>
+                            <input
+                                type="text"
+                                placeholder="Your url"
+                                className="input input-bordered w-full bg-neutral"
+                                name="external_link"
+                                onChange={handleChange}
+                                value={gameData.external_link}
+                            />
+                        </div>
+                        <div className="form-control w-full mb-8">
+                            <label className="label">
+                                <span className="label-text">Release date</span>
+                            </label>
+                            <input
+                                type="date"
+                                name="release_date"
+                                placeholder="Type here"
+                                className="input input-bordered w-full bg-neutral"
+                                value={gameData.release_date}
+                                onChange={handleChange}
+                            />
+                        </div>
+                        {loadingGame ? (
+                            <ButtonLoading />
+                        ) : (
+                            <button
+                                type="submit"
+                                className="btn btn-primary w-full"
+                            >
+                                Envoyer
+                            </button>
+                        )}
+                    </form>
+                </div>
+            ) : (
+                <Loading />
+            )}
         </ContentContainer>
     );
 }

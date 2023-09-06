@@ -6,7 +6,7 @@ import { useDispatch } from 'react-redux';
 import { logout } from '../store/reducers/user';
 
 /**
- * This hook is use to centralized api calls, it can be called multiple times with destructuring
+ * This hook is use to centralized api calls, it can be called multiple times with destructuring. We call state from this hook in component, like a component in a component.
  * example : {get, data, loading} = useApi -> only once by component
  * example 2 : {get:getIssue, data:dataIssue, loading:loadingIssue} = useApi -> can be called multiple times by changing name while destructuring
  * @returns

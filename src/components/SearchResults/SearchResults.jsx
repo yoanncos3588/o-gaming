@@ -54,7 +54,7 @@ function SearchResults() {
                                 </li>
                             ))
                         ) : (
-                            <li className="my-5">no user </li>
+                            <li className="my-5 font-bold text-2xl">no user</li>
                         )}
                     </div>
                 </div>
@@ -80,7 +80,7 @@ function SearchResults() {
                     </li>
                 ))
             ) : (
-                <span className="font-bold text-2xl">no game</span>
+                <li className=" my-5 font-bold text-2xl">no game</li>
             )}
         </ContentContainer>
     );

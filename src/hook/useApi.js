@@ -1,5 +1,9 @@
 import { useState } from 'react';
 import { axiosInstance } from '../utils/axios';
+import { isTokenExpired } from '../utils/token';
+import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { logout } from '../store/reducers/user';
 
 /**
  * This hook is use to centralized api calls, it can be called multiple times with destructuring
@@ -16,6 +20,9 @@ const useApi = () => {
     const [error, setError] = useState(null);
     // state to know when api have finished (only succes), usefull for post, delete, patch
     const [isComplete, setIsComplete] = useState(false);
+
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     /**
      * Main function for api calls
@@ -42,6 +49,7 @@ const useApi = () => {
                     throw Error(res.data.error);
                 }
                 if (objectKey) {
+                    // get data from api result
                     setData(res.data[objectKey]);
                 } else {
                     setData(res.data);
@@ -63,6 +71,15 @@ const useApi = () => {
             setData(null);
             // is complete is only when api call is successfull
             setIsComplete(false);
+            // if token has expired server send an error 500, so we test if token is expired when a 500 error happen
+            if (error.response.status === 500) {
+                if (isTokenExpired()) {
+                    // use method from redux reducer to logout user,
+                    dispatch(logout());
+                    // redirect to login with toast message params
+                    navigate('/login?toast=tokenExpired');
+                }
+            }
         } finally {
             // isLoading do not depends on api succes, can be bad or good
             setLoading(false);

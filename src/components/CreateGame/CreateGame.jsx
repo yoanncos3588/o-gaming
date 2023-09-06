@@ -46,12 +46,10 @@ function CreateGame() {
         } catch (error) {
             if (error !== undefined) {
                 toast.error(error.message, {
-                    theme: 'colored',
                     toastId: 'errorImage',
                 });
             } else {
                 toast.error('An unexpected error has occurred', {
-                    theme: 'colored',
                     toastId: 'errorImage',
                 });
             }
@@ -125,7 +123,6 @@ function CreateGame() {
 
                 if (res.status !== 200) {
                     toast.error(res.data.error, {
-                        theme: 'colored',
                         toastId: 'errorFetchCategories',
                     });
                     return;
@@ -133,7 +130,6 @@ function CreateGame() {
                 setCategories(res.data.categories);
             } catch (error) {
                 toast.error('An unexpected error has occurred', {
-                    theme: 'colored',
                     toastId: 'errorFetchCategories',
                 });
             }
@@ -185,7 +181,6 @@ function CreateGame() {
             );
             if (res.status === 200) {
                 toast.success('Your game was created', {
-                    theme: 'colored',
                     toastId: 'successCreateGame',
                 });
                 navigate('/');
@@ -198,7 +193,6 @@ function CreateGame() {
                 error.response.data.error !== undefined
             ) {
                 toast.error(error.response.data.error, {
-                    theme: 'colored',
                     toastId: 'errorCreateGame',
                 });
             }
@@ -212,7 +206,6 @@ function CreateGame() {
                 const res = await axios.get('http://localhost:3000/tags');
                 if (res.status !== 200) {
                     toast.error(res.data.error, {
-                        theme: 'colored',
                         toastId: 'errorFetchCategories',
                     });
                     return;
@@ -220,7 +213,6 @@ function CreateGame() {
                 setTags(res.data.tags);
             } catch (error) {
                 toast.error('An unexpected error has occurred', {
-                    theme: 'colored',
                     toastId: 'errorFetchCategories',
                 });
             }

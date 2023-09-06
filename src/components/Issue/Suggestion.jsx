@@ -34,10 +34,9 @@ const Suggestion = () => {
                 }, 1000);
             } catch (error) {
                 toast.error('Can not find what your looking for', {
-                    theme: 'colored',
                     toastId: 'errorLogin',
                 });
-                // navigate('/404');
+                navigate('/404');
             }
         };
         fetchSuggestion();
@@ -59,10 +58,9 @@ const Suggestion = () => {
                 }, 1000);
             } catch (error) {
                 toast.error('Can not find what your looking for', {
-                    theme: 'colored',
                     toastId: 'errorLogin',
                 });
-                // navigate('/404');
+                navigate('/404');
             }
         };
         fetchGame();
@@ -80,14 +78,12 @@ const Suggestion = () => {
                 throw Error;
             } else {
                 toast.success('Suggestion deleted', {
-                    theme: 'colored',
                     toastId: 'successDeleteSuggestion',
                 });
                 navigate(`/game/${idGame}`);
             }
         } catch (error) {
             toast.error('You are not allowed to do that', {
-                theme: 'colored',
                 toastId: 'errorDeleteSuggestion',
             });
         }

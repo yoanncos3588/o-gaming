@@ -27,9 +27,7 @@ function Games() {
                     setIsLoading(false);
                 }, 500);
             } catch (error) {
-                toast.error('An unexpected error has occured', {
-                    theme: 'colored',
-                });
+                toast.error('An unexpected error has occured');
             }
         };
         fetchGames();

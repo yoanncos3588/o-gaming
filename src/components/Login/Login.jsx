@@ -6,35 +6,16 @@ import {
     updateLoginErrorMessage,
 } from '../../store/reducers/user';
 import { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import ContentContainer from '../ContentContainer';
 
 function Login() {
     const [isLoading, setIsLoading] = useState(false);
     const dispatch = useDispatch();
     const { email, password } = useSelector((state) => state.user.credentials);
-    const username = useSelector((state) => state.user.userData?.username);
     const loginErrorMessage = useSelector(
         (state) => state.user.loginErrorMessage
     );
-    const navigate = useNavigate();
-
-    /** useEffect for success on login */
-    useEffect(() => {
-        if (username) {
-            setIsLoading(true);
-            toast.success(`Welcome back ${username}, you will be redirected…`, {
-                autoClose: 2000,
-                theme: 'colored',
-                toastId: 'successLogin',
-            });
-        }
-        toast.onChange((payload) => {
-            if (payload.status === 'removed' && payload.id === 'successLogin') {
-                navigate('/');
-            }
-        });
-    }, [username, navigate]);
 
     /** useEffect for error on login */
     useEffect(() => {
@@ -71,6 +52,7 @@ function Login() {
      */
     const handleLogin = async (e) => {
         e.preventDefault();
+        setIsLoading(true);
         if (email === '' || password === '') {
             toast.error('Missing fields', {
                 theme: 'colored',
@@ -78,6 +60,7 @@ function Login() {
             return;
         }
         dispatch(login());
+        setIsLoading(false);
     };
 
     return (

@@ -22,7 +22,6 @@ function Games() {
                 if (res.status !== 200) {
                     throw Error();
                 }
-                console.log(res);
                 setGames(res.data.games);
                 setTimeout(() => {
                     setIsLoading(false);

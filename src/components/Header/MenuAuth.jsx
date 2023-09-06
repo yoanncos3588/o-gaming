@@ -1,12 +1,12 @@
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { logout } from '../../store/reducers/user';
 import { Link, useNavigate } from 'react-router-dom';
 import { ReactComponent as UserCircleIcon } from '../../assets/icons/user.svg';
+import { isLoggedIn } from '../../utils/userStatus';
 
 export const MenuAuth = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const userData = useSelector((state) => state.user.userData);
 
     /**
      * Disconnect user
@@ -26,14 +26,14 @@ export const MenuAuth = () => {
                         fill="white"
                         className="w-4 h-4 hidden lg:inline-block"
                     />
-                    {!userData ? (
+                    {!isLoggedIn() ? (
                         <Link to="/login">Login</Link>
                     ) : (
                         <button onClick={handleLogout}>Logout</button>
                     )}
                 </div>
             </li>
-            {!userData && (
+            {!isLoggedIn() && (
                 <li>
                     <Link to="/signup">Sign up</Link>
                 </li>

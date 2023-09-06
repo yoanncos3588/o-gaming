@@ -1,4 +1,3 @@
-import ContentContainer from '../ContentContainer';
 import { Link } from 'react-router-dom';
 import placeholder from '../../../public/placeholderUser.png';
 import PropTypes from 'prop-types';
@@ -18,35 +17,29 @@ function UsersItem({ id, name, avatar, email }) {
         showCover();
     }, [avatar]);
     return (
-        <ContentContainer>
-            <div className="flex flex-wrap bg-base-200 p-6 align-middle rounded-lg w-fit">
-                <div className=" justify-end">
-                    <div className="avatar w-fit align-middle mr-3">
-                        <div className="w-14 rounded-full">
-                            <img
-                                src={!showPlaceholder ? avatar : placeholder}
-                                alt={`image cover of ${name}`}
-                            />
-                        </div>
-                    </div>
-                    <div>
-                        <h2 className=" text-xl font-black h-fit w-full">
-                            <Link
-                                to={`/profil/${id}`}
-                                className="hover:underline uppercase"
-                            >
-                                {name}
-                            </Link>
-                        </h2>
-
-                        <div className="text-sm my-2">
-                            <span className="">email : </span>
-                            <span>{email}</span>
-                        </div>
-                    </div>
+        <article className="flex bg-base-200 p-5 rounded-xl">
+            <div className="">
+                <Link to={`/profil/${id}`}>
+                    <img
+                        src={!showPlaceholder ? avatar : placeholder}
+                        alt={`image cover of ${name.toLowerCase()}`}
+                        className="w-20"
+                    />
+                </Link>
+                <h2 className=" text-xl font-black my-4">
+                    <Link
+                        to={`/profil/${id}`}
+                        className="hover:underline uppercase"
+                    >
+                        {name}
+                    </Link>
+                </h2>
+                <div className="text-sm my-2">
+                    <span className="">email : </span>
+                    <span>{email}</span>
                 </div>
             </div>
-        </ContentContainer>
+        </article>
     );
 }
 UsersItem.propTypes = {

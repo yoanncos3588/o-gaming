@@ -38,50 +38,49 @@ function SearchResults() {
     }, []);
     return (
         <ContentContainer
-            SidebarRight={<div className="w-fit">Result for User :</div>}
+            SidebarRight={
+                <div>
+                    <h1 className="mb-4 underline">Results for Users :</h1>
+                    <div>
+                        {searchUsers.length > 0 ? (
+                            searchUsers &&
+                            searchUsers.map((g) => (
+                                <li className="mb-6 list-none" key={g.id}>
+                                    <UsersItem
+                                        name={g.username}
+                                        avatar={g.avatar}
+                                        email={g.email}
+                                    />
+                                </li>
+                            ))
+                        ) : (
+                            <li className="my-5">no user </li>
+                        )}
+                    </div>
+                </div>
+            }
         >
-            <div className="w-fit">Result for games :</div>
-
-            {searchUsers.length > 0 ? (
-                <ContentContainer
-                    SidebarRight={
-                        searchUsers &&
-                        searchUsers.map((g) => (
-                            <li className="mb-6 list-none" key={g.id}>
-                                <UsersItem
-                                    name={g.username}
-                                    avatar={g.avatar}
-                                    email={g.email}
-                                />
-                            </li>
-                        ))
-                    }
-                />
-            ) : (
-                <li className="my-5">il ya pas d'Users </li>
-            )}
+            <h1 className="mb-4 underline">Results for Games :</h1>
             {searchGames.length > 0 ? (
                 searchGames &&
                 searchGames.map((g) => (
                     <li className="mb-6 list-none" key={g.id}>
-                        <ContentContainer>
-                            <GameItem
-                                id={g.id}
-                                name={g.name}
-                                image={g.picture}
-                                publisher={g.author}
-                                publisherId={g.user_id}
-                                realeaseDate={g.release_date}
-                                description={g.description}
-                                categories={g.categories}
-                                totalIssues={g.issue_count}
-                                totalSuggestions={g.suggestion_count}
-                            />
-                        </ContentContainer>
+                        <GameItem
+                            id={g.id}
+                            name={g.name}
+                            image={g.picture}
+                            publisher={g.author}
+                            publisherId={g.user_id}
+                            realeaseDate={g.release_date}
+                            description={g.description}
+                            categories={g.categories}
+                            totalIssues={g.issue_count}
+                            totalSuggestions={g.suggestion_count}
+                        />
                     </li>
                 ))
             ) : (
-                <span></span>
+                <span className="font-bold text-2xl">no game</span>
             )}
         </ContentContainer>
     );

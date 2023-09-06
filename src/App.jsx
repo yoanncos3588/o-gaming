@@ -12,7 +12,7 @@ import Issue from './components/Issue/Issue';
 import Games from './components/Games/Games';
 import SearchResults from './components/SearchResults/SearchResults';
 
-import Error from './components/error/error';
+import Error from './components/Error/Error';
 import Game from './components/Game/Game';
 import CreateSuggestion from './components/CreateIssue/CreateSuggestion';
 import Suggestion from './components/Issue/Suggestion';

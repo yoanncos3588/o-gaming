@@ -57,14 +57,20 @@ export const GameItem = ({
                         {name}
                     </Link>
                 </h2>
-                <div className="text-sm my-2">
-                    <span className="">Publisher : </span>
-                    <span>
-                        <Link to={`/user/${publisherId}`} className="underline">
-                            {publisher}
-                        </Link>
-                    </span>
-                </div>
+                {publisher && (
+                    <div className="text-sm my-2">
+                        <span className="">Publisher : </span>
+                        <span>
+                            <Link
+                                to={`/user/${publisherId}`}
+                                className="underline"
+                            >
+                                {publisher}
+                            </Link>
+                        </span>
+                    </div>
+                )}
+
                 <div className="text-sm my-2">
                     <span>Released : </span>
                     <span>{formatDate(realeaseDate)}</span>

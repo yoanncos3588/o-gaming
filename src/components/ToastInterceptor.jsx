@@ -25,6 +25,11 @@ const ToastInterceptor = () => {
                     toastId: 'toastUnauthorized',
                 });
                 break;
+            case 'accountOk':
+                toast.success('Account created successfully', {
+                    toastId: 'toastAccountOk',
+                });
+                break;
         }
     }, [searchParams]);
 

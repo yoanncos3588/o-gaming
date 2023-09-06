@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import ContentContainer from '../ContentContainer';
 import { toast } from 'react-toastify';
 import { Link, useNavigate } from 'react-router-dom';
+import useApi from '../../hook/useApi';
 
 function SignIn() {
     const [userInfos, setUserInfos] = useState({
@@ -12,18 +13,22 @@ function SignIn() {
         confirmPassword: '',
         role_id: '2',
     });
-
+    const { post, error, loading, isComplete } = useApi();
     const navigate = useNavigate();
-    const [isLoading, setIsLoading] = useState(false);
 
+    // api call is over with success
     useEffect(() => {
-        // redirect user on success
-        toast.onChange((payload) => {
-            if (payload.status === 'removed' && payload.id === 'succesToast') {
-                navigate('/login');
-            }
-        });
-    }, [navigate]);
+        if (isComplete) {
+            navigate('/login?toast=accountOk');
+        }
+    }, [isComplete, navigate]);
+
+    // api call send error
+    useEffect(() => {
+        if (error) {
+            toast.error(error);
+        }
+    }, [error]);
 
     /**
      * Handle input change on form
@@ -42,23 +47,7 @@ function SignIn() {
      */
     const handleSubmit = async (e) => {
         e.preventDefault();
-        try {
-            const res = await axios.post(
-                'http://localhost:3000/signup',
-                userInfos
-            );
-            if (Object.prototype.hasOwnProperty.call(res.data, 'error')) {
-                toast.error(res.data.error);
-            } else {
-                setIsLoading(true);
-                toast.success('Succes, you will be redirect…', {
-                    toastId: 'succesToast',
-                });
-            }
-        } catch (error) {
-            console.log(error);
-            toast.error('An unexpected error occured');
-        }
+        post(`${import.meta.VITE_API_URL}/signup`, userInfos);
     };
 
     return (
@@ -166,7 +155,7 @@ function SignIn() {
                                                     />
                                                 </div>
                                                 <div className="text-center pt-1 mb-5 pb-1">
-                                                    {!isLoading ? (
+                                                    {!loading ? (
                                                         <button
                                                             className="btn btn-primary mt-4 w-full mb-3"
                                                             type="submit"
@@ -187,12 +176,12 @@ function SignIn() {
                                                 </p>
                                                 <Link
                                                     to={`${
-                                                        !isLoading
+                                                        !loading
                                                             ? '/login'
                                                             : '#'
                                                     }`}
                                                     className={`${
-                                                        isLoading &&
+                                                        loading &&
                                                         'btn-disabled'
                                                     } btn btn-success btn-sm btn-outline`}
                                                 >

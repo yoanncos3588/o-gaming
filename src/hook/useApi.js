@@ -25,7 +25,9 @@ const useApi = () => {
                 }
                 if (objectKey) {
                     setData(res.data[objectKey]);
+                    console.log(res.data[objectKey]);
                 } else {
+                    console.log(res.data[objectKey]);
                     setData(res.data);
                 }
                 setError(null);
@@ -56,6 +58,7 @@ const useApi = () => {
         loading,
         error,
         isComplete,
+        setError,
         get,
         post,
         patch,

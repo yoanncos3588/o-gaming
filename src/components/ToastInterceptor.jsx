@@ -45,6 +45,11 @@ const ToastInterceptor = () => {
                     toastId: 'toastSuggestionOk',
                 });
                 break;
+            case 'missingGame':
+                toast.error("Can\t find the game you'r looking for", {
+                    toastId: 'toastMissingGame',
+                });
+                break;
         }
     }, [searchParams]);
 

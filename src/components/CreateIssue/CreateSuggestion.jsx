@@ -49,9 +49,9 @@ function CreateSuggestion() {
     // success while posting game
     useEffect(() => {
         if (isCompleteSuggestion) {
-            navigate(`/?toast=suggestionCreated`);
+            navigate(`/game/${idGame}?toast=suggestionCreated`);
         }
-    }, [isCompleteSuggestion, navigate]);
+    }, [isCompleteSuggestion, navigate, idGame]);
 
     // error while posting game
     useEffect(() => {

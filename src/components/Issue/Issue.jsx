@@ -15,13 +15,21 @@ import useApi from '../../hook/useApi';
 const Issue = () => {
     const { idGame, idIssue } = useParams();
 
-    const { get: getGame, data: game } = useApi();
-    const { get: getIssue, data: issue, setData: setIssue } = useApi();
+    const { get: getGame, error: errorGame, data: game } = useApi();
+
+    const {
+        get: getIssue,
+        error: errorIssue,
+        data: issue,
+        setData: setIssue,
+    } = useApi();
+
     const {
         del: delIssue,
         isComplete: isCompleteDel,
         error: errorDel,
     } = useApi();
+
     const {
         patch: patchIssue,
         isComplete: isCompletePatch,
@@ -41,7 +49,7 @@ const Issue = () => {
     useEffect(() => {
         getIssue(`http://localhost:3000/issue/${idIssue}`, 'issue');
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [idGame]);
+    }, [idIssue]);
 
     // if issue private, test if connected user can see it
     useEffect(() => {
@@ -103,6 +111,13 @@ const Issue = () => {
             toast.error(errorPatch);
         }
     }, [errorDel, errorPatch]);
+
+    // if api request for game and issue failed, something is wrong, 404
+    useEffect(() => {
+        if (errorGame || errorIssue) {
+            navigate('/404');
+        }
+    }, [errorGame, errorIssue, navigate]);
 
     return (
         <>

@@ -1,97 +1,75 @@
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import ContentContainer from '../ContentContainer';
-import { useEffect, useState } from 'react';
-import axios from 'axios';
+import { useEffect } from 'react';
 import { toast } from 'react-toastify';
 import Loading from '../Loading';
-import { axiosInstance } from '../../utils/axios';
 import { formatDate } from '../../utils/date';
 import DeleteItem from './DeleteItem';
 import { ReactComponent as IconSuggestion } from '../../assets/icons/suggestion.svg';
+import useApi from '../../hook/useApi';
 
 const Suggestion = () => {
-    const [suggestion, setSuggestion] = useState(null);
-    const [game, setGame] = useState(null);
     const { idGame, idSuggestion } = useParams();
-    const [isLoadingSuggestion, setIsLoadingSuggestion] = useState(true);
-    const [isLoadingGame, setIsLoadingGame] = useState(true);
+    const { get: getGame, data: game, error: errorGame } = useApi();
+    const {
+        get: getSuggestion,
+        data: suggestion,
+        error: errorSuggestion,
+    } = useApi();
+    const {
+        del: delSuggestion,
+        isComplete: isCompleteDel,
+        error: errorDel,
+    } = useApi();
+
     const navigate = useNavigate();
 
-    /** fetch issue */
+    // fetch game
     useEffect(() => {
-        const fetchSuggestion = async () => {
-            try {
-                const res = await axios.get(
-                    `http://localhost:3000/suggestion/${idSuggestion}`
-                );
-                console.log(res);
-                if (res.status !== 200) {
-                    throw Error;
-                }
-                setSuggestion(res.data.suggestion);
-                setTimeout(() => {
-                    setIsLoadingSuggestion(false);
-                }, 1000);
-            } catch (error) {
-                toast.error('Can not find what your looking for', {
-                    toastId: 'errorLogin',
-                });
-                navigate('/404');
-            }
-        };
-        fetchSuggestion();
-    }, [idGame, idSuggestion, navigate, setIsLoadingSuggestion]);
+        getGame(`http://localhost:3000/games/game/${idGame}`, 'game');
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [idGame]);
 
-    /** fetch game */
+    // fetch issue
     useEffect(() => {
-        const fetchGame = async () => {
-            try {
-                const res = await axios.get(
-                    `http://localhost:3000/games/game/${idGame}`
-                );
-                if (res.status !== 200) {
-                    throw Error;
-                }
-                setGame(res.data.game[0]);
-                setTimeout(() => {
-                    setIsLoadingGame(false);
-                }, 1000);
-            } catch (error) {
-                toast.error('Can not find what your looking for', {
-                    toastId: 'errorLogin',
-                });
-                navigate('/404');
-            }
-        };
-        fetchGame();
-    }, [idGame, navigate, setIsLoadingGame]);
+        getSuggestion(
+            `http://localhost:3000/suggestion/${idSuggestion}`,
+            'suggestion'
+        );
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [idSuggestion]);
 
     /**
-     * Handle click on delete suggestion
+     * Handle click on delete issue
      */
     const handleDeleteSuggestion = async () => {
-        try {
-            const res = await axiosInstance.delete(
-                `http://localhost:3000/suggestion/${idSuggestion}`
-            );
-            if (res.status !== 200) {
-                throw Error;
-            } else {
-                toast.success('Suggestion deleted', {
-                    toastId: 'successDeleteSuggestion',
-                });
-                navigate(`/game/${idGame}`);
-            }
-        } catch (error) {
-            toast.error('You are not allowed to do that', {
-                toastId: 'errorDeleteSuggestion',
-            });
-        }
+        delSuggestion(`http://localhost:3000/suggestion/${idSuggestion}`);
     };
+
+    // check if issue request for delete is complete and redirect
+    useEffect(() => {
+        if (isCompleteDel) {
+            navigate(`/game/${idGame}?toast=suggestionDeleted`);
+        }
+    }, [isCompleteDel, idGame, navigate]);
+
+    //show error or delete failed
+    useEffect(() => {
+        if (errorDel) {
+            toast.error(errorDel);
+        }
+    }, [errorDel]);
+
+    // if api request for game or suggestion failed, something is wrong, 404
+    useEffect(() => {
+        if (errorGame || errorSuggestion) {
+            navigate('/404');
+        }
+    }, [errorGame, errorSuggestion, navigate]);
 
     return (
         <>
-            {isLoadingSuggestion && isLoadingGame ? (
+            {!game && !suggestion ? (
                 <Loading />
             ) : (
                 <ContentContainer

@@ -55,6 +55,11 @@ const ToastInterceptor = () => {
                     toastId: 'toastIssueDeleted',
                 });
                 break;
+            case 'suggestionDeleted':
+                toast.success('Suggestion deleted successfully', {
+                    toastId: 'toastSuggestionDeleted',
+                });
+                break;
         }
     }, [searchParams]);
 

@@ -38,7 +38,6 @@ const Issue = () => {
                 }, 1000);
             } catch (error) {
                 toast.error('Can not find what your looking for', {
-                    theme: 'colored',
                     toastId: 'errorLogin',
                 });
                 // navigate('/404');
@@ -76,7 +75,6 @@ const Issue = () => {
         if (issue && game) {
             if (!canUserSeeIssue(issue, userData, game.user_id)) {
                 toast.error('You dont have the right to see this issue', {
-                    theme: 'colored',
                     toastId: 'errorLogin',
                 });
                 navigate(`/game/${game.id}`);
@@ -97,14 +95,12 @@ const Issue = () => {
                 throw Error;
             } else {
                 toast.success('Issue deleted', {
-                    theme: 'colored',
                     toastId: 'successDeleteIssue',
                 });
                 navigate(`/game/${idGame}`);
             }
         } catch (error) {
             toast.error('You are not allowed to do that', {
-                theme: 'colored',
                 toastId: 'errorDeleteIssue',
             });
         }
@@ -133,13 +129,11 @@ const Issue = () => {
                 throw Error;
             } else {
                 toast.success('Issue updated', {
-                    theme: 'colored',
                     toastId: 'successUpdateIssue',
                 });
             }
         } catch (error) {
             toast.error('You are not allowed to do that', {
-                theme: 'colored',
                 toastId: 'errorDeleteIssue',
             });
         }

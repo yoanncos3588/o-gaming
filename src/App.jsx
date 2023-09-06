@@ -23,7 +23,7 @@ function App() {
     }, []);
     return (
         <>
-            <ToastContainer />
+            <ToastContainer autoClose={3000} theme="colored" />
             <Routes>
                 {/* {routes for everybody} */}
                 <Route path="/search" element={<SearchResults />} />

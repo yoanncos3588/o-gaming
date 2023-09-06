@@ -34,9 +34,7 @@ const SidebarGame = ({ idGame }) => {
                 setGame(res.data.game[0]);
                 setIsLoading(false);
             } catch (error) {
-                toast.error('An unexpected error has occured', {
-                    theme: 'colored',
-                });
+                toast.error('An unexpected error has occured');
             }
         };
         fetchGame();

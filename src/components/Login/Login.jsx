@@ -21,7 +21,6 @@ function Login() {
     useEffect(() => {
         if (loginErrorMessage !== '') {
             toast.error(loginErrorMessage, {
-                theme: 'colored',
                 toastId: 'errorLogin',
             });
             toast.onChange((payload) => {
@@ -54,9 +53,7 @@ function Login() {
         e.preventDefault();
         setIsLoading(true);
         if (email === '' || password === '') {
-            toast.error('Missing fields', {
-                theme: 'colored',
-            });
+            toast.error('Missing fields');
             return;
         }
         dispatch(login());

@@ -47,7 +47,6 @@ function CreateIssue() {
                 toast.error(
                     'Unable to get informations from API, retry later',
                     {
-                        theme: 'colored',
                         toastId: 'errorLogin',
                     }
                 );
@@ -72,7 +71,6 @@ function CreateIssue() {
                 toast.error(
                     'Unable to get informations from API, retry later',
                     {
-                        theme: 'colored',
                         toastId: 'errorLogin',
                     }
                 );
@@ -140,22 +138,16 @@ function CreateIssue() {
             );
             if (res.status === 201) {
                 toast.success('Succes, you will be redirect…', {
-                    autoClose: 2000,
                     toastId: 'succesToast',
-                    theme: 'colored',
                 });
             }
             setIsLoading(false);
         } catch (error) {
             setIsLoading(false);
             if (error.response.data.error) {
-                toast.error(error.response.data.error, {
-                    theme: 'colored',
-                });
+                toast.error(error.response.data.error);
             } else {
-                toast.error('An unexpected error has occured', {
-                    theme: 'colored',
-                });
+                toast.error('An unexpected error has occured');
             }
         }
     };

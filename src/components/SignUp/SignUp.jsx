@@ -48,22 +48,16 @@ function SignIn() {
                 userInfos
             );
             if (Object.prototype.hasOwnProperty.call(res.data, 'error')) {
-                toast.error(res.data.error, {
-                    theme: 'colored',
-                });
+                toast.error(res.data.error);
             } else {
                 setIsLoading(true);
                 toast.success('Succes, you will be redirect…', {
-                    autoClose: 2000,
                     toastId: 'succesToast',
-                    theme: 'colored',
                 });
             }
         } catch (error) {
             console.log(error);
-            toast.error('An unexpected error occured', {
-                theme: 'colored',
-            });
+            toast.error('An unexpected error occured');
         }
     };
 

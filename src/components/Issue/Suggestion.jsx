@@ -26,14 +26,14 @@ const Suggestion = () => {
 
     // fetch game
     useEffect(() => {
-        getGame(`http://localhost:3000/games/game/${idGame}`, 'game');
+        getGame(`${import.meta.env.VITE_API_URL}/games/game/${idGame}`, 'game');
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [idGame]);
 
     // fetch issue
     useEffect(() => {
         getSuggestion(
-            `http://localhost:3000/suggestion/${idSuggestion}`,
+            `${import.meta.env.VITE_API_URL}/${idSuggestion}`,
             'suggestion'
         );
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -43,7 +43,9 @@ const Suggestion = () => {
      * Handle click on delete issue
      */
     const handleDeleteSuggestion = async () => {
-        delSuggestion(`http://localhost:3000/suggestion/${idSuggestion}`);
+        delSuggestion(
+            `${import.meta.env.VITE_API_URL}/suggestion/${idSuggestion}`
+        );
     };
 
     // check if issue request for delete is complete and redirect

@@ -23,7 +23,7 @@ const Game = () => {
 
     // fetch game
     useEffect(() => {
-        getGame(`http://localhost:3000/games/game/${idGame}`, 'game');
+        getGame(`${import.meta.env.VITE_API_URL}/games/game/${idGame}`, 'game');
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [idGame]);
 

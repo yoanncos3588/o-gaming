@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { axiosInstance } from '../utils/axios';
-import { isTokenExpired } from '../utils/token';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { logout } from '../store/reducers/user';

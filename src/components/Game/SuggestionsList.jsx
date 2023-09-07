@@ -2,35 +2,23 @@ import { useState, useEffect } from 'react';
 import { IssueSuggestionListItem } from './IssueSuggestionListItem';
 import propTypes from 'prop-types';
 
-import axios from 'axios';
+import useApi from '../../hook/useApi';
+import Loading from '../Loading';
 
 const SuggestionsList = ({ idGame }) => {
-    const [suggestions, setSuggestions] = useState([]);
-
-    const [isLoadingSuggestions, setIsLoadingSuggestions] = useState(true);
+    const { get: getSuggestions, data: suggestions } = useApi();
 
     const [textToSearch, setTextToSearch] = useState('');
     const [filteredList, setFilteredList] = useState([]);
-
     const [isSearchOn, setIsSearchOn] = useState(false);
 
-    // fetch issues
+    // fetch suggestions
     useEffect(() => {
-        const fetchSuggestions = async () => {
-            try {
-                const res = await axios.get(
-                    `http://localhost:3000/games/game/${idGame}/suggestions`
-                );
-                if (res.status !== 200) {
-                    throw Error;
-                }
-                setSuggestions(res.data.suggestions);
-                setIsLoadingSuggestions(false);
-            } catch (error) {
-                console.log(error);
-            }
-        };
-        fetchSuggestions();
+        getSuggestions(
+            `${import.meta.env.VITE_API_URL}/games/game/${idGame}/suggestions`,
+            'suggestions'
+        );
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [idGame]);
 
     /**
@@ -59,7 +47,7 @@ const SuggestionsList = ({ idGame }) => {
 
     return (
         <>
-            {!isLoadingSuggestions && (
+            {suggestions ? (
                 <>
                     <form
                         action=""
@@ -140,6 +128,8 @@ const SuggestionsList = ({ idGame }) => {
                         )}
                     </ul>
                 </>
+            ) : (
+                <Loading />
             )}
         </>
     );

@@ -1,4 +1,3 @@
-import { isDeveloper } from '../../utils/userStatus';
 import { useSelector } from 'react-redux';
 import propTypes from 'prop-types';
 import { useEffect, useState } from 'react';
@@ -9,16 +8,12 @@ const DeleteItem = ({ handleDelete, authorId, devId }) => {
 
     useEffect(() => {
         /**
-         * Check if user can delete the issue, only author and game of the game can
+         * Check if user can delete the issue, only author can
          * @returns {boolean}
          */
         const canDeleteItem = () => {
             // if user is the author
             if (authorId === userData.userId) {
-                return true;
-            }
-            // if user is dev and creator of the game
-            if (isDeveloper(userData) && userData.userId === devId) {
                 return true;
             }
             return false;

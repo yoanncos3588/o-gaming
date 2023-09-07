@@ -40,7 +40,6 @@ const useApi = () => {
                 data: body, // data to be send with our request when needed (post, patch)
             };
             const res = await axiosInstance(config);
-
             if (res.status === 200 || res.status === 201) {
                 // api can send object with error and status 200
                 if (Object.prototype.hasOwnProperty.call(res.data, 'error')) {

@@ -59,7 +59,7 @@ const useApi = () => {
                 throw Error('An error has occured');
             }
         } catch (error) {
-            if (error.response.data.error) {
+            if (error?.response?.data?.error) {
                 // sometimes api send an object with error key when error occured
                 setError(error.response.data.error);
             } else {
@@ -70,7 +70,7 @@ const useApi = () => {
             // is complete is only when api call is successfull
             setIsComplete(false);
             // if token has expired server send an error 403
-            if (error.response.status === 403) {
+            if (error?.response?.status === 403) {
                 // use method from redux reducer to logout user,
                 dispatch(logout());
                 // redirect to login with toast message params

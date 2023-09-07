@@ -1,69 +1,48 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { IssueSuggestionListItem } from './IssueSuggestionListItem';
 import propTypes from 'prop-types';
-
-import axios from 'axios';
 import { useSelector } from 'react-redux';
 import { filterPrivateIssues } from '../../utils/userStatus';
+import useApi from '../../hook/useApi';
+import Loading from '../Loading';
 
 const IssuesList = ({ idGame, idDev }) => {
-    const [issues, setIssues] = useState([]);
-    const [tags, setTags] = useState([]);
+    const { get: getTags, data: tags } = useApi();
+    const { get: getIssues, data: issues } = useApi();
 
-    const [isLoadingIssue, setIsLoadingIssue] = useState(true);
-    const [isLoadingTag, setIsLoadingTag] = useState(true);
+    const [issuesToShow, setIssuesToShow] = useState([]);
 
     const [selectedSearchTag, setSelectedSearchTag] = useState('all');
-
     const [textToSearch, setTextToSearch] = useState('');
     const [filteredList, setFilteredList] = useState([]);
-
     const [isSearchOn, setIsSearchOn] = useState(false);
 
     const userData = useSelector((state) => state.user.userData);
 
-    const navigate = useNavigate();
+    /** fetch  tags */
+    useEffect(() => {
+        getTags(
+            `${import.meta.env.VITE_API_URL}/games/game/${idGame}/tags`,
+            'tags'
+        );
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     // fetch issues and filter results
     useEffect(() => {
-        const fetchIssues = async () => {
-            try {
-                const res = await axios.get(
-                    `http://localhost:3000/games/game/${idGame}/issues`
-                );
-                if (res.status !== 200) {
-                    throw Error;
-                }
-                setIssues(
-                    filterPrivateIssues(res.data.issues, userData, idDev)
-                );
-                setIsLoadingIssue(false);
-            } catch (error) {
-                console.log(error);
-            }
-        };
-        fetchIssues();
-    }, [idGame, userData, idDev]);
+        getIssues(
+            `${import.meta.env.VITE_API_URL}/games/game/${idGame}/issues`,
+            'issues'
+        );
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [idGame]);
 
-    // fetch tags
+    // filter issue to remove private issue if user is not allowed (only author and game creator)
     useEffect(() => {
-        const fetchTags = async () => {
-            try {
-                const res = await axios.get(
-                    `http://localhost:3000/games/game/${idGame}/tags`
-                );
-                if (res.status !== 200) {
-                    throw Error('Unable to get tags from API');
-                }
-                setTags(res.data.tags);
-                setIsLoadingTag(false);
-            } catch (error) {
-                console.log(error);
-            }
-        };
-        fetchTags();
-    }, [idGame, navigate, isLoadingTag]);
+        if (issues) {
+            setIssuesToShow(filterPrivateIssues(issues, userData, idDev));
+        }
+    }, [issues, userData, idDev]);
 
     /**
      * Handle when user press search on form above list issues
@@ -82,14 +61,14 @@ const IssuesList = ({ idGame, idDev }) => {
 
         // filter by tag
         if (selectedSearchTag !== 'all') {
-            result = issues.filter((issue) => {
+            result = issuesToShow.filter((issue) => {
                 return issue.tags.some(
                     (tag) =>
                         tag.toLowerCase() === selectedSearchTag.toLowerCase()
                 );
             });
         } else {
-            result = [...issues];
+            result = [...issuesToShow];
         }
 
         // filter by title
@@ -106,56 +85,50 @@ const IssuesList = ({ idGame, idDev }) => {
 
     return (
         <>
-            {!isLoadingTag && (
-                <form
-                    action=""
-                    className="w-full mt-4"
-                    onSubmit={handleSubmitSearch}
-                >
-                    <div className="join w-full flex lg:flex-row flex-col">
-                        <select
-                            className="select select-bordered lg:join-item bg-neutral"
-                            onChange={(e) =>
-                                setSelectedSearchTag(
-                                    e.target.value.toLowerCase()
-                                )
-                            }
-                            value={selectedSearchTag}
-                        >
-                            <option value={'all'}>All tags</option>
-                            {tags.map((t) => (
-                                <option
-                                    key={t.id}
-                                    value={t.title.toLowerCase()}
-                                >
-                                    {t.title}
-                                </option>
-                            ))}
-                        </select>
-                        <div className="flex-1">
-                            <div>
-                                <input
-                                    className="input input-bordered lg:join-item w-full text-sm text-white focus:outline-none focus:bg-white focus:text-secondary-content bg-neutral"
-                                    placeholder="Search"
-                                    onChange={(e) =>
-                                        setTextToSearch(
-                                            e.target.value.toLowerCase()
-                                        )
-                                    }
-                                    value={textToSearch}
-                                />
-                            </div>
+            <form
+                action=""
+                className="w-full mt-4"
+                onSubmit={handleSubmitSearch}
+            >
+                <div className="join w-full flex lg:flex-row flex-col">
+                    <select
+                        className="select select-bordered lg:join-item bg-neutral"
+                        onChange={(e) =>
+                            setSelectedSearchTag(e.target.value.toLowerCase())
+                        }
+                        value={selectedSearchTag}
+                    >
+                        <option value={'all'}>All tags</option>
+                        {tags?.map((t) => (
+                            <option key={t.id} value={t.title.toLowerCase()}>
+                                {t.title}
+                            </option>
+                        ))}
+                    </select>
+
+                    <div className="flex-1">
+                        <div>
+                            <input
+                                className="input input-bordered lg:join-item w-full text-sm text-white focus:outline-none focus:bg-white focus:text-secondary-content bg-neutral"
+                                placeholder="Search"
+                                onChange={(e) =>
+                                    setTextToSearch(
+                                        e.target.value.toLowerCase()
+                                    )
+                                }
+                                value={textToSearch}
+                            />
                         </div>
-                        <button
-                            className="btn-primary btn lg:join-item"
-                            type="submit"
-                        >
-                            Search
-                        </button>
                     </div>
-                </form>
-            )}
-            {!isLoadingIssue && (
+                    <button
+                        className="btn-primary btn lg:join-item"
+                        type="submit"
+                    >
+                        Search
+                    </button>
+                </div>
+            </form>
+            {issues && issuesToShow ? (
                 <ul className="mt-4">
                     {isSearchOn ? (
                         filteredList.length ? (
@@ -188,8 +161,8 @@ const IssuesList = ({ idGame, idDev }) => {
                                 </button>
                             </li>
                         )
-                    ) : issues.length ? (
-                        issues.map((i) => (
+                    ) : issuesToShow.length ? (
+                        issuesToShow.map((i) => (
                             <li className="mb-4" key={i.id}>
                                 <IssueSuggestionListItem
                                     id={i.id}
@@ -209,6 +182,8 @@ const IssuesList = ({ idGame, idDev }) => {
                         </li>
                     )}
                 </ul>
+            ) : (
+                <Loading />
             )}
         </>
     );

@@ -3,13 +3,13 @@ import { useEffect, useState } from 'react';
 import ContentContainer from '../ContentContainer';
 import { toast } from 'react-toastify';
 import { useNavigate, useParams } from 'react-router-dom';
-import { axiosInstance } from '../../utils/axios';
 import { useSelector } from 'react-redux';
 import SidebarGame from './SidebarGame';
 import { ReactComponent as IconSuggestion } from '../../assets/icons/suggestion.svg';
+import useApi from '../../hook/useApi';
+import { ButtonLoading } from '../ButtonLoading';
 
 function CreateSuggestion() {
-    const [isLoading, setIsLoading] = useState(false);
     const [suggestionInfos, setSuggestionInfos] = useState({
         title: '',
         description: '',
@@ -20,14 +20,12 @@ function CreateSuggestion() {
     const navigate = useNavigate();
     const { idGame } = useParams();
 
-    // redirect user on success
-    useEffect(() => {
-        toast.onChange((payload) => {
-            if (payload.status === 'removed' && payload.id === 'succesToast') {
-                navigate(`/game/${idGame}`);
-            }
-        });
-    }, [navigate, idGame]);
+    const {
+        post: postSuggestion,
+        error: errorSuggestion,
+        loading: loadingSuggestion,
+        isComplete: isCompleteSuggestion,
+    } = useApi();
 
     /** Handle change on form inputs */
     const handleChange = (e) => {
@@ -40,29 +38,27 @@ function CreateSuggestion() {
     // submit form
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setIsLoading(true);
         suggestionInfos.user_id = userId;
         suggestionInfos.published_at = publishedAt;
-        try {
-            const res = await axiosInstance.post(
-                `http://localhost:3000/games/game/${idGame}/suggestions`,
-                suggestionInfos
-            );
-            if (res.status === 201) {
-                toast.success('Succes, you will be redirect…', {
-                    toastId: 'succesToast',
-                });
-            }
-            setIsLoading(false);
-        } catch (error) {
-            setIsLoading(false);
-            if (error.response.data.error) {
-                toast.error(error.response.data.error);
-            } else {
-                toast.error('An unexpected error has occured');
-            }
-        }
+        postSuggestion(
+            `${import.meta.env.VITE_API_URL}/games/game/${idGame}/suggestions`,
+            suggestionInfos
+        );
     };
+
+    // success while posting game
+    useEffect(() => {
+        if (isCompleteSuggestion) {
+            navigate(`/game/${idGame}?toast=suggestionCreated`);
+        }
+    }, [isCompleteSuggestion, navigate, idGame]);
+
+    // error while posting game
+    useEffect(() => {
+        if (errorSuggestion) {
+            toast.error(errorSuggestion);
+        }
+    }, [errorSuggestion]);
 
     return (
         <ContentContainer SidebarRight={<SidebarGame idGame={idGame} />}>
@@ -104,17 +100,14 @@ function CreateSuggestion() {
                             ></textarea>
                         </div>
                         <div className="text-center pt-1 mb-5 pb-1">
-                            {!isLoading ? (
+                            {loadingSuggestion ? (
+                                <ButtonLoading />
+                            ) : (
                                 <button
                                     className="btn btn-primary mt-4 w-full mb-3"
                                     type="submit"
                                 >
                                     Send suggestion
-                                </button>
-                            ) : (
-                                <button className="btn btn-primary mt-4 w-full mb-3">
-                                    <span className="loading loading-spinner"></span>
-                                    loading
                                 </button>
                             )}
                         </div>

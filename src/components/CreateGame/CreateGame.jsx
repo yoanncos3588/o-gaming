@@ -3,29 +3,53 @@ import { toast } from 'react-toastify';
 import Select from 'react-select';
 import CreatableSelect from 'react-select/creatable';
 import ContentContainer from '../ContentContainer';
-import axios from 'axios';
-import { axiosInstance } from '../../utils/axios';
 import { isImageValid } from '../../utils/imageValidator';
 import { useNavigate } from 'react-router-dom';
+import useApi from '../../hook/useApi';
+import { ButtonLoading } from '../ButtonLoading';
+import Loading from '../Loading';
 
 function CreateGame() {
-    // tag and categories from api
-    const [categories, setCategories] = useState([]);
     const [selectedCategories, setSelectedCategories] = useState([]);
-    const [tags, setTags] = useState([]);
     const [selectedTags, setSelectedTags] = useState([]);
     const [imageUrl, setImageUrl] = useState(''); //https://i.imgur.com/asAuCMn.jpg image valid for testing
     const navigate = useNavigate();
 
+    const { get: getCat, error: errorCat, data: dataCat } = useApi();
+    const { get: getTags, error: errorTags, data: dataTags } = useApi();
+
+    const {
+        post: postGame,
+        error: errorGame,
+        loading: loadingGame,
+        isComplete: isCompleteGame,
+    } = useApi();
+
     const [gameData, setGameData] = useState({
         name: '',
         description: '',
-        picture: '',
+        picture: 'https://i.imgur.com/asAuCMn.jpg',
         external_link: '',
         release_date: '',
         categories: [],
         tags: [],
     });
+
+    /** fetch categories and tags */
+    useEffect(() => {
+        getCat(`${import.meta.env.VITE_API_URL}/categories`, 'categories');
+        getTags(`${import.meta.env.VITE_API_URL}/tags`, 'tags');
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    useEffect(() => {
+        if (errorCat) {
+            toast.error('Can\t find categories', { toastId: 'errorGetCat' });
+        }
+        if (errorTags) {
+            toast.error('Can\t find tags', { toastId: 'errorGetTags' });
+        }
+    }, [errorTags, errorCat]);
 
     /**
      * Handle when user click on add image cover
@@ -115,28 +139,6 @@ function CreateGame() {
         });
     };
 
-    /** fetch categories */
-    useEffect(() => {
-        const fetchCategories = async () => {
-            try {
-                const res = await axios.get('http://localhost:3000/categories');
-
-                if (res.status !== 200) {
-                    toast.error(res.data.error, {
-                        toastId: 'errorFetchCategories',
-                    });
-                    return;
-                }
-                setCategories(res.data.categories);
-            } catch (error) {
-                toast.error('An unexpected error has occurred', {
-                    toastId: 'errorFetchCategories',
-                });
-            }
-        };
-        fetchCategories();
-    }, []);
-
     // format categories for api
     useEffect(() => {
         /**
@@ -173,206 +175,186 @@ function CreateGame() {
      */
     const handleSubmit = async (e) => {
         e.preventDefault();
-
-        try {
-            const res = await axiosInstance.post(
-                'http://localhost:3000/games/game',
-                gameData
-            );
-            if (res.status === 200) {
-                toast.success('Your game was created', {
-                    toastId: 'successCreateGame',
-                });
-                navigate('/');
-                return;
-            }
-        } catch (error) {
-            console.log(error.response.data.error);
-            if (
-                error.response.data.error &&
-                error.response.data.error !== undefined
-            ) {
-                toast.error(error.response.data.error, {
-                    toastId: 'errorCreateGame',
-                });
-            }
-        }
+        postGame(`${import.meta.env.VITE_API_URL}/games/game`, gameData);
     };
 
-    /** fetch tags */
+    // success while posting game
     useEffect(() => {
-        const fetchTags = async () => {
-            try {
-                const res = await axios.get('http://localhost:3000/tags');
-                if (res.status !== 200) {
-                    toast.error(res.data.error, {
-                        toastId: 'errorFetchCategories',
-                    });
-                    return;
-                }
-                setTags(res.data.tags);
-            } catch (error) {
-                toast.error('An unexpected error has occurred', {
-                    toastId: 'errorFetchCategories',
-                });
-            }
-        };
-        fetchTags();
-    }, []);
+        if (isCompleteGame) {
+            navigate(`/?toast=gameCreated`);
+        }
+    }, [isCompleteGame, navigate]);
+
+    // error while posting game
+    useEffect(() => {
+        if (errorGame) {
+            toast.error(errorGame);
+        }
+    }, [errorGame]);
 
     return (
         <ContentContainer>
-            <div className=" w-full  xl:w-3/5 bg-base-200 p-8 rounded-lg shadow-lg mx-auto">
-                <h1 className="text-2xl font-black text-white mb-4">
-                    Create a game
-                </h1>
-                <form onSubmit={handleSubmit}>
-                    <div className="form-control w-full  mb-8">
-                        <label className="label">
-                            <span className="label-text">Title</span>
-                        </label>
-                        <input
-                            type="text"
-                            value={gameData.name}
-                            name="name"
-                            placeholder="Type here"
-                            className="input input-bordered w-full bg-neutral"
-                            onChange={handleChange}
-                        />
-                    </div>
-
-                    <div className="form-control w-full mb-8">
-                        <label className="label">
-                            <span className="label-text">Categories</span>
-                        </label>
-                        <Select
-                            name="categories"
-                            options={categories}
-                            className="basic-multi-select"
-                            classNamePrefix="select"
-                            closeMenuOnSelect={false}
-                            onChange={onOptionChangeForCategories}
-                            value={selectedCategories}
-                            getOptionLabel={(option) => `${option.name}`}
-                            getOptionValue={(option) => option.name}
-                            isMulti
-                        />
-                    </div>
-
-                    <div className="form-control mb-8">
-                        <label className="label">
-                            <span className="label-text">Description</span>
-                        </label>
-                        <textarea
-                            className="textarea textarea-bordered h-24 bg-neutral"
-                            name="description"
-                            placeholder="Your game description"
-                            value={gameData.description}
-                            onChange={handleChange}
-                        ></textarea>
-                    </div>
-
-                    <div className="form-control mb-8">
-                        {gameData.picture && (
-                            <img
-                                src={gameData.picture}
-                                alt="selected cover image"
-                                className="mb-4"
+            {dataCat && dataTags ? (
+                <div className=" w-full  xl:w-3/5 bg-base-200 p-8 rounded-lg shadow-lg mx-auto">
+                    <h1 className="text-2xl font-black text-white mb-4">
+                        Create a game
+                    </h1>
+                    <form onSubmit={handleSubmit}>
+                        <div className="form-control w-full  mb-8">
+                            <label className="label">
+                                <span className="label-text">Title</span>
+                            </label>
+                            <input
+                                type="text"
+                                value={gameData.name}
+                                name="name"
+                                placeholder="Type here"
+                                className="input input-bordered w-full bg-neutral"
+                                onChange={handleChange}
                             />
-                        )}
-                        <label className="label">
-                            <span className="label-text">
-                                Add an image cover from external URL{' '}
-                                <span className="text-sm opacity-50">
-                                    (1200x600px only, .jpg and .png only)
-                                </span>
-                            </span>
-                        </label>
-                        <input
-                            type="text"
-                            placeholder="Your image url"
-                            className={`input input-bordered w-full bg-neutral`}
-                            disabled={gameData.picture !== ''}
-                            value={imageUrl}
-                            onChange={(e) => setImageUrl(e.target.value)}
-                        />
-                        <div className="flex">
-                            <button
-                                className={`btn  w-1/2 ${
-                                    gameData.picture
-                                        ? 'btn-warning'
-                                        : 'btn-disabled'
-                                }`}
-                                onClick={(e) => handleDeleteImage(e)}
-                            >
-                                Delete image
-                            </button>
-                            <button
-                                className={`btn  w-1/2 ${
-                                    imageUrl || gameData.picture === ''
-                                        ? 'btn-success'
-                                        : 'btn-disabled'
-                                }`}
-                                onClick={handleAddImage}
-                            >
-                                Add image
-                            </button>
                         </div>
-                    </div>
-                    <div className="form-control mb-8">
-                        <label className="label">
-                            <span className="label-text">
-                                Select or create tags
-                            </span>
-                        </label>
-                        <CreatableSelect
-                            name="tags"
-                            options={tags}
-                            className="basic-multi-select"
-                            classNamePrefix="select"
-                            closeMenuOnSelect={false}
-                            onChange={onOptionChangeForTags}
-                            value={selectedTags}
-                            getOptionLabel={(option) => `${option.title}`}
-                            getOptionValue={(option) => option.title}
-                            onCreateOption={handleCreateTag}
-                            isMulti
-                        />
-                    </div>
-                    <div className="form-control w-full mb-8">
-                        <label className="label">
-                            <span className="label-text">
-                                Official website or buy page
-                            </span>
-                        </label>
-                        <input
-                            type="text"
-                            placeholder="Your url"
-                            className="input input-bordered w-full bg-neutral"
-                            name="external_link"
-                            onChange={handleChange}
-                            value={gameData.external_link}
-                        />
-                    </div>
-                    <div className="form-control w-full mb-8">
-                        <label className="label">
-                            <span className="label-text">Release date</span>
-                        </label>
-                        <input
-                            type="date"
-                            name="release_date"
-                            placeholder="Type here"
-                            className="input input-bordered w-full bg-neutral"
-                            value={gameData.release_date}
-                            onChange={handleChange}
-                        />
-                    </div>
 
-                    <button type="submit" className="btn btn-primary w-full">
-                        Envoyer
-                    </button>
-                </form>
-            </div>
+                        <div className="form-control w-full mb-8">
+                            <label className="label">
+                                <span className="label-text">Categories</span>
+                            </label>
+                            <Select
+                                name="categories"
+                                options={dataCat}
+                                className="basic-multi-select"
+                                classNamePrefix="select"
+                                closeMenuOnSelect={false}
+                                onChange={onOptionChangeForCategories}
+                                value={selectedCategories}
+                                getOptionLabel={(option) => `${option.name}`}
+                                getOptionValue={(option) => option.name}
+                                isMulti
+                            />
+                        </div>
+
+                        <div className="form-control mb-8">
+                            <label className="label">
+                                <span className="label-text">Description</span>
+                            </label>
+                            <textarea
+                                className="textarea textarea-bordered h-24 bg-neutral"
+                                name="description"
+                                placeholder="Your game description"
+                                value={gameData.description}
+                                onChange={handleChange}
+                            ></textarea>
+                        </div>
+
+                        <div className="form-control mb-8">
+                            {gameData.picture && (
+                                <img
+                                    src={gameData.picture}
+                                    alt="selected cover image"
+                                    className="mb-4"
+                                />
+                            )}
+                            <label className="label">
+                                <span className="label-text">
+                                    Add an image cover from external URL{' '}
+                                    <span className="text-sm opacity-50">
+                                        (1200x600px only, .jpg and .png only)
+                                    </span>
+                                </span>
+                            </label>
+                            <input
+                                type="text"
+                                placeholder="Your image url"
+                                className={`input input-bordered w-full bg-neutral`}
+                                disabled={gameData.picture !== ''}
+                                value={imageUrl}
+                                onChange={(e) => setImageUrl(e.target.value)}
+                            />
+                            <div className="flex">
+                                <button
+                                    className={`btn  w-1/2 ${
+                                        gameData.picture
+                                            ? 'btn-warning'
+                                            : 'btn-disabled'
+                                    }`}
+                                    onClick={(e) => handleDeleteImage(e)}
+                                >
+                                    Change image
+                                </button>
+                                <button
+                                    className={`btn  w-1/2 ${
+                                        imageUrl || gameData.picture === ''
+                                            ? 'btn-success'
+                                            : 'btn-disabled'
+                                    }`}
+                                    onClick={handleAddImage}
+                                >
+                                    Add image
+                                </button>
+                            </div>
+                        </div>
+                        <div className="form-control mb-8">
+                            <label className="label">
+                                <span className="label-text">
+                                    Select or create tags
+                                </span>
+                            </label>
+                            <CreatableSelect
+                                name="tags"
+                                options={dataTags}
+                                className="basic-multi-select"
+                                classNamePrefix="select"
+                                closeMenuOnSelect={false}
+                                onChange={onOptionChangeForTags}
+                                value={selectedTags}
+                                getOptionLabel={(option) => `${option.title}`}
+                                getOptionValue={(option) => option.title}
+                                onCreateOption={handleCreateTag}
+                                isMulti
+                            />
+                        </div>
+                        <div className="form-control w-full mb-8">
+                            <label className="label">
+                                <span className="label-text">
+                                    Official website or buy page
+                                </span>
+                            </label>
+                            <input
+                                type="text"
+                                placeholder="Your url"
+                                className="input input-bordered w-full bg-neutral"
+                                name="external_link"
+                                onChange={handleChange}
+                                value={gameData.external_link}
+                            />
+                        </div>
+                        <div className="form-control w-full mb-8">
+                            <label className="label">
+                                <span className="label-text">Release date</span>
+                            </label>
+                            <input
+                                type="date"
+                                name="release_date"
+                                placeholder="Type here"
+                                className="input input-bordered w-full bg-neutral"
+                                value={gameData.release_date}
+                                onChange={handleChange}
+                            />
+                        </div>
+                        {loadingGame ? (
+                            <ButtonLoading />
+                        ) : (
+                            <button
+                                type="submit"
+                                className="btn btn-primary w-full"
+                            >
+                                Envoyer
+                            </button>
+                        )}
+                    </form>
+                </div>
+            ) : (
+                <Loading />
+            )}
         </ContentContainer>
     );
 }

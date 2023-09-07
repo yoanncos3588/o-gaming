@@ -1,44 +1,38 @@
 import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import axios from 'axios';
-import { toast } from 'react-toastify';
 import { isImageValid } from '../../utils/imageValidator';
 import placeholder from '/placeholder.jpg';
 import PropTypes from 'prop-types';
+import useApi from '../../hook/useApi';
+import { toast } from 'react-toastify';
 
 const SidebarGame = ({ idGame }) => {
-    const [game, setGame] = useState([]);
     const [showPlaceholder, setShowPlaceholder] = useState(true);
-    const [isLoading, setIsLoading] = useState(true);
+
+    const { get: getGame, error: errorGame, data: dataGame } = useApi();
 
     useEffect(() => {
         const showCover = async () => {
-            const validImage = await isImageValid(game.picture);
-            if (validImage) {
-                setShowPlaceholder(false);
+            if (dataGame) {
+                const validImage = await isImageValid(dataGame[0]?.picture);
+                if (validImage) {
+                    setShowPlaceholder(false);
+                }
             }
         };
         showCover();
-    }, [game]);
+    }, [dataGame]);
 
     /** fetch game */
     useEffect(() => {
-        const fetchGame = async () => {
-            try {
-                const res = await axios.get(
-                    `http://localhost:3000/games/game/${idGame}`
-                );
-                if (res.status !== 200) {
-                    throw Error();
-                }
-                setGame(res.data.game[0]);
-                setIsLoading(false);
-            } catch (error) {
-                toast.error('An unexpected error has occured');
-            }
-        };
-        fetchGame();
+        getGame(`http://localhost:3000/games/game/${idGame}`, 'game');
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [idGame]);
+
+    useEffect(() => {
+        toast.error(errorGame, { toastId: 'toastErrorGame' });
+    }, [errorGame]);
+
     return (
         <div>
             <Link
@@ -47,15 +41,17 @@ const SidebarGame = ({ idGame }) => {
             >
                 Return to game page
             </Link>
-            {!isLoading && (
+            {dataGame && dataGame?.length && (
                 <>
                     <img
                         className="my-3"
-                        src={!showPlaceholder ? game.picture : placeholder}
-                        alt={`image cover of ${name.toLowerCase()}`}
+                        src={
+                            !showPlaceholder ? dataGame[0].picture : placeholder
+                        }
+                        alt={`image cover of ${dataGame[0].name.toLowerCase()}`}
                     />
-                    <h2 className=" font-bold mb-2">{game.name}</h2>
-                    <p className=" opacity-50">{game.description}</p>
+                    <h2 className=" font-bold mb-2">{dataGame[0].name}</h2>
+                    <p className=" opacity-50">{dataGame[0].description}</p>
                 </>
             )}
         </div>

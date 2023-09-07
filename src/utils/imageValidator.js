@@ -6,6 +6,7 @@ import isUrl from 'is-url';
  * @returns {boolean}
  */
 const isImageExstensionOk = (imageUrl) => {
+    if (typeof imageUrl !== 'string') return false;
     const extension = imageUrl.slice(-4);
     return extension === '.jpg' || extension === '.png';
 };
@@ -45,4 +46,9 @@ export const isImageValid = async (imageUrl) => {
     } catch (error) {
         return false;
     }
+};
+
+export const exportForTesting = {
+    isImageExstensionOk,
+    getImageMeta,
 };

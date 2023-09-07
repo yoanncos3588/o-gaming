@@ -7,13 +7,17 @@ import jwt_decode from 'jwt-decode';
  */
 export const decodeToken = (token) => {
     if (token || token !== undefined) {
-        const decoded = jwt_decode(token);
-        const userData = {
-            userId: decoded.userId,
-            username: decoded.username,
-            role: decoded.role,
-        };
-        return userData;
+        try {
+            const decoded = jwt_decode(token);
+            const userData = {
+                userId: decoded.userId,
+                username: decoded.username,
+                role: decoded.role,
+            };
+            return userData;
+        } catch (error) {
+            return null;
+        }
     } else {
         return null;
     }

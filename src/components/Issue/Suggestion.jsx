@@ -30,10 +30,10 @@ const Suggestion = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [idGame]);
 
-    // fetch issue
+    // fetch suggestion
     useEffect(() => {
         getSuggestion(
-            `${import.meta.env.VITE_API_URL}/${idSuggestion}`,
+            `${import.meta.env.VITE_API_URL}/suggestion/${idSuggestion}`,
             'suggestion'
         );
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -71,7 +71,7 @@ const Suggestion = () => {
 
     return (
         <>
-            {!game && !suggestion ? (
+            {!game || !suggestion ? (
                 <Loading />
             ) : (
                 <ContentContainer

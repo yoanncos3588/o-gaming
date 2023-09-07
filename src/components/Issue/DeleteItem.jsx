@@ -13,7 +13,7 @@ const DeleteItem = ({ handleDelete, authorId, devId }) => {
          */
         const canDeleteItem = () => {
             // if user is the author
-            if (authorId === userData.userId) {
+            if (userData && authorId === userData.userId) {
                 return true;
             }
             return false;

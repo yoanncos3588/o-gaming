@@ -41,13 +41,13 @@ const Issue = () => {
 
     // fetch game
     useEffect(() => {
-        getGame(`http://localhost:3000/games/game/${idGame}`, 'game');
+        getGame(`${import.meta.env.VITE_API_URL}/games/game/${idGame}`, 'game');
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [idGame]);
 
     // fetch issue
     useEffect(() => {
-        getIssue(`http://localhost:3000/issue/${idIssue}`, 'issue');
+        getIssue(`${import.meta.env.VITE_API_URL}/issue/${idIssue}`, 'issue');
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [idIssue]);
 
@@ -64,7 +64,7 @@ const Issue = () => {
      * Handle click on delete issue
      */
     const handleDeleteIssue = async () => {
-        delIssue(`http://localhost:3000/issue/${idIssue}`);
+        delIssue(`${import.meta.env.VITE_API_URL}/issue/${idIssue}`);
     };
 
     // check if issue request for delete is complete and redirect
@@ -80,7 +80,7 @@ const Issue = () => {
      */
     const handleUpdateIssue = async (e) => {
         e.preventDefault();
-        patchIssue(`http://localhost:3000/issue/${idIssue}`, {
+        patchIssue(`${import.meta.env.VITE_API_URL}/issue/${idIssue}`, {
             title: issue.title,
             description: issue.description,
             status: issue.status,

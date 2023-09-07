@@ -71,14 +71,12 @@ const useApi = () => {
             setData(null);
             // is complete is only when api call is successfull
             setIsComplete(false);
-            // if token has expired server send an error 500, so we test if token is expired when a 500 error happen
-            if (error.response.status === 500) {
-                if (isTokenExpired()) {
-                    // use method from redux reducer to logout user,
-                    dispatch(logout());
-                    // redirect to login with toast message params
-                    navigate('/login?toast=tokenExpired');
-                }
+            // if token has expired server send an error 403
+            if (error.response.status === 403) {
+                // use method from redux reducer to logout user,
+                dispatch(logout());
+                // redirect to login with toast message params
+                navigate('/login?toast=tokenExpired');
             }
         } finally {
             // isLoading do not depends on api succes, can be bad or good

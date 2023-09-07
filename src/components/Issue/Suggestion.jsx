@@ -71,7 +71,7 @@ const Suggestion = () => {
 
     return (
         <>
-            {!game && !suggestion ? (
+            {!game || !suggestion ? (
                 <Loading />
             ) : (
                 <ContentContainer

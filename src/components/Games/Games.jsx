@@ -85,7 +85,7 @@ function Games() {
                     <ul>
                         {categoryFilter !== 'all' || dateFilter !== 'all' ? (
                             filteredGames.length > 0 ? (
-                                filteredGames.map((g) => (
+                                filteredGames.toReversed().map((g) => (
                                     <li className="mb-6" key={g.id}>
                                         <GameItem
                                             id={g.id}
@@ -109,7 +109,7 @@ function Games() {
                                 </p>
                             )
                         ) : (
-                            games.map((g) => (
+                            games.toReversed().map((g) => (
                                 <li className="mb-6" key={g.id}>
                                     <GameItem
                                         id={g.id}

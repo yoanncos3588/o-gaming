@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import placeholder from '../../../public/placeholderUser.png';
+import placeholder from '/placeholderUser.png';
 import PropTypes from 'prop-types';
 import { isImageValid } from '../../utils/imageValidator';
 import { useEffect, useState } from 'react';

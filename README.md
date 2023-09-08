@@ -71,14 +71,14 @@ cochera ensuite "toutes les cartes"
 -  "working on it"
 -  "refusé"
 -  "terminé"
-...
+
 classifier le retour si il est mineur ou grave,
 assigner des personnes a ce feedback
 et passer son feedback en priver ou public
 
 
--  prohet O'gaming back (https://github.com/O-Clock-Watt/projet-o-gaming-back)
-
+-  prohet O'gaming back (https://github.com/O-Clock-Watt/projet-o-gaming-back)  
+-  APi 0'gaming (https://o-gaming-6556579cc786.herokuapp.com/docs/) 
 
 - [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
 - [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh

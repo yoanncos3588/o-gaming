@@ -8,11 +8,12 @@ const Drawer = () => {
         <div className="drawer-side">
             <label htmlFor="my-drawer-3" className="drawer-overlay"></label>
             <div className="menu p-4 w-80 h-full bg-base-200">
-                <div className="mb-4">
+                <div className="">
                     <Link to={'/'}>
                         <Logo />
                     </Link>
                 </div>
+                <div className="divider p-0 m-0 mb-2"></div>
                 <ul>
                     <Menu />
                     <MenuAuth />

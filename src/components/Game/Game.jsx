@@ -39,7 +39,7 @@ const Game = () => {
     // valid image cover
     useEffect(() => {
         const showCover = async () => {
-            if (game && game[0]?.length) {
+            if (game && game?.length) {
                 const validImage = await isImageValid(game[0].picture);
                 if (validImage) {
                     setShowImagePlaceholder(false);

@@ -47,7 +47,7 @@ export const SidebarGames = ({
     return (
         <>
             {categories && (
-                <div className="collapse lg:collapse-open lg:bg-base-100 bg-base-200  collapse-arrow">
+                <div className="collapse lg:collapse-open lg:bg-base-100 bg-base-200  collapse-arrow z-0">
                     <input type="checkbox" />
                     <div className="collapse-title text-xl relative font-bold">
                         Filter by

@@ -82,10 +82,10 @@ function Games() {
                                       : `in ${dateFilter}`
                               }`}
                     </h1>
-                    <ul>
+                    <ul className="flex flex-col-reverse flex-wrap">
                         {categoryFilter !== 'all' || dateFilter !== 'all' ? (
                             filteredGames.length > 0 ? (
-                                filteredGames.toReversed().map((g) => (
+                                filteredGames.map((g) => (
                                     <li className="mb-6" key={g.id}>
                                         <GameItem
                                             id={g.id}
@@ -109,7 +109,7 @@ function Games() {
                                 </p>
                             )
                         ) : (
-                            games.toReversed().map((g) => (
+                            games.map((g) => (
                                 <li className="mb-6" key={g.id}>
                                     <GameItem
                                         id={g.id}

@@ -7,13 +7,13 @@ const Menu = () => {
     const userData = useSelector((state) => state.user.userData);
     return (
         <>
-            <li>
-                <Link to="/" className="btn-primary font-bold">
+            <li className="mb-4 lg:mb-0">
+                <Link to="/" className="btn-primary font-bold ">
                     All Games
                 </Link>
             </li>
             {isDeveloper(userData) && (
-                <li className="ml-4">
+                <li className="lg:ml-4 mb-4 lg:mb-0">
                     <Link to="/create-game" className="btn-success font-bold">
                         Add Game
                     </Link>

@@ -20,21 +20,27 @@ export const MenuAuth = () => {
 
     return (
         <>
-            <li>
-                <div>
-                    <UserCircleIcon
-                        fill="white"
-                        className="w-4 h-4 hidden lg:inline-block"
-                    />
-                    {!isLoggedIn() ? (
-                        <Link to="/login">Login</Link>
-                    ) : (
-                        <button onClick={handleLogout}>Logout</button>
-                    )}
-                </div>
+            <li className="mb-4 lg:mb-0 lg:flex lg:flex-row lg:items-center">
+                {!isLoggedIn() ? (
+                    <Link to="/login">
+                        <UserCircleIcon
+                            fill="white"
+                            className="w-4 h-4 hidden lg:inline-block"
+                        />
+                        Login
+                    </Link>
+                ) : (
+                    <button onClick={handleLogout}>
+                        <UserCircleIcon
+                            fill="white"
+                            className="w-4 h-4 hidden lg:inline-block"
+                        />
+                        Logout
+                    </button>
+                )}
             </li>
             {!isLoggedIn() && (
-                <li>
+                <li className=" mb-4 lg:mb-0">
                     <Link to="/signup">Sign up</Link>
                 </li>
             )}

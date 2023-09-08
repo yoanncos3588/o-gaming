@@ -12,12 +12,21 @@ import { ReactComponent as IconSuggestion } from '../../assets/icons/suggestion.
 import { ReactComponent as IconTools } from '../../assets/icons/tools.svg';
 import useApi from '../../hook/useApi';
 import isUrl from 'is-url';
+import { useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
 
 const Game = () => {
     const { idGame } = useParams();
     const [showSuggestion, setShowSuggestion] = useState(false);
     const [showImagePlaceholder, setShowImagePlaceholder] = useState(true);
+    const [canDeleteGame, setCanDeleteGame] = useState(false);
     const { get: getGame, error: errorGame, data: game, isComplete } = useApi();
+    const {
+        del: delGame,
+        error: errorDel,
+        isComplete: isCompleteDel,
+    } = useApi();
+    const userData = useSelector((state) => state.user.userData);
 
     const navigate = useNavigate();
 
@@ -30,7 +39,7 @@ const Game = () => {
     // valid image cover
     useEffect(() => {
         const showCover = async () => {
-            if (game) {
+            if (game && game[0]?.length) {
                 const validImage = await isImageValid(game[0].picture);
                 if (validImage) {
                     setShowImagePlaceholder(false);
@@ -46,6 +55,33 @@ const Game = () => {
             navigate('/?toast=missingGame');
         }
     }, [isComplete, errorGame, navigate, game]);
+
+    // test if user is the game creator and show delete button
+    useEffect(() => {
+        const canUserDeleteGame = () => {
+            if (userData && game && userData?.userId === game[0]?.user_id) {
+                setCanDeleteGame(true);
+            }
+        };
+        canUserDeleteGame();
+    }, [userData, game]);
+
+    /**
+     * handle click on delete game
+     */
+    const handleDelete = () => {
+        delGame(`${import.meta.env.VITE_API_URL}/games/game/${game[0].id}`);
+    };
+
+    // test if delete is complete without error
+    useEffect(() => {
+        if (isCompleteDel) {
+            navigate('/?toast=gameDeleted');
+        }
+        if (errorDel) {
+            toast.error('An error has occured');
+        }
+    }, [errorDel, isCompleteDel, navigate]);
 
     return (
         <ContentContainer>
@@ -92,6 +128,14 @@ const Game = () => {
                                 >
                                     <IconSuggestion /> Send suggestion
                                 </Link>
+                                {canDeleteGame && (
+                                    <button
+                                        className="btn btn-error w-full"
+                                        onClick={handleDelete}
+                                    >
+                                        Delete game
+                                    </button>
+                                )}
                             </div>
                         </div>
                     </div>

@@ -303,6 +303,15 @@ function CreateIssue() {
                                                 option.title
                                             }
                                             isMulti
+                                            theme={(theme) => ({
+                                                ...theme,
+                                                borderRadius: 0,
+                                                colors: {
+                                                    ...theme.colors,
+                                                    primary25: 'black',
+                                                    primary: 'black',
+                                                },
+                                            })}
                                         />
                                     </div>
                                 </>

@@ -229,6 +229,15 @@ function CreateGame() {
                                 getOptionLabel={(option) => `${option.name}`}
                                 getOptionValue={(option) => option.name}
                                 isMulti
+                                theme={(theme) => ({
+                                    ...theme,
+                                    borderRadius: 0,
+                                    colors: {
+                                        ...theme.colors,
+                                        primary25: 'black',
+                                        primary: 'black',
+                                    },
+                                })}
                             />
                         </div>
 
@@ -310,6 +319,15 @@ function CreateGame() {
                                 getOptionValue={(option) => option.title}
                                 onCreateOption={handleCreateTag}
                                 isMulti
+                                theme={(theme) => ({
+                                    ...theme,
+                                    borderRadius: 0,
+                                    colors: {
+                                        ...theme.colors,
+                                        primary25: 'black',
+                                        primary: 'black',
+                                    },
+                                })}
                             />
                         </div>
                         <div className="form-control w-full mb-8">
